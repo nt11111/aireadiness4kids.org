@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curriculum | aireadiness4kids (ARK)</title>
+<meta name="description" content="A free K-12 AI literacy curriculum in three grade-banded tracks: AI Explorers (K-5), AI Investigators (6-8), and AI Architects (9-12). 17 standalone modules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" type="image/png" href="assets/ark-mark-180.png">
+<link rel="apple-touch-icon" href="assets/ark-mark-180.png">
+</head>
+<body>
+<div class="progress"></div>
+
+<nav class="nav" aria-label="Primary">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="aireadiness4kids home">
+      <img class="brand__mark" src="assets/ark-mark.png" alt="ARK circuit elephant logo" width="46" height="46">
+      <span class="brand__name">aireadiness4kids<small>Responsible AI · K-12</small></span>
+    </a>
+    <div class="nav__links">
+      <a href="index.html">Home</a>
+      <a href="curriculum.html" class="active">Curriculum</a>
+      <a href="programs.html">Programs</a>
+      <a href="about.html">About</a>
+      <a href="get-involved.html">Get Involved</a>
+    </div>
+    <a href="get-involved.html#donate" class="btn nav__cta" data-magnetic>Donate</a>
+    <button class="nav__toggle" aria-label="Open menu" aria-expanded="false" aria-controls="m-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="m-menu">
+  <a href="index.html">Home</a><a href="curriculum.html">Curriculum</a><a href="programs.html">Programs</a><a href="about.html">About</a><a href="get-involved.html">Get Involved</a>
+  <a href="get-involved.html#donate" class="btn btn--lg">Donate</a>
+</div>
+
+<header class="page-hero">
+  <img src="assets/ark-mark.png" class="page-hero__mascot" alt="" aria-hidden="true">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg><span>Curriculum</span></nav>
+    <span class="eyebrow">The curriculum library</span>
+    <h1 class="mt-s">A complete K-12 AI literacy curriculum, free for everyone</h1>
+    <p class="lead">Organized into three grade-banded tracks. Each track breaks into standalone modules you can teach in any order, or combine into a full program. Every module follows the same template, so facilitators always know what to expect.</p>
+    <div class="hero__cta" style="margin-top:28px;">
+      <a href="#explorers" class="btn">Browse the tracks
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+      <a href="programs.html#workshops" class="btn btn--ghost">Book a workshop</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== PROMISE ROW ===== -->
+<section class="section--tight section">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card reveal d1" style="text-align:center;"><div class="stat__num">No login</div><p class="mt-s">No account needed to download and use any material.</p></div>
+      <div class="card reveal d2" style="text-align:center;"><div class="stat__num">No paywall</div><p class="mt-s">Teachers, parents, and homeschoolers can use it all, anytime.</p></div>
+      <div class="card reveal d3" style="text-align:center;"><div class="stat__num">Updated</div><p class="mt-s">Refreshed every year to reflect the latest AI developments.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRACKS (TABBED) ===== -->
+<section class="section" style="background:var(--cream-2);border-block:1px solid var(--border);">
+  <div class="container">
+    <div class="section-head reveal" style="margin-bottom:34px;">
+      <span class="eyebrow center-line">Pick a track</span>
+      <h2>Choose the right level for your students</h2>
+    </div>
+
+    <div class="tabs reveal" role="tablist" aria-label="Curriculum tracks">
+      <button class="tab active" data-tab="explorers" role="tab" aria-selected="true">AI Explorers <span class="g">K-5</span></button>
+      <button class="tab" data-tab="investigators" role="tab" aria-selected="false">AI Investigators <span class="g">6-8</span></button>
+      <button class="tab" data-tab="architects" role="tab" aria-selected="false">AI Architects <span class="g">9-12</span></button>
+    </div>
+
+    <!-- PANEL: EXPLORERS -->
+    <div class="tab-panel active" id="explorers" role="tabpanel">
+      <div class="split" style="margin-bottom:40px;align-items:flex-end;">
+        <div>
+          <span class="track-card__grade" style="color:var(--blue);">Track 1 · Grades K-5</span>
+          <h2 class="mt-s">AI Explorers</h2>
+          <p class="lead mt-s">Discovery and Awareness. AI Explorers introduces young learners to the idea that AI exists in the world around them, how it helps and sometimes confuses us, and what it means to be a thoughtful user of technology.</p>
+        </div>
+        <div class="track-card track-card--k5" style="min-height:auto;">
+          <span class="track-card__grade">Theme</span>
+          <h3 style="font-size:1.4rem;margin-top:4px;">Discovery and Awareness</h3>
+          <p style="margin-top:8px;">5 standalone modules. 60 to 90 minutes each. Friendly, hands-on, and curiosity led.</p>
+        </div>
+      </div>
+      <div class="modules">
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#2E86C9,#15517E)">1</span><span class="module__title"><h4>What Is AI?</h4><p>Discovering artificial intelligence through familiar everyday examples.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What makes something "intelligent"</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Examples of AI kids already use (Siri, Netflix, autocorrect)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>AI versus robots versus computers, what is the difference?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How AI learns from examples, a simple intro to training data</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#2E86C9,#15517E)">2</span><span class="module__title"><h4>AI Helpers, and When They Get It Wrong</h4><p>Building early critical thinking about trusting technology.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>AI errors and why they happen</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Stories of AI being wrong or unfair</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>When should we trust AI? When should we double-check?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Who is responsible when AI makes a mistake?</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#2E86C9,#15517E)">3</span><span class="module__title"><h4>Being a Smart AI User</h4><p>Asking good questions, evaluating answers, knowing when to ask a human.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What is a prompt? Giving AI good instructions</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Checking AI answers, is it always right?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Asking a real person versus asking AI</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>AI as a tool, not a replacement for thinking</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#2E86C9,#15517E)">4</span><span class="module__title"><h4>Kindness, Feelings and AI</h4><p>How AI-generated content can affect emotions and relationships.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Can AI be kind or unkind?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Cyberbullying and AI-generated content</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How does seeing AI-made images affect how we feel?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Treating others kindly online, even when talking to a bot</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#2E86C9,#15517E)">5</span><span class="module__title"><h4>My Digital Footprint</h4><p>What it means that AI tools collect and remember information.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What is a digital footprint?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What information AI can see or remember</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Keeping personal information private</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Simple rules for staying safe online</li>
+          </ul></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: INVESTIGATORS -->
+    <div class="tab-panel" id="investigators" role="tabpanel">
+      <div class="split" style="margin-bottom:40px;align-items:flex-end;">
+        <div>
+          <span class="track-card__grade" style="color:var(--blue);">Track 2 · Grades 6-8</span>
+          <h2 class="mt-s">AI Investigators</h2>
+          <p class="lead mt-s">Critical Thinking and Ethics. AI Investigators goes deeper. How does AI actually work, what are its real-world consequences, and what does responsible use look like in school and daily life?</p>
+        </div>
+        <div class="track-card track-card--68" style="min-height:auto;">
+          <span class="track-card__grade">Theme</span>
+          <h3 style="font-size:1.4rem;margin-top:4px;">Critical Thinking and Ethics</h3>
+          <p style="margin-top:8px;">6 standalone modules. 60 to 90 minutes each. Evidence, debate, and real-world cases.</p>
+        </div>
+      </div>
+      <div class="modules">
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">1</span><span class="module__title"><h4>How AI Actually Works</h4><p>A non-technical but accurate introduction to machine learning.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Training data and how AI learns from examples</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Pattern recognition versus true understanding</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>The difference between AI, machine learning, and algorithms</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Inputs, outputs, and feedback loops, a simple mental model</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">2</span><span class="module__title"><h4>Bias in AI</h4><p>How bias enters AI systems, with real-world examples of harm.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What is bias, and how does it get into training data?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Real cases: facial recognition, hiring algorithms, predictive policing</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Who is most affected by biased AI?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What can be done to reduce AI bias?</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">3</span><span class="module__title"><h4>AI and Schoolwork, Where Is the Line?</h4><p>Responsible use versus academic dishonesty in the age of ChatGPT.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How students are currently using AI for homework</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plagiarism versus AI assistance, what is and is not allowed?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>When AI use helps learning versus when it undermines it</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>School policies and why they exist</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">4</span><span class="module__title"><h4>Deepfakes and Misinformation</h4><p>Spotting AI-generated content and thinking critically about media.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What are deepfakes and how are they made?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How to spot AI-generated images, video, and audio</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Why people create and spread misinformation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Tools and habits for fact-checking</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">5</span><span class="module__title"><h4>Privacy and Your Data</h4><p>How AI companies collect data, and how to protect yourself.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What data AI apps collect about users</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Data brokers and how personal information is sold</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Reading privacy policies, and why almost no one does</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Practical steps: settings, permissions, and habits</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#1C92C4,#0D5E86)">6</span><span class="module__title"><h4>Ethical Dilemmas in AI</h4><p>Debating real scenarios with a structured decision-making framework.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Introduction to AI ethics: fairness, accountability, transparency</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Scenario 1: AI in hiring decisions</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Scenario 2: AI content moderation on social media</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Scenario 3: AI-powered surveillance in public spaces</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How to reason through ethical trade-offs</li>
+          </ul></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: ARCHITECTS -->
+    <div class="tab-panel" id="architects" role="tabpanel">
+      <div class="split" style="margin-bottom:40px;align-items:flex-end;">
+        <div>
+          <span class="track-card__grade" style="color:var(--blue);">Track 3 · Grades 9-12</span>
+          <h2 class="mt-s">AI Architects</h2>
+          <p class="lead mt-s">Agency, Policy and Action. AI Architects is for students ready to think seriously about AI's role in society and their own role in shaping it. Modules move from understanding to agency and action.</p>
+        </div>
+        <div class="track-card track-card--912" style="min-height:auto;">
+          <span class="track-card__grade">Theme</span>
+          <h3 style="font-size:1.4rem;margin-top:4px;">Agency, Policy and Action</h3>
+          <p style="margin-top:8px;">6 standalone modules. 60 to 90 minutes each. Culminating in a student capstone.</p>
+        </div>
+      </div>
+      <div class="modules">
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">1</span><span class="module__title"><h4>The AI Landscape Today</h4><p>What is real versus hype, what is possible now, and what is coming.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Generative AI, large language models, and what they can and cannot do</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>The gap between AI marketing claims and reality</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Industries being transformed by AI right now</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>What "artificial general intelligence" means and why it matters</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">2</span><span class="module__title"><h4>AI Ethics and Who Makes the Rules</h4><p>The policy landscape: who regulates AI, and where the gaps are.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Major AI ethics frameworks: EU AI Act, US executive orders, voluntary commitments</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Who has power over AI development: companies, governments, researchers</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>The accountability gap: when AI causes harm, who is responsible?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Student role in shaping norms and policy</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">3</span><span class="module__title"><h4>Algorithmic Bias and Systemic Justice</h4><p>How algorithmic systems can reinforce or amplify inequity.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How historical inequity gets encoded in training data</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Case studies: criminal justice, healthcare, education, housing</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Intersectionality and compound algorithmic harm</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Auditing AI systems: how researchers and journalists hold AI accountable</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">4</span><span class="module__title"><h4>AI and the Future of Work</h4><p>How AI is changing job markets and what skills will matter.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Jobs AI is automating versus jobs it is augmenting</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Skills that remain distinctly human: creativity, judgment, empathy</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>AI and economic inequality, who benefits, who is displaced?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Career planning in an AI-transformed world</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">5</span><span class="module__title"><h4>Building Responsibly, Design Thinking with AI</h4><p>Students become AI designers and work through ethical decisions.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Product design principles: who is this for? who could it harm?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Stakeholder mapping and unintended consequences</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Red-teaming: how do we stress-test an AI system for misuse?</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Student project: design a responsible AI product for a real community need</li>
+          </ul></div></div>
+        </div>
+        <div class="module">
+          <button class="module__head"><span class="module__no" style="background:linear-gradient(140deg,#143A5A,#0D2236)">6</span><span class="module__title"><h4>Advocacy and Action</h4><p>A concrete action plan for advancing responsible AI, the capstone.</p></span><span class="module__chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></button>
+          <div class="module__body"><div class="module__body-inner"><h5>Key topics covered</h5><ul class="topics">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Forms of advocacy: writing, organizing, building, speaking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>How to write a policy brief or op-ed on AI</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Student-led campaigns and real examples of youth AI advocacy</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Capstone: each student develops a one-page action plan and presents to peers</li>
+          </ul></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHAT'S INCLUDED ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow center-line">In every module</span>
+      <h2>A consistent template facilitators can trust</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card reveal d1"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>Learning objectives</h3><p>Three to five measurable objectives, what students will know or be able to do by the end.</p></div>
+      <div class="card reveal d2"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div><h3>Main activity</h3><p>A core hands-on exercise that anchors the concept in something kids actually do.</p></div>
+      <div class="card reveal d3"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Discussion questions</h3><p>Prompts for whole-class or small-group conversation that surface real opinions.</p></div>
+      <div class="card reveal d1"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg></div><h3>Materials and resources</h3><p>Handouts, videos, tools, and links, everything you need in one place.</p></div>
+      <div class="card reveal d2"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h3>Duration</h3><p>Piloted timing so you can plan the session, 60 to 90 minutes per module.</p></div>
+      <div class="card reveal d3"><div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><h3>Optional assessment</h3><p>Exit tickets, reflections, quizzes, or projects to check understanding.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band reveal">
+      <img src="assets/ark-mark.png" class="cta-band__mascot" alt="" aria-hidden="true">
+      <h2>Bring responsible AI to your classroom</h2>
+      <p>Download the full curriculum free, or invite a certified facilitator to deliver it as a workshop in your school.</p>
+      <div class="cta-band__btns">
+        <a href="get-involved.html#educators" class="btn btn--cyan btn--lg" data-magnetic>Download the curriculum</a>
+        <a href="programs.html#workshops" class="btn btn--on-dark btn--lg">Book a workshop</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="assets/ark-mark.png" class="footer__wm" alt="" aria-hidden="true">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <a href="index.html" class="brand">
+          <img class="brand__mark" src="assets/ark-mark.png" alt="ARK logo" width="46" height="46">
+          <span class="brand__name">aireadiness4kids<small style="color:var(--cyan)">Think. Prompt. Responsibly.</small></span>
+        </a>
+        <p class="footer__about">A nonprofit that equips K-12 students with the knowledge, skills, and ethical grounding to use AI responsibly, safely, and thoughtfully.</p>
+        <form class="newsletter" data-demo aria-label="Newsletter signup">
+          <input type="email" placeholder="Your email" aria-label="Email address" required>
+          <button class="btn" type="submit">Subscribe</button>
+        </form>
+      </div>
+      <div class="footer__col"><h5>Explore</h5><a href="curriculum.html">Curriculum</a><a href="programs.html">Programs</a><a href="about.html">About</a><a href="about.html#roadmap">Roadmap</a></div>
+      <div class="footer__col"><h5>Get Involved</h5><a href="get-involved.html#ambassadors">Student Ambassadors</a><a href="get-involved.html#volunteer">Volunteer</a><a href="get-involved.html#partners">Partner With Us</a><a href="get-involved.html#donate">Donate</a></div>
+      <div class="footer__col"><h5>Connect</h5><a href="#">Newsletter</a><a href="#">Blog</a><a href="mailto:hello@aireadiness4kids.org">Contact</a><a href="get-involved.html#partners">For Districts</a></div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> aireadiness4kids (ARK) · 501(c)(3) nonprofit · Think. Prompt. Responsibly.</span>
+      <div class="footer__social">
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.3 2.1 1.6 3.7 3.9 4v3c-1.4 0-2.7-.4-3.9-1.1V16a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v3.1a2.5 2.5 0 1 0 1.8 2.4V3z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
