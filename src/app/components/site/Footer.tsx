@@ -23,7 +23,7 @@ export function Footer() {
               {[
                 { Icon: Instagram, label: "Instagram", href: "#" },
                 { Icon: Linkedin, label: "LinkedIn", href: "#" },
-                { Icon: Mail, label: "Email", href: "mailto:hello@aireadiness4kids.org" },
+                { Icon: Mail, label: "Email", href: "mailto:neiltodkar@gmail.com" },
               ].map(({ Icon, label, href }) => (
                 <a key={label} href={href} aria-label={label} className="w-10 h-10 rounded-xl bg-white/6 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/12 hover:-translate-y-0.5 transition-all">
                   <Icon size={18} />

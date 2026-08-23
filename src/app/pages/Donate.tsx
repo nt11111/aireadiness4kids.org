@@ -5,12 +5,6 @@ import { PageHero } from "../components/site/PageHero";
 import { Section, Card, Btn } from "../components/site/Primitives";
 
 const amounts = [25, 50, 100, 250];
-const uses = [
-  ["$25", "Prints facilitator kits for one classroom workshop"],
-  ["$50", "Covers materials for a bilingual Parent Information Night"],
-  ["$100", "Trains one Student Ambassador to reach hundreds of peers"],
-  ["$250", "Funds a full-day immersive workshop at a Title I school"],
-];
 
 export default function Donate() {
   const [amt, setAmt] = useState<number | null>(50);
@@ -43,16 +37,10 @@ export default function Donate() {
           </Card>
 
           <div className="grid gap-4">
-            <div className="reveal d1 rounded-2xl bg-primary text-white p-8 relative overflow-hidden">
-              <div className="absolute inset-0 circuit-grid opacity-[0.05]" />
-              <img src="/brand/ark-mark-web.png" alt="" aria-hidden className="absolute -right-6 -bottom-6 w-40 opacity-[0.14]" />
-              <div className="relative"><h3 className="font-display text-2xl font-black">What your gift does</h3>
-                <ul className="grid gap-3 mt-5">{uses.map(([a, d]) => <li key={a} className="flex gap-3 text-white/80 text-[15px]"><span className="font-display font-black text-glow w-12 shrink-0">{a}</span>{d}</li>)}</ul></div>
-            </div>
-            <Card className="reveal d2"><h3 className="font-display text-xl font-black text-primary mb-3">Where the money goes</h3>
+            <Card className="reveal d1"><h3 className="font-display text-xl font-black text-primary mb-3">Where the money goes</h3>
               <ul className="grid gap-2">{[["50%", "Programs: curriculum, workshops, facilitator training"], ["25%", "Operations: staffing, technology, compliance"], ["15%", "Marketing: content, social, event outreach"], ["10%", "Reserve: emergency and growth fund"]].map(([p, d]) => (
                 <li key={p} className="flex gap-3 items-center text-[15px] text-foreground/80"><span className="font-mono font-bold text-accent w-12">{p}</span>{d}</li>))}</ul></Card>
-            <Card className="reveal d3"><h3 className="font-display text-xl font-black text-primary mb-2">Corporate or foundation?</h3><p className="text-muted-foreground text-[15px]">Explore our partnership tiers, from Community Supporter to Founding Partner with a board advisory seat.</p><Btn to="/get-involved#partners" variant="ghost" className="mt-4" arrow>See partnership tiers</Btn></Card>
+            <Card className="reveal d2"><h3 className="font-display text-xl font-black text-primary mb-2">Corporate or foundation?</h3><p className="text-muted-foreground text-[15px]">Explore our partnership tiers, from Community Supporter to Founding Partner with a board advisory seat.</p><Btn to="/get-involved#partners" variant="ghost" className="mt-4" arrow>See partnership tiers</Btn></Card>
           </div>
         </div>
       </Section>

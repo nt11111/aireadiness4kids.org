@@ -6,7 +6,7 @@ export const ORG = {
   name: "ARK",
   fullName: "AI Readiness for Kids",
   tagline: "Think. Prompt. Responsibly.",
-  email: "hello@aireadiness4kids.org",
+  email: "neiltodkar@gmail.com",
   mission:
     "ARK is a 501(c)(3) nonprofit dedicated to equipping K-12 students with the knowledge, skills, and ethical grounding to use artificial intelligence responsibly, safely, and thoughtfully, for themselves, their communities, and the world.",
   vision:
@@ -84,12 +84,6 @@ export const VALUES = [
   { word: "Empowerment", desc: "Students become informed participants, not passive consumers. Future builders, critics, and policy-makers." },
   { word: "Community", desc: "Built with parents, teachers, and students, not just for them. Real change happens in schools, families, and neighborhoods." },
   { word: "Ethics First", desc: "Every lesson grounds AI use in human values and real-world consequences." },
-];
-
-export const TESTIMONIALS = [
-  { quote: "For the first time, my students were the ones explaining to me how the recommendation algorithm worked. The lessons gave them language they did not have before.", name: "Middle school teacher", role: "Pilot classroom, AI Investigators track" },
-  { quote: "The parent night changed the conversation at our dinner table. I finally understood what my daughter was actually doing with these apps, and we set rules together.", name: "Parent", role: "Parent Information Night attendee" },
-  { quote: "Leading a workshop for younger kids at my own school made me realize how much I had learned. It felt like real responsibility.", name: "Student Ambassador", role: "Grade 11" },
 ];
 
 export const ROADMAP = [

@@ -49,7 +49,7 @@ export default function GetInvolved() {
               <h3 className="font-display text-2xl font-black text-white">Why student ambassadors?</h3>
               <p className="text-white/65 leading-relaxed mt-4">Ambassadors create an organic reach multiplier. One trained teen can run workshops for hundreds of classmates without a staff facilitator present. This mirrors the model used successfully by Cyber For Youth.</p>
               <div className="grid grid-cols-2 gap-4 mt-8">
-                {[["100+", "Ambassadors by Year 5"], ["9-12", "Grades eligible"]].map(([n, l]) => (
+                {[["9-12", "Grades eligible"], ["1 day", "Certification training"]].map(([n, l]) => (
                   <div key={l} className="bg-white/8 border border-white/12 rounded-xl p-5"><div className="font-display text-3xl font-black text-glow">{n}</div><div className="text-white/60 text-xs font-mono uppercase tracking-wider mt-1">{l}</div></div>
                 ))}
               </div>

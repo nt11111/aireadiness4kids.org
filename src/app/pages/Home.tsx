@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle2, BookOpen, Users, Home as HomeIcon, Star, GraduationCap, Trophy, Quote, ShieldCheck, Sparkles, HeartHandshake } from "lucide-react";
-import { ORG, TRUST, IMPACT, TRACKS, PROGRAMS, TESTIMONIALS } from "../lib/content";
+import { ArrowRight, CheckCircle2, BookOpen, Users, Home as HomeIcon, Star, GraduationCap, Trophy, ShieldCheck, Sparkles, HeartHandshake } from "lucide-react";
+import { ORG, TRUST, IMPACT, TRACKS, PROGRAMS } from "../lib/content";
 import { Section, Eyebrow, H2, Lead, SectionHead, Btn, Card, IconBox, CTABand } from "../components/site/Primitives";
 import { Counter } from "../components/site/Counter";
 
@@ -155,23 +155,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── TESTIMONIALS ─── */}
-      <Section>
-        <SectionHead center eyebrow="What people say" title="Voices from the classroom and the kitchen table." />
-        <div className="grid md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <Card key={t.name} className={`flex flex-col reveal d${i + 1}`}>
-              <Quote size={28} className="text-accent/40 mb-4" />
-              <p className="text-foreground/80 leading-relaxed flex-1 text-[15.5px]">"{t.quote}"</p>
-              <div className="mt-6 pt-5 border-t border-border">
-                <div className="font-semibold text-primary">{t.name}</div>
-                <div className="text-xs text-muted-foreground font-mono mt-0.5">{t.role}</div>
-              </div>
-            </Card>
-          ))}
-        </div>
-        <p className="text-center text-xs text-muted-foreground font-mono mt-6">Illustrative quotes from pilot sessions. Replace with attributed testimonials as programs launch.</p>
-      </Section>
 
       {/* ─── INTERESTED IN CREATING CHANGE? ─── */}
       <Section className="bg-white border-y border-border">
