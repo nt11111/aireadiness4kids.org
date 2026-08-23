@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Check, Target, Pencil, MessageSquare, FolderOpen, Clock, ClipboardCheck } from "lucide-react";
+import { ChevronDown, Check, Target, Pencil, MessageSquare, FolderOpen, Clock, ClipboardCheck, Presentation, ExternalLink } from "lucide-react";
 import { TRACKS } from "../lib/content";
 import { PageHero } from "../components/site/PageHero";
 import { Section, SectionHead, Btn, Card, IconBox, CTABand } from "../components/site/Primitives";
 
-function Module({ n, t, d, topics, color, open, onToggle }: { n: number; t: string; d: string; topics: string[]; color: string; open: boolean; onToggle: () => void }) {
+function Module({ n, t, d, topics, color, deck, open, onToggle }: { n: number; t: string; d: string; topics: string[]; color: string; deck?: string; open: boolean; onToggle: () => void }) {
   return (
     <div className={`bg-card border rounded-2xl overflow-hidden transition-all ${open ? "border-accent/40 shadow-[0_12px_40px_rgba(13,31,51,.10)]" : "border-border"}`}>
       <button onClick={onToggle} aria-expanded={open} className="w-full flex items-center gap-5 p-6 text-left">
@@ -25,6 +25,11 @@ function Module({ n, t, d, topics, color, open, onToggle }: { n: number; t: stri
                 <li key={tp} className="flex gap-2.5 text-[15px] text-foreground/75"><Check size={17} className="text-accent shrink-0 mt-0.5" />{tp}</li>
               ))}
             </ul>
+            {deck && (
+              <a href={deck} target="_blank" rel="noopener noreferrer" className="sheen inline-flex items-center gap-2 mt-5 bg-accent text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-accent/90 hover:scale-[1.03] transition-all shadow-md shadow-accent/25">
+                <Presentation size={16} /> View slide deck <ExternalLink size={13} className="opacity-70" />
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -93,13 +98,18 @@ export default function Curriculum() {
                 <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">Theme</div>
                 <div className="font-display text-2xl font-black mt-1">{track.focus}</div>
                 <p className="text-white/80 text-sm mt-3">{track.modules} standalone modules · 60 to 90 minutes each.</p>
+                {track.folder && (
+                  <a href={track.folder} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 bg-white text-primary px-4 py-2.5 rounded-full text-sm font-bold hover:bg-white/90 hover:scale-[1.03] transition-all">
+                    <FolderOpen size={16} /> Open all {track.modules} slide decks <ExternalLink size={13} className="opacity-60" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
 
           <div className="grid gap-3">
             {track.list.map((m, i) => (
-              <Module key={m.t} n={i + 1} t={m.t} d={m.d} topics={m.topics} color={track.color === "#0D1F33" ? "linear-gradient(140deg,#1C507A,#0D1F33)" : `linear-gradient(140deg,${track.color},#1C507A)`} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
+              <Module key={m.t} n={i + 1} t={m.t} d={m.d} topics={m.topics} deck={m.deck} color={track.color === "#0D1F33" ? "linear-gradient(140deg,#1C507A,#0D1F33)" : `linear-gradient(140deg,${track.color},#1C507A)`} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
             ))}
           </div>
         </div>
