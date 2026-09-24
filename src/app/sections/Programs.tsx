@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
 import { ArrowRight, Clock, Home, GraduationCap, Trophy, BarChart3, Mic, Mail, Share2, BookOpen, Library, Check } from "lucide-react";
 import { TRACKS } from "../lib/content";
+import { trackStyle } from "../lib/tracks";
 import { PageHero } from "../components/site/PageHero";
 import { Section, SectionHead, Btn, Card, IconBox, CTABand, Eyebrow, H2, Lead } from "../components/site/Primitives";
+import { cn } from "../components/ui/utils";
 
 const formats = [
   { t: "Express Workshop", time: "60 minutes", d: "A single-session introduction. Best for one classroom or a small group." },
@@ -32,7 +33,7 @@ export default function Programs() {
         lead="All curriculum and core programs stay free to students and schools. We meet learners in classrooms, families at evening events, and teachers through professional development." />
 
       {/* Program 1 */}
-      <Section className="bg-white border-b border-border">
+      <Section className="bg-surface border-b border-border">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           <div className="reveal">
             <Eyebrow>Program 01 · The centerpiece</Eyebrow>
@@ -40,18 +41,21 @@ export default function Programs() {
             <Lead>A downloadable K-12 curriculum in three grade-banded tracks. Lesson plans, slide decks, facilitator guides, worksheets, and discussion banks. Refreshed every year.</Lead>
             <ul className="grid gap-3 mt-7">
               {["No login required, no paywall", "Reviewed by classroom teachers before release", "Standalone modules, teach in any order", "Updated annually to reflect AI developments"].map((x) => (
-                <li key={x} className="flex gap-3 text-foreground/80"><Check size={18} className="text-accent shrink-0 mt-1" />{x}</li>
+                <li key={x} className="flex gap-3 text-foreground/80"><Check size={18} aria-hidden="true" className="text-brand shrink-0 mt-1" />{x}</li>
               ))}
             </ul>
             <Btn to="/curriculum" className="mt-9" arrow>Browse all 17 modules</Btn>
           </div>
           <div className="grid gap-3 reveal d2">
-            {TRACKS.map((t) => (
-              <Link key={t.id} to={`/curriculum#${t.id}`} className="group flex items-center justify-between rounded-2xl p-6 text-white relative overflow-hidden hover:-translate-y-1 transition-transform" style={{ background: `linear-gradient(140deg, ${t.color === "#0D1F33" ? "#1C507A" : t.color}, #0D1F33)` }}>
-                <div><div className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">{t.grades} · {t.modules} modules</div><div className="font-display text-2xl font-black mt-1">{t.label}</div></div>
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            ))}
+            {TRACKS.map((t) => {
+              const s = trackStyle(t.id);
+              return (
+                <a key={t.id} href={`/curriculum#${t.id}`} className={cn("group flex items-center justify-between rounded-2xl p-6 relative overflow-hidden shadow-1 hover:-translate-y-1 hover:shadow-2 transition-[transform,box-shadow] duration-[var(--dur-slow)]", s.fill)}>
+                  <div><div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]">{t.grades} · {t.modules} modules</div><div className="font-display text-2xl font-black mt-1">{t.label}</div></div>
+                  <ArrowRight aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </Section>
@@ -62,9 +66,9 @@ export default function Programs() {
         <div className="grid md:grid-cols-3 gap-5">
           {formats.map((f, i) => (
             <Card key={f.t} className={`reveal d${i + 1}`}>
-              <IconBox><Clock size={22} /></IconBox>
-              <div className="font-mono text-xs text-accent font-bold tracking-wider uppercase">{f.time}</div>
-              <h3 className="font-display text-2xl font-black text-primary mt-1 mb-3">{f.t}</h3>
+              <IconBox><Clock size={22} aria-hidden="true" /></IconBox>
+              <div className="font-mono text-xs text-brand font-bold tracking-wider uppercase">{f.time}</div>
+              <h3 className="font-display text-2xl font-black text-ink mt-1 mb-3">{f.t}</h3>
               <p className="text-muted-foreground text-[15px] leading-relaxed">{f.d}</p>
             </Card>
           ))}
@@ -73,15 +77,15 @@ export default function Programs() {
       </Section>
 
       {/* 3-6 */}
-      <Section className="bg-white border-y border-border">
+      <Section className="bg-surface border-y border-border">
         <SectionHead eyebrow="More programs" title="Reaching families, teachers, and the wider community." />
         <div className="grid md:grid-cols-2 gap-5">
           {more.map(({ id, Icon, tag, t, d }, i) => (
-            <Card key={id} className={`scroll-mt-28 reveal d${(i % 2) + 1}`}>
-              <div id={id} />
-              <IconBox><Icon size={22} /></IconBox>
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent font-bold">{tag}</div>
-              <h3 className="font-display text-2xl font-black text-primary mt-1 mb-3">{t}</h3>
+            <Card key={id} className={`reveal d${(i % 2) + 1}`}>
+              <div id={id}  />
+              <IconBox><Icon size={22} aria-hidden="true" /></IconBox>
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand font-bold">{tag}</div>
+              <h3 className="font-display text-2xl font-black text-ink mt-1 mb-3">{t}</h3>
               <p className="text-muted-foreground text-[15px] leading-relaxed">{d}</p>
             </Card>
           ))}
@@ -93,7 +97,7 @@ export default function Programs() {
         <SectionHead center eyebrow="Content and media" title="Staying connected between events." />
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {channels.map(({ Icon, t, d }, i) => (
-            <Card key={t} className={`reveal d${(i % 5) + 1}`}><IconBox className="w-10 h-10"><Icon size={18} /></IconBox><h3 className="font-display text-lg font-bold text-primary mb-1.5">{t}</h3><p className="text-muted-foreground text-sm leading-relaxed">{d}</p></Card>
+            <Card key={t} className={`reveal d${(i % 5) + 1}`}><IconBox className="w-10 h-10"><Icon size={18} aria-hidden="true" /></IconBox><h3 className="font-display text-lg font-bold text-ink mb-1.5">{t}</h3><p className="text-muted-foreground text-sm leading-relaxed">{d}</p></Card>
           ))}
         </div>
       </Section>

@@ -4,3 +4,16 @@ dist
 *.log
 .vite
 graphify-out/
+
+# Astro / Netlify build output
+.astro
+.netlify
+
+# Playwright
+screenshots/
+test-results/
+playwright-report/
+blob-report/
+
+# iCloud-safe git dir (local only)
+.git.nosync

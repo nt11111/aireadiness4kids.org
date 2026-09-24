@@ -1,3 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+/* Self-hosted via @fontsource: no Google Fonts request (friendlier to school networks). */
+/* Fraunces: display headings only. Variable wght + optical size. */
+@import "@fontsource-variable/fraunces/opsz.css";
+/* Atkinson Hyperlegible: body and UI. Built for legibility for young and struggling readers. */
+@import "@fontsource/atkinson-hyperlegible/400.css";
+@import "@fontsource/atkinson-hyperlegible/400-italic.css";
+@import "@fontsource/atkinson-hyperlegible/700.css";
+@import "@fontsource/atkinson-hyperlegible/700-italic.css";

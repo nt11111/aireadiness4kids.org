@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { CurriculumTop, CurriculumTracks, CurriculumBottom } from "../app/sections/Curriculum";
+export const prerender = true;
+// Brief section 2: replaced by /courses (with a redirect from here) in Phase 1.
+---
+
+<BaseLayout title="Curriculum | ARK · AI Readiness for Kids" description="A free K-12 AI literacy curriculum: three grade-banded tracks and 17 standalone modules, with slide decks for every lesson.">
+  <CurriculumTop />
+  <CurriculumTracks client:load />
+  <CurriculumBottom />
+</BaseLayout>

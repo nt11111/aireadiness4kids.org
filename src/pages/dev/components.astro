@@ -1,0 +1,301 @@
+---
+// Hidden style guide (brief section 6). Not linked anywhere; noindex.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import themeCss from "../../styles/theme.css?raw";
+import { TRACKS } from "../../app/lib/content";
+import { Button } from "../../app/components/ui/button";
+import { Badge } from "../../app/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../../app/components/ui/card";
+import { Progress } from "../../app/components/ui/progress";
+import { ProgressRing } from "../../app/components/ui/progress-ring";
+import { Logo } from "../../app/components/site/Logo";
+import { ArrowRight, BookOpen, PlayCircle, Split, CircleCheck, PenLine, ListChecks, Hammer, PencilLine, BadgeCheck, Clock } from "lucide-react";
+export const prerender = true;
+
+// Token values come straight from theme.css so this page can't drift from the source.
+const rootStart = themeCss.indexOf(":root {");
+const root = themeCss.slice(rootStart, themeCss.indexOf("}", rootStart));
+const hex: Record<string, string> = Object.fromEntries([...root.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{6})\b/g)].map((m) => [m[1], m[2].toUpperCase()]));
+hex.white = "#FFFFFF";
+const lum = (h: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const ratio = (a: string, b: string) => { const [x, y] = [lum(hex[a]), lum(hex[b])].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+
+// [token, role, sample text color, sample background] : the pairing each token is meant for.
+type Row = [string, string, string, string];
+const groups: { title: string; rows: Row[] }[] = [
+  { title: "Surfaces and ink", rows: [
+    ["bg", "Page background", "ink", "bg"], ["surface", "Cards", "ink", "surface"], ["surface-2", "Muted panels", "ink-soft", "surface-2"],
+    ["ink", "Body text", "ink", "bg"], ["ink-soft", "Secondary text", "ink-soft", "bg"], ["ink-faint", "Captions and meta", "ink-faint", "surface-2"],
+    ["line", "Dividers (decorative only)", "line", "surface"], ["line-strong", "Form-control borders", "line-strong", "surface"],
+  ]},
+  { title: "Brand and accent", rows: [
+    ["brand", "Primary buttons, links", "white", "brand"], ["brand-soft", "Brand tint", "brand", "brand-soft"],
+    ["accent", "Marigold: highlights (ink text only)", "ink", "accent"], ["accent-strong", "Progress fills on light", "accent-strong", "surface-2"], ["glow", "Emphasis on dark sections", "glow", "ink"],
+  ]},
+  { title: "Tracks", rows: TRACKS.flatMap((t) => [
+    [`track-${t.id}`, `${t.label} fill`, `track-${t.id}-on`, `track-${t.id}`],
+    [`track-${t.id}-ink`, `${t.label} text and rings`, `track-${t.id}-ink`, "surface-2"],
+    [`track-${t.id}-soft`, `${t.label} chip tint`, `track-${t.id}-ink`, `track-${t.id}-soft`],
+  ] as Row[]) },
+  { title: "Status", rows: [["success", "Success", "success", "surface-2"], ["warning", "Warning, draft", "warning", "surface-2"], ["danger", "Errors, destructive", "white", "danger"]] },
+];
+const need = (tok: string) => (tok.startsWith("line") || tok === "accent-strong" ? 3 : 4.5);
+
+const typeScale = [
+  ["text-display-xl", "Display XL", "56 / 1.05", "font-display font-semibold"],
+  ["text-display-lg", "Display L: page titles", "44 / 1.1", "font-display font-semibold"],
+  ["text-display-md", "Display M: section titles", "34 / 1.15", "font-display font-semibold"],
+  ["text-display-sm", "Display S: card titles", "26 / 1.2", "font-display font-medium"],
+  ["text-title", "Title", "20 / 1.3", "font-display font-semibold"],
+  ["text-lesson-explorers", "Lesson body, Explorers (K-5)", "20 / 1.6", "font-sans"],
+  ["text-lesson", "Lesson body", "18 / 1.7", "font-sans"],
+  ["text-ui", "UI text", "16 / 1.5", "font-sans"],
+  ["text-small", "Small, meta", "14 / 1.45", "font-sans"],
+] as const;
+
+const variants = ["default", "accent", "secondary", "outline", "ghost", "link", "destructive"] as const;
+const states = ["Default", "Hover", "Focus", "Pressed", "Disabled", "Loading"] as const;
+const demo: Record<string, string | undefined> = { Hover: "hover", Focus: "focus", Pressed: "active" };
+
+const stepTypes = [["explainer", BookOpen], ["video", PlayCircle], ["scenario", Split], ["check", CircleCheck], ["reflect", PenLine], ["recap", ListChecks], ["activity", Hammer]] as const;
+const inv = TRACKS[1];
+const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], ["cards", "Cards"], ["chips", "Chips"], ["progress", "Progress"], ["brand", "Logo and focus"]];
+---
+
+<BaseLayout title="Components | ARK design system" noindex>
+  <div class="bg-surface-2 border-b border-line pt-32 pb-10 px-6">
+    <div class="max-w-site mx-auto">
+      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Phase 0 · Hidden style guide</p>
+      <h1 class="text-display-lg mt-2 text-ink">ARK design system</h1>
+      <p class="text-lesson text-ink-soft mt-3 max-w-reading">Tokens from <code class="font-mono text-small">src/styles/theme.css</code> (brief section 3), checked for WCAG AA by <code class="font-mono text-small">npm run check:contrast</code>. Card and progress content below is sample data for layout only.</p>
+      <nav aria-label="Style guide sections" class="mt-6">
+        <ul class="flex flex-wrap gap-2">
+          {sections.map(([id, label]) => <li><a href={`#${id}`} class="inline-flex min-h-11 items-center rounded-full border-[1.5px] border-input bg-surface px-4 text-ui font-bold text-ink hover:border-brand hover:text-brand">{label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="px-6"><div class="max-w-site mx-auto py-16 space-y-24">
+    <!-- Type -->
+    <section id="type" aria-labelledby="type-h">
+      <h2 id="type-h" class="text-display-md text-ink">Type scale</h2>
+      <p class="text-ui text-ink-soft mt-2">Fraunces (500-600) for display headings only. Atkinson Hyperlegible for everything else.</p>
+      <div class="mt-8 divide-y divide-line border-y border-line">
+        {typeScale.map(([cls, name, spec, family]) => (
+          <div class="grid gap-2 py-5 md:grid-cols-[220px_1fr] md:items-baseline">
+            <div class="text-small text-ink-soft"><span class="font-bold text-ink">{name}</span><br /><code class="font-mono">{cls}</code> · {spec}</div>
+            <p class={`${cls} ${family} text-ink`}>Think. Prompt. Responsibly.</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-10 grid gap-8 lg:grid-cols-2">
+        <div>
+          <h3 class="text-title text-ink">Lesson body (18px, 68ch)</h3>
+          <p class="text-lesson text-ink mt-3 max-w-reading">Training data is the set of examples an AI system learns from. If some groups of people are missing from those examples, the system can work less well for them. That is one way bias gets into AI.</p>
+        </div>
+        <div>
+          <h3 class="text-title text-ink">Explorers lesson body (20px, 1.6)</h3>
+          <p class="text-lesson-explorers text-ink mt-3 max-w-reading">AI is a computer program that learns from lots of examples. It can be helpful. It can also make mistakes. Always check!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color -->
+    <section id="color" aria-labelledby="color-h">
+      <h2 id="color-h" class="text-display-md text-ink">Color</h2>
+      <p class="text-ui text-ink-soft mt-2">Each swatch shows the pairing it is meant for and its contrast ratio. Text needs 4.5:1; borders and progress fills need 3:1.</p>
+      {groups.map((g) => (
+        <div class="mt-10">
+          <h3 class="text-title text-ink">{g.title}</h3>
+          <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {g.rows.map(([tok, role, fg, bg]) => {
+              const r = ratio(fg, bg);
+              const isLine = tok.startsWith("line") || tok === "accent-strong";
+              return (
+                <li class="overflow-hidden rounded-lg border border-line bg-surface shadow-1">
+                  <div class="grid h-20 place-items-center border-b border-line" style={`background:var(--${bg})`}>
+                    {isLine
+                      ? <span class="block h-2.5 w-3/4 rounded-full" style={`background:var(--${tok})`} aria-hidden="true"></span>
+                      : <span class="text-title font-bold" style={`color:${fg === "white" ? "#FFFFFF" : `var(--${fg})`}`} aria-hidden="true">Aa</span>}
+                  </div>
+                  <div class="p-3 text-small">
+                    <div class="font-bold text-ink">--{tok}</div>
+                    <div class="font-mono text-ink-soft">{hex[tok]}</div>
+                    <div class="text-ink-soft">{role}</div>
+                    {tok === "line"
+                      ? <div class="mt-1 text-ink-soft">{r.toFixed(2)}:1 · decorative only, never for text or controls</div>
+                      : r >= need(tok)
+                        ? <div class="mt-1 font-bold text-success">{r.toFixed(2)}:1 · passes {need(tok) === 3 ? "3:1" : "AA"}</div>
+                        : <div class="mt-1 font-bold text-danger">{r.toFixed(2)}:1 · FAILS {need(tok) === 3 ? "3:1" : "AA"}</div>}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </section>
+
+    <!-- Buttons -->
+    <section id="buttons" aria-labelledby="buttons-h">
+      <h2 id="buttons-h" class="text-display-md text-ink">Buttons</h2>
+      <p class="text-ui text-ink-soft mt-2">Hover, focus, and pressed are forced here with <code class="font-mono text-small">data-demo</code> so every state is visible. Default height 44px; large 48px (Explorers tap targets).</p>
+      <div class="mt-8 overflow-x-auto rounded-lg border border-line bg-surface">
+        <table class="w-full min-w-[860px] text-left">
+          <caption class="sr-only">Button variants in each state</caption>
+          <thead class="bg-surface-2 text-small text-ink-soft">
+            <tr><th scope="col" class="p-3 font-bold">Variant</th>{states.map((s) => <th scope="col" class="p-3 font-bold">{s}</th>)}</tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            {variants.map((v) => (
+              <tr>
+                <th scope="row" class="p-3 font-mono text-small text-ink">{v}</th>
+                {states.map((s) => (
+                  <td class="p-3">
+                    <Button variant={v} data-demo={demo[s]} disabled={s === "Disabled"} loading={s === "Loading"}>{v === "link" ? "Read more" : "Continue"}</Button>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="on-dark mt-6 rounded-lg bg-ink p-6">
+        <h3 class="text-title text-white">On dark sections</h3>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <Button>Primary</Button>
+          <Button variant="light">Light</Button>
+          <Button variant="outline-light">Outline light</Button>
+          <Button variant="accent">Accent</Button>
+          <Button variant="outline-light" data-demo="focus">Focused</Button>
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <Button size="sm">Small</Button>
+        <Button>Default</Button>
+        <Button size="lg">Large <ArrowRight aria-hidden="true" /></Button>
+        <Button size="icon" variant="outline"><ArrowRight aria-hidden="true" /><span class="sr-only">Next step</span></Button>
+      </div>
+    </section>
+
+    <!-- Cards -->
+    <section id="cards" aria-labelledby="cards-h">
+      <h2 id="cards-h" class="text-display-md text-ink">Cards</h2>
+      <p class="text-ui text-ink-soft mt-2">Radius 14px, <code class="font-mono text-small">shadow-1</code> at rest and <code class="font-mono text-small">shadow-2</code> on hover. Sample data.</p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-3">
+        <Card className="overflow-hidden gap-0">
+          <div class="bg-track-investigators text-track-investigators-on p-6">
+            <Badge variant="neutral" className="bg-white/90 text-ink">{inv.grades}</Badge>
+            <h3 class="text-display-sm mt-3">{inv.label}</h3>
+            <p class="text-small mt-1">{inv.focus}</p>
+          </div>
+          <CardContent className="flex items-center gap-4 !p-6">
+            <ProgressRing done={2} total={inv.modules} label={`${inv.label} progress (sample)`} track="investigators" />
+            <div class="text-small text-ink-soft"><span class="font-bold text-ink">{inv.modules} modules</span><br />2 of {inv.modules} complete</div>
+          </CardContent>
+          <CardFooter className="!px-6 !pb-6">
+            <Button className="w-full">Resume course <ArrowRight aria-hidden="true" /></Button>
+          </CardFooter>
+        </Card>
+
+        <Card className="p-6">
+          <div class="flex items-start gap-4">
+            <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-track-investigators font-display font-black text-track-investigators-on" aria-hidden="true">2</span>
+            <div class="min-w-0">
+              <h3 class="font-display text-title font-semibold text-ink">Bias in AI</h3>
+              <p class="text-small text-ink-soft mt-1 flex items-center gap-1.5"><Clock className="size-4" aria-hidden="true" /> 60 min · 6 steps</p>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <Badge variant="draft"><PencilLine aria-hidden="true" /> Draft: under expert review</Badge>
+          </div>
+          <div class="mt-5">
+            <div class="mb-2 flex justify-between text-small"><span class="font-bold text-ink">Progress</span><span class="text-ink-soft">0 of 6 steps</span></div>
+            <Progress value={0} aria-label="Bias in AI progress (sample)" />
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Card title</CardTitle>
+            <CardDescription>Supporting text in ink-soft on a white surface.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p class="text-ui text-ink">Body content sits here. Cards group one idea with one clear action.</p>
+          </CardContent>
+          <CardFooter className="gap-3">
+            <Button size="sm">Primary</Button>
+            <Button size="sm" variant="ghost">Secondary</Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </section>
+
+    <!-- Chips -->
+    <section id="chips" aria-labelledby="chips-h">
+      <h2 id="chips-h" class="text-display-md text-ink">Chips</h2>
+      <h3 class="text-title text-ink mt-8">Tracks</h3>
+      <div class="mt-3 flex flex-wrap gap-2">
+        {TRACKS.map((t) => <Badge variant={t.id as "explorers" | "investigators" | "architects"}>{t.label} · {t.short}</Badge>)}
+        {TRACKS.map((t) => <Badge variant={`${t.id}-solid` as "explorers-solid"}>{t.label}</Badge>)}
+      </div>
+      <h3 class="text-title text-ink mt-8">Review status</h3>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <Badge variant="draft"><PencilLine aria-hidden="true" /> Draft: under expert review</Badge>
+        <Badge variant="reviewed"><BadgeCheck aria-hidden="true" /> Reviewed by [names]</Badge>
+      </div>
+      <h3 class="text-title text-ink mt-8">Step types</h3>
+      <div class="mt-3 flex flex-wrap gap-2">
+        {stepTypes.map(([name, Icon]) => <Badge variant="neutral"><Icon aria-hidden="true" /> {name}</Badge>)}
+      </div>
+      <h3 class="text-title text-ink mt-8">Other</h3>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <Badge>Brand</Badge><Badge variant="secondary">Secondary</Badge><Badge variant="outline">Outline</Badge><Badge variant="accent">Completed</Badge><Badge variant="destructive">Error</Badge>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section id="progress" aria-labelledby="progress-h">
+      <h2 id="progress-h" class="text-display-md text-ink">Progress</h2>
+      <p class="text-ui text-ink-soft mt-2">Rings use each track's text-safe shade so the fill meets 3:1 on light surfaces. Sample values.</p>
+      <div class="mt-8 flex flex-wrap items-end gap-8">
+        <ProgressRing done={0} total={6} label="Sample: not started" size="sm" />
+        <ProgressRing done={3} total={6} label="Sample: brand ring" />
+        <ProgressRing done={6} total={6} label="Sample: complete" size="lg" />
+        {TRACKS.map((t, i) => <ProgressRing done={i + 2} total={t.modules} label={`Sample: ${t.label}`} track={t.id as "explorers" | "investigators" | "architects"} size="md" />)}
+      </div>
+      <div class="mt-10 max-w-reading space-y-4">
+        <div><div class="mb-2 text-small font-bold text-ink">Step 3 of 6</div><Progress value={50} aria-label="Sample module progress" /></div>
+        <div><div class="mb-2 text-small font-bold text-ink">Complete</div><Progress value={100} aria-label="Sample completed module" /></div>
+      </div>
+    </section>
+
+    <!-- Logo and focus -->
+    <section id="brand" aria-labelledby="brand-h">
+      <h2 id="brand-h" class="text-display-md text-ink">Logo and focus</h2>
+      <p class="text-ui text-ink-soft mt-2">One <code class="font-mono text-small">&lt;Logo /&gt;</code> component; the mark appears at small sizes only. Focus is a 3px ring that switches to marigold on dark sections.</p>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <div class="rounded-lg border border-line bg-surface p-8">
+          <Logo />
+          <div class="mt-6"><Logo showMark={false} /></div>
+          <div class="mt-8"><Button variant="outline" data-demo="focus">Focused on light</Button></div>
+        </div>
+        <div class="on-dark rounded-lg bg-ink p-8">
+          <Logo tone="light" />
+          <div class="mt-6"><Logo tone="light" showMark={false} /></div>
+          <div class="mt-8"><Button variant="outline-light" data-demo="focus">Focused on dark</Button></div>
+        </div>
+      </div>
+      <h3 class="text-title text-ink mt-10">Radius and elevation</h3>
+      <div class="mt-4 flex flex-wrap gap-6">
+        <div class="grid size-28 place-items-center rounded-sm border border-line bg-surface text-small text-ink-soft">sm · 8</div>
+        <div class="grid size-28 place-items-center rounded-lg border border-line bg-surface text-small text-ink-soft shadow-1">14 · shadow-1</div>
+        <div class="grid size-28 place-items-center rounded-xl border border-line bg-surface text-small text-ink-soft shadow-2">20 · shadow-2</div>
+      </div>
+    </section>
+  </div></div>
+</BaseLayout>

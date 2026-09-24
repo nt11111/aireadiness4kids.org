@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buttonVariants } from "../app/components/ui/button";
+export const prerender = true;
+---
+
+<BaseLayout title="Page not found | ARK · AI Readiness for Kids" noindex>
+  <section class="min-h-[70vh] grid place-items-center px-6 pt-28 pb-16 text-center">
+    <div>
+      <img src="/brand/ark-mark-web.png" alt="" width="160" height="123" class="w-40 h-auto mx-auto mb-6 ark-float" />
+      <h1 class="font-display text-5xl font-black text-ink">Page not found.</h1>
+      <p class="text-muted-foreground mt-3">Even elephants forget a path sometimes.</p>
+      <a href="/" class:list={[buttonVariants(), "mt-7"]}>Back home</a>
+    </div>
+  </section>
+</BaseLayout>

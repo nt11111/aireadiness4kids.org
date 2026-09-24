@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { Instagram, Linkedin, Mail } from "lucide-react";
-import { Brand } from "./Logo";
+import { Mail } from "lucide-react";
+import { Logo } from "./Logo";
+import { ORG } from "../../lib/content";
 
 const cols = [
   { heading: "Our Work", links: [["Curriculum", "/curriculum"], ["Programs", "/programs"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"]] },
@@ -10,43 +10,38 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="relative bg-primary text-white overflow-hidden">
-      <img src="/brand/ark-mark-web.png" alt="" aria-hidden className="absolute -right-10 -bottom-12 w-[340px] opacity-[0.06] pointer-events-none select-none" />
-      <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-10">
-        <div className="grid lg:grid-cols-[1.4fr_2fr] gap-12 pb-12 border-b border-white/10">
+    <footer className="on-dark relative overflow-hidden bg-ink text-white">
+      <div className="relative mx-auto max-w-7xl px-6 pb-10 pt-16">
+        <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.4fr_2fr]">
           <div>
-            <Brand light />
-            <p className="text-white/55 text-[15px] leading-relaxed mt-5 max-w-sm">
+            <a href="/" aria-label="ARK AIReadiness4Kids, home" className="inline-block rounded-md">
+              <Logo tone="light" />
+            </a>
+            <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/75">
               A 501(c)(3) nonprofit equipping K-12 students, teachers, and parents with the knowledge, skills, and ethical grounding to use AI responsibly.
             </p>
-            <div className="flex gap-2.5 mt-6">
-              {[
-                { Icon: Instagram, label: "Instagram", href: "#" },
-                { Icon: Linkedin, label: "LinkedIn", href: "#" },
-                { Icon: Mail, label: "Email", href: "mailto:neiltodkar@gmail.com" },
-              ].map(({ Icon, label, href }) => (
-                <a key={label} href={href} aria-label={label} className="w-10 h-10 rounded-xl bg-white/6 border border-white/10 grid place-items-center text-white/70 hover:text-white hover:bg-white/12 hover:-translate-y-0.5 transition-all">
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
+            <a href={`mailto:${ORG.email}`} className="mt-6 inline-flex items-center gap-2.5 text-[15px] text-white/85 underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">
+              <Mail aria-hidden="true" className="size-[18px]" /> {ORG.email}
+            </a>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
             {cols.map((c) => (
-              <div key={c.heading}>
-                <div className="text-white/40 text-[10px] font-mono uppercase tracking-[0.18em] mb-4">{c.heading}</div>
-                {c.links.map(([label, to]) => (
-                  <Link key={label} to={to} className="block text-white/65 hover:text-glow text-sm py-1.5 transition-colors">{label}</Link>
-                ))}
-              </div>
+              <nav key={c.heading} aria-label={c.heading}>
+                <h2 className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">{c.heading}</h2>
+                <ul>
+                  {c.links.map(([label, href]) => (
+                    <li key={label}><a href={href} className="block py-1.5 text-sm text-white/85 transition-colors hover:text-glow">{label}</a></li>
+                  ))}
+                </ul>
+              </nav>
             ))}
           </div>
         </div>
 
-        <div className="pt-7 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-white/35 text-xs font-mono">© {new Date().getFullYear()} ARK · AI Readiness for Kids · 501(c)(3) nonprofit</p>
-          <p className="text-glow/70 text-xs font-mono tracking-wider">Think. Prompt. Responsibly.</p>
+        <div className="flex flex-col items-center justify-between gap-3 pt-7 sm:flex-row">
+          <p className="font-mono text-xs text-white/70">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
+          <p className="font-mono text-xs tracking-wider text-glow">Think. Prompt. Responsibly.</p>
         </div>
       </div>
     </footer>

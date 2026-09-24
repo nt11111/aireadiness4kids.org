@@ -30,7 +30,7 @@ export const IMPACT = [
 
 export const TRACKS = [
   {
-    id: "explorers", short: "K-5", label: "AI Explorers", grades: "Grades K-5", focus: "Discovery and Awareness", modules: 5, color: "#45D2FF",
+    id: "explorers", short: "K-5", label: "AI Explorers", grades: "Grades K-5", focus: "Discovery and Awareness", modules: 5, color: "var(--track-explorers)",
     blurb: "Young learners discover that AI is all around them, how it helps and sometimes confuses us, and what it means to be a thoughtful user of technology.",
     folder: "https://drive.google.com/drive/folders/1RYQ5lLN-0gKUg4ef3VwQKcWJTPnEaKiR",
     list: [
@@ -42,7 +42,7 @@ export const TRACKS = [
     ],
   },
   {
-    id: "investigators", short: "6-8", label: "AI Investigators", grades: "Grades 6-8", focus: "Critical Thinking and Ethics", modules: 6, color: "#2F8FE6",
+    id: "investigators", short: "6-8", label: "AI Investigators", grades: "Grades 6-8", focus: "Critical Thinking and Ethics", modules: 6, color: "var(--track-investigators)",
     blurb: "Going deeper. How does AI actually work, what are its real-world consequences, and what does responsible use look like in school and daily life?",
     folder: "https://drive.google.com/drive/folders/1yp7PwpzLostPpjQt3sKvzkiMISs6vFF4",
     list: [
@@ -55,7 +55,7 @@ export const TRACKS = [
     ],
   },
   {
-    id: "architects", short: "9-12", label: "AI Architects", grades: "Grades 9-12", focus: "Agency, Policy and Action", modules: 6, color: "#0D1F33",
+    id: "architects", short: "9-12", label: "AI Architects", grades: "Grades 9-12", focus: "Agency, Policy and Action", modules: 6, color: "var(--track-architects)",
     blurb: "For students ready to think seriously about AI's role in society and their own role in shaping it. Modules move from understanding to agency and action.",
     folder: "https://drive.google.com/drive/folders/1olHGh5ks8SIQfz5mnZci9R3pCgBxlcxi",
     list: [

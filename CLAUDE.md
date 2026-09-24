@@ -3,8 +3,10 @@
 This repo is being rebuilt from a marketing site into ARK's free course platform. The full spec is **`docs/ARK_UI_BUILD_BRIEF.md`**. Read it before starting any phase. The phase prompts are in `docs/ARK_Claude_Code_Prompts.md`.
 
 ## Current state
-- Live site: React 18 + Vite + Tailwind v4 + shadcn/Radix (Figma Make export), with React Router.
-- Copy lives in `src/app/lib/content.ts`, pages in `src/app/pages/`, and brand assets in `public/brand/`.
+- `main` is the live site: React 18 + Vite + Tailwind v4 + shadcn/Radix (Figma Make export), with React Router.
+- `platform-v1` (Phase 0 done): Astro 7 + React islands + MDX + Tailwind v4, `output: 'server'` with the Netlify adapter. Every page so far sets `prerender = true`.
+- Routes are `.astro` files in `src/pages/`; page sections in `src/app/sections/`; shared components in `src/app/components/site/` and shadcn primitives in `src/app/components/ui/`. Copy lives in `src/app/lib/content.ts`, tokens in `src/styles/theme.css`, brand assets in `public/brand/`. Style guide: `/dev/components` (noindex, unlinked).
+- Commands: `npm run dev` (port 5180), `npm run build` (also checks alt text, links, and bundle secrets), `npm run check:contrast`, `npm run check`, `npm run test:visual`, `npm run test:a11y`, `npm test`.
 - **Pushing to `main` deploys to production** (GitHub Pages via `.github/workflows/deploy.yml`).
 
 ## Rules

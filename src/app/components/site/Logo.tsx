@@ -1,28 +1,34 @@
-import { Link } from "react-router-dom";
+import { cn } from "../ui/utils";
 
-export function ARKMark({ className = "", size = 40 }: { className?: string; size?: number }) {
+/** The circuit-elephant mark. Brief section 3: use it at small sizes only. */
+export function ARKMark({ size = 28, decorative = false, className }: { size?: number; decorative?: boolean; className?: string }) {
   return (
     <img
       src="/brand/ark-mark-web.png"
-      alt="ARK circuit elephant logo"
+      alt={decorative ? "" : "ARK"}
       width={size}
-      height={size}
-      className={`object-contain select-none ${className}`}
+      height={Math.round(size * 0.77)}
+      className={cn("shrink-0 select-none object-contain", className)}
       draggable={false}
     />
   );
 }
 
-export function Brand({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
+/**
+ * ARK wordmark: "ARK" in Fraunces with "AIReadiness4Kids" in small caps beneath.
+ * The single place to swap the logo (brief section 3).
+ */
+export function Logo({ tone = "dark", showMark = true, className }: { tone?: "dark" | "light"; showMark?: boolean; className?: string }) {
+  const light = tone === "light";
   return (
-    <Link to="/" className="group flex items-center gap-3" aria-label="ARK home">
-      <ARKMark size={compact ? 36 : 44} className="transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-105 drop-shadow-[0_4px_10px_rgba(13,31,51,.25)]" />
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      {showMark && <ARKMark size={30} decorative />}
       <span className="flex flex-col leading-none">
-        <span className={`font-display text-xl font-black tracking-tight ${light ? "text-white" : "text-primary"}`}>ARK</span>
-        <span className={`text-[10px] font-mono uppercase tracking-[0.18em] mt-1 ${light ? "text-glow/80" : "text-accent"}`}>
-          AI Readiness for Kids
+        <span className={cn("font-display text-[1.625rem] font-semibold tracking-tight", light ? "text-white" : "text-ink")}>ARK</span>
+        <span className={cn("mt-0.5 text-[0.8125rem] font-bold tracking-[0.04em] [font-variant-caps:small-caps]", light ? "text-glow" : "text-brand")}>
+          AIReadiness4Kids
         </span>
       </span>
-    </Link>
+    </span>
   );
 }

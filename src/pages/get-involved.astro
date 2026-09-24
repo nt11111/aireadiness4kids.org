@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { GetInvolvedTop, Faq, GetInvolvedCta } from "../app/sections/GetInvolved";
+export const prerender = true;
+---
+
+<BaseLayout title="Get Involved | ARK · AI Readiness for Kids" description="Become a Student Ambassador, volunteer, or partner with ARK to keep AI literacy free for every K-12 learner.">
+  <GetInvolvedTop />
+  <Faq client:visible />
+  <GetInvolvedCta />
+</BaseLayout>

@@ -1,0 +1,60 @@
+---
+import "../styles/index.css";
+import { Nav } from "../app/components/site/Nav";
+import { Footer } from "../app/components/site/Footer";
+
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = "ARK (AI Readiness for Kids) is a nonprofit that equips K-12 students, teachers, and parents with the knowledge, skills, and ethical grounding to use AI responsibly.",
+  noindex = false,
+} = Astro.props;
+const pathname = Astro.url.pathname;
+const canonical = new URL(pathname, Astro.site);
+const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="theme-color" content="#1C2430" />
+    <link rel="icon" type="image/png" href="/brand/ark-mark-180.png" />
+    <link rel="apple-touch-icon" href="/brand/ark-mark-180.png" />
+    <!-- Reveal animations only hide content once JS is confirmed running. -->
+    <script is:inline>document.documentElement.classList.add("js");</script>
+  </head>
+  <body>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-5 focus:py-3 focus:font-bold focus:text-ink focus:shadow-2">Skip to content</a>
+    <Nav client:load pathname={pathname} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline>
+      (function () {
+        var els = document.querySelectorAll(".reveal");
+        if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("in"); }); return; }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+        }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+        els.forEach(function (e) { io.observe(e); });
+      })();
+    </script>
+  </body>
+</html>

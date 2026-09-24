@@ -1,57 +1,109 @@
 @custom-variant dark (&:is(.dark *));
+/* Real hover/press, or forced with data-demo="hover|active" (used by /dev/components to show states). */
+@custom-variant hover-state {
+  @media (hover: hover) { &:hover { @slot; } }
+  &[data-demo~="hover"] { @slot; }
+}
+@custom-variant active-state {
+  &:active { @slot; }
+  &[data-demo~="active"] { @slot; }
+}
 
 /* ============================================================
-   ARK · AI Readiness for Kids — brand tokens
-   Palette pulled from the circuit-elephant logo.
+   ARK design tokens (brief section 3).
+   Every text/background pair is checked for WCAG AA by
+   `npm run check:contrast` (scripts/check-contrast.mjs), which
+   reads the hex values in this :root block. Keep them as hex.
    ============================================================ */
 :root {
+  /* Surfaces and ink */
+  --bg: #FBF8F3;
+  --surface: #FFFFFF;
+  --surface-2: #F4EFE6;
+  --ink: #1C2430;
+  --ink-soft: #4A5563;
+  --ink-faint: #646C78;         /* brief #6B7480: 4.47:1 on --bg, darkened to pass AA */
+  --line: #E6DFD2;              /* decorative dividers and card edges only */
+  --line-strong: #908776;       /* form-control borders, which need 3:1 */
+
+  /* Brand */
+  --brand: #1F6F5C;
+  --brand-ink: #FFFFFF;
+  --brand-soft: #E3F1EC;
+
+  /* Marigold. White text on it fails (2.0:1), so its foreground is --ink. */
+  --accent: #F2A93B;
+  --accent-strong: #BF780D;     /* progress fills and strokes on light surfaces (3:1) */
+  --glow: #FADDB1;              /* emphasis text on dark brand or ink sections */
+
+  /* Tracks: fill (headers, chip backgrounds), -on (text on the fill),
+     -ink (text and strokes on light surfaces), -soft (tint backgrounds) */
+  --track-explorers: #E08A1E;
+  --track-explorers-on: #1C2430;
+  --track-explorers-ink: #995E15;
+  --track-explorers-soft: #FBEEDE;
+  --track-investigators: #C74D37;       /* brief #C9503A: white text was 4.48:1 */
+  --track-investigators-on: #FFFFFF;
+  --track-investigators-ink: #B74732;
+  --track-investigators-soft: #FAEDEB;
+  --track-architects: #3D4FA8;
+  --track-architects-on: #FFFFFF;
+  --track-architects-ink: #3D4FA8;
+  --track-architects-soft: #DADEF2;
+
+  /* Status */
+  --success: #2D794D;           /* brief #2E7D4F: 4.40:1 on --surface-2, darkened to pass AA */
+  --warning: #936119;           /* brief #B7791F: 3.44:1 as text, darkened to pass AA */
+  --danger: #B42318;
+
+  /* Elevation, layout, motion */
+  --shadow-1: 0 1px 2px rgba(28, 36, 48, .06), 0 1px 3px rgba(28, 36, 48, .08);
+  --shadow-2: 0 6px 20px rgba(28, 36, 48, .08);
+  --container: 1180px;
+  --reading: 68ch;
+  --dur-fast: 150ms;
+  --dur: 200ms;
+  --dur-slow: 250ms;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+
+  /* shadcn semantic names, read by src/app/components/ui */
   --font-size: 16px;
-
-  --background: #F7F7F3;
-  --foreground: #0D1729;
-  --card: #ffffff;
-  --card-foreground: #0D1729;
-  --popover: #ffffff;
-  --popover-foreground: #0D1729;
-
-  /* deep navy from the logo outline */
-  --primary: #0D1F33;
-  --primary-foreground: #ffffff;
-
-  --secondary: #EAF3FA;
-  --secondary-foreground: #0D1729;
-  --muted: #EFEFEA;
-  --muted-foreground: #5F6B7A;
-
-  /* electric circuit blue from the logo traces */
-  --accent: #2F8FE6;
-  --accent-foreground: #ffffff;
-  --glow: #45D2FF;
-
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(13, 23, 41, 0.10);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-ink);
+  --secondary: var(--brand-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--ink-soft);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --destructive-foreground: #FFFFFF;
+  --border: var(--line);
+  --input: var(--line-strong);
+  --input-background: var(--surface);
+  --switch-background: var(--line-strong);
+  --ring: var(--brand);
+  --radius: 14px;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #2F8FE6;
-  --radius: 0.875rem;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--brand-ink);
+  --sidebar-accent: var(--surface-2);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--brand);
+}
 
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+/* Dark sections (brand or ink backgrounds) swap the focus ring to a light color. */
+.on-dark {
+  --ring: var(--glow);
 }
 
 @theme inline {
@@ -69,7 +121,6 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-glow: var(--glow);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -77,60 +128,167 @@
   --color-input-background: var(--input-background);
   --color-switch-background: var(--switch-background);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "DM Mono", ui-monospace, monospace;
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-glow: var(--glow);
+  --color-track-explorers: var(--track-explorers);
+  --color-track-explorers-on: var(--track-explorers-on);
+  --color-track-explorers-ink: var(--track-explorers-ink);
+  --color-track-explorers-soft: var(--track-explorers-soft);
+  --color-track-investigators: var(--track-investigators);
+  --color-track-investigators-on: var(--track-investigators-on);
+  --color-track-investigators-ink: var(--track-investigators-ink);
+  --color-track-investigators-soft: var(--track-investigators-soft);
+  --color-track-architects: var(--track-architects);
+  --color-track-architects-on: var(--track-architects-on);
+  --color-track-architects-ink: var(--track-architects-ink);
+  --color-track-architects-soft: var(--track-architects-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  /* Brief radii: sm 8, default 14, lg 20 (Tailwind rounded-sm / rounded-lg / rounded-xl) */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: var(--radius);
+  --radius-xl: 20px;
+
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+
+  --container-site: var(--container);
+  --container-reading: var(--reading);
+
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale. Headings use Fraunces 500-600; lesson body 18px; UI 16px; Explorers lessons 20px/1.6. */
+  --text-display-xl: 3.5rem;
+  --text-display-xl--line-height: 1.05;
+  --text-display-lg: 2.75rem;
+  --text-display-lg--line-height: 1.1;
+  --text-display-md: 2.125rem;
+  --text-display-md--line-height: 1.15;
+  --text-display-sm: 1.625rem;
+  --text-display-sm--line-height: 1.2;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.3;
+  --text-lesson: 1.125rem;
+  --text-lesson--line-height: 1.7;
+  --text-lesson-explorers: 1.25rem;
+  --text-lesson-explorers--line-height: 1.6;
+  --text-ui: 1rem;
+  --text-ui--line-height: 1.5;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.3;
+
+  --ease-out: var(--ease-out);
 }
 
 @layer base {
-  * { @apply border-border outline-ring/50; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-background text-foreground; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
-  ::selection { background: rgba(47,143,230,.22); }
+  * {
+    @apply border-border;
+  }
+  html {
+    font-size: var(--font-size);
+    -webkit-text-size-adjust: 100%;
+    /* Keeps anchored and keyboard-focused content clear of the 72px fixed header (WCAG 2.4.11). */
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+  /* One visible focus style everywhere (3:1 against its background via --ring / .on-dark). */
+  :focus-visible,
+  [data-demo~="focus"] {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
 }
 
-html { font-size: var(--font-size); }
+/* Utility for components that manage their own focus style (e.g. inside overflow-hidden cards). */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
+}
 
-/* ---------- motion ---------- */
-@keyframes ark-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+/* ---------- motion (existing site effects; all disabled under reduced motion) ---------- */
+@keyframes ark-float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
 @keyframes ark-spin { to { transform: rotate(360deg) } }
-@keyframes ark-ping { 0% { box-shadow: 0 0 0 0 rgba(69,210,255,.55) } 70% { box-shadow: 0 0 0 12px rgba(69,210,255,0) } 100% { box-shadow: 0 0 0 0 rgba(69,210,255,0) } }
-@keyframes ark-marquee { to { transform: translateX(-50%) } }
+@keyframes ark-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--glow) 70%, transparent) } 70% { box-shadow: 0 0 0 12px transparent } 100% { box-shadow: 0 0 0 0 transparent } }
 @keyframes ark-rise { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: none } }
-@keyframes ark-draw { to { stroke-dashoffset: 0 } }
 
 .ark-float { animation: ark-float 6s ease-in-out infinite; }
 .ark-spin-slow { animation: ark-spin 40s linear infinite; }
 .ark-spin-slower { animation: ark-spin 70s linear infinite reverse; }
-.ark-ping { animation: ark-ping 2.4s cubic-bezier(.22,.61,.36,1) infinite; }
-.ark-marquee { animation: ark-marquee 30s linear infinite; }
-.ark-marquee:hover { animation-play-state: paused; }
-.ark-rise { animation: ark-rise .8s cubic-bezier(.16,1,.3,1) both; }
+.ark-ping { animation: ark-ping 2.4s cubic-bezier(.22, .61, .36, 1) infinite; }
+.ark-rise { animation: ark-rise .8s var(--ease-out) both; }
 
-/* reveal on scroll */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
-.reveal.in { opacity: 1; transform: none; }
-.reveal.d1 { transition-delay: .08s } .reveal.d2 { transition-delay: .16s } .reveal.d3 { transition-delay: .24s } .reveal.d4 { transition-delay: .32s } .reveal.d5 { transition-delay: .4s }
+/* Reveal on scroll. Progressive enhancement: content is only hidden once JS has
+   marked <html class="js">, so nothing disappears if scripts fail to load. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  .js .reveal.d1 { transition-delay: .08s } .js .reveal.d2 { transition-delay: .16s } .js .reveal.d3 { transition-delay: .24s } .js .reveal.d4 { transition-delay: .32s } .js .reveal.d5 { transition-delay: .4s }
+}
 
-/* circuit grid texture */
+/* Subtle grid texture for dark sections (was cyan; now neutral). */
 .circuit-grid {
-  background-image: linear-gradient(rgba(69,210,255,.9) 1px, transparent 1px), linear-gradient(90deg, rgba(69,210,255,.9) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(255, 255, 255, .9) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .9) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
-/* btn sheen */
 .sheen { position: relative; overflow: hidden; }
-.sheen::after { content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.3), transparent); transform: skewX(-18deg); }
-.sheen:hover::after { animation: sheen .8s cubic-bezier(.22,.61,.36,1); }
+.sheen::after { content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .3), transparent); transform: skewX(-18deg); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .sheen:hover::after { animation: sheen .8s cubic-bezier(.22, .61, .36, 1); }
+}
 @keyframes sheen { to { left: 130% } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
-  .reveal { opacity: 1; transform: none; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { HomeHero, ImpactBar, HomeBody } from "../app/sections/Home";
+export const prerender = true;
+---
+
+<BaseLayout title="ARK | AI Readiness for Kids" description="ARK (AI Readiness for Kids) is a nonprofit that equips K-12 students, teachers, and parents to use AI responsibly. Free curriculum, workshops, and a student ambassador program.">
+  <HomeHero />
+  <ImpactBar client:idle />
+  <HomeBody />
+</BaseLayout>
