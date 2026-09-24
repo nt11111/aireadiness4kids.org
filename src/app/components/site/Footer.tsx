@@ -1,9 +1,10 @@
-import { Mail } from "lucide-react";
+import { Mail, ShieldCheck } from "lucide-react";
 import { Logo } from "./Logo";
 import { ORG } from "../../lib/content";
 
 const cols = [
-  { heading: "Our Work", links: [["Curriculum", "/curriculum"], ["Programs", "/programs"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"]] },
+  { heading: "Learn", links: [["All courses", "/courses"], ["AI Explorers (K-5)", "/courses/explorers"], ["AI Investigators (6-8)", "/courses/investigators"], ["AI Architects (9-12)", "/courses/architects"]] },
+  { heading: "Our Work", links: [["Programs & workshops", "/programs"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"], ["How we review modules", "/about#reviewers"]] },
   { heading: "Join Us", links: [["Become an Ambassador", "/get-involved#ambassadors"], ["Volunteer", "/get-involved#volunteer"], ["Partner With Us", "/get-involved#partners"], ["Mailing List", "/contact#newsletter"]] },
   { heading: "Organization", links: [["About", "/about"], ["Leadership", "/about#team"], ["Donate", "/donate"], ["Contact", "/contact"]] },
 ];
@@ -11,24 +12,24 @@ const cols = [
 export function Footer() {
   return (
     <footer className="on-dark relative overflow-hidden bg-ink text-white">
-      <div className="relative mx-auto max-w-7xl px-6 pb-10 pt-16">
-        <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.4fr_2fr]">
+      <div className="relative mx-auto max-w-[calc(var(--container)+3rem)] px-4 pb-10 pt-16 sm:px-6">
+        <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div>
             <a href="/" aria-label="ARK AIReadiness4Kids, home" className="inline-block rounded-md">
               <Logo tone="light" />
             </a>
-            <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/75">
-              A 501(c)(3) nonprofit equipping K-12 students, teachers, and parents with the knowledge, skills, and ethical grounding to use AI responsibly.
+            <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/80">
+              A 501(c)(3) nonprofit helping K-12 students, teachers, and parents understand AI and use it responsibly. Every course is free.
             </p>
             <a href={`mailto:${ORG.email}`} className="mt-6 inline-flex items-center gap-2.5 text-[15px] text-white/85 underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">
               <Mail aria-hidden="true" className="size-[18px]" /> {ORG.email}
             </a>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {cols.map((c) => (
               <nav key={c.heading} aria-label={c.heading}>
-                <h2 className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">{c.heading}</h2>
+                <h2 className="mb-4 font-sans text-eyebrow font-bold uppercase tracking-[0.14em] text-white/75">{c.heading}</h2>
                 <ul>
                   {c.links.map(([label, href]) => (
                     <li key={label}><a href={href} className="block py-1.5 text-sm text-white/85 transition-colors hover:text-glow">{label}</a></li>
@@ -39,9 +40,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-3 pt-7 sm:flex-row">
-          <p className="font-mono text-xs text-white/70">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
-          <p className="font-mono text-xs tracking-wider text-glow">Think. Prompt. Responsibly.</p>
+        <p className="mt-8 flex max-w-3xl gap-3 text-sm leading-relaxed text-white/85">
+          <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-glow" />
+          <span><strong className="text-white">Our privacy promise:</strong> we collect as little as we can. Kids under 13 never give us an email, reflections stay on your own device, and our analytics use no cookies.</span>
+        </p>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/15 pt-7 sm:flex-row">
+          <p className="text-xs text-white/75">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
+          <p className="text-xs font-bold tracking-wider text-glow">Think. Prompt. Responsibly.</p>
         </div>
       </div>
     </footer>

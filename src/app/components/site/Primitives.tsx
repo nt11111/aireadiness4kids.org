@@ -6,7 +6,7 @@ import { cn } from "../ui/utils";
 /* ---------- layout ---------- */
 export const Section = ({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) => (
   <section id={id} className={cn("py-24 lg:py-32 px-6", className)}>
-    <div className="max-w-7xl mx-auto">{children}</div>
+    <div className="max-w-site mx-auto">{children}</div>
   </section>
 );
 
@@ -55,7 +55,7 @@ export const IconBox = ({ children, className = "" }: { children: ReactNode; cla
 /* ---------- CTA band ---------- */
 export const CTABand = ({ title, lead, primary, secondary }: { title: ReactNode; lead: ReactNode; primary: { label: string; to: string }; secondary?: { label: string; to: string } }) => (
   <section className="px-6 py-12">
-    <div className="on-dark relative max-w-7xl mx-auto rounded-[32px] bg-ink overflow-hidden px-8 py-16 lg:px-16 lg:py-20 reveal">
+    <div className="on-dark relative max-w-site mx-auto rounded-[32px] bg-ink overflow-hidden px-8 py-16 lg:px-16 lg:py-20 reveal">
       <div className="absolute inset-0 circuit-grid opacity-[0.05]" />
       <div className="absolute -top-32 -right-20 w-[480px] h-[480px] rounded-full bg-brand/30 blur-3xl pointer-events-none" />
       <img src="/brand/ark-mark-web.png" alt="" aria-hidden="true" className="absolute right-6 -bottom-10 w-56 opacity-[0.14] pointer-events-none select-none hidden md:block" />

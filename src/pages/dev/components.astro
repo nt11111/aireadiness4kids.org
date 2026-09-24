@@ -2,15 +2,29 @@
 // Hidden style guide (brief section 6). Not linked anywhere; noindex.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import themeCss from "../../styles/theme.css?raw";
-import { TRACKS } from "../../app/lib/content";
+import { getCourses } from "../../lib/courses";
+import { ReviewBadge } from "../../app/components/site/ReviewBadge";
+import TrackCard from "../../components/TrackCard.astro";
+import SyllabusItem from "../../components/SyllabusItem.astro";
+import StepList from "../../components/StepList.astro";
 import { Button } from "../../app/components/ui/button";
 import { Badge } from "../../app/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../../app/components/ui/card";
 import { Progress } from "../../app/components/ui/progress";
 import { ProgressRing } from "../../app/components/ui/progress-ring";
 import { Logo } from "../../app/components/site/Logo";
-import { ArrowRight, BookOpen, PlayCircle, Split, CircleCheck, PenLine, ListChecks, Hammer, PencilLine, BadgeCheck, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, PlayCircle, Split, CircleCheck, PenLine, ListChecks, Hammer, Clock } from "lucide-react";
 export const prerender = true;
+
+const courses = await getCourses();
+const TRACKS = courses.map(({ track, modules }) => ({ id: track.id, label: track.data.title, short: track.data.grades, grades: `Grades ${track.data.grades}`, focus: track.data.tagline, modules: modules.length }));
+// Sample reviewer names for layout only. Real names come from each module's frontmatter.
+const SAMPLE = [
+  { name: "Sample Reviewer A", credentials: "PhD, learning sciences" },
+  { name: "Sample Reviewer B" },
+  { name: "Sample Reviewer C" },
+  { name: "Sample Reviewer D" },
+];
 
 // Token values come straight from theme.css so this page can't drift from the source.
 const rootStart = themeCss.indexOf(":root {");
@@ -62,13 +76,13 @@ const demo: Record<string, string | undefined> = { Hover: "hover", Focus: "focus
 
 const stepTypes = [["explainer", BookOpen], ["video", PlayCircle], ["scenario", Split], ["check", CircleCheck], ["reflect", PenLine], ["recap", ListChecks], ["activity", Hammer]] as const;
 const inv = TRACKS[1];
-const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], ["cards", "Cards"], ["chips", "Chips"], ["progress", "Progress"], ["brand", "Logo and focus"]];
+const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], ["cards", "Cards"], ["chips", "Chips"], ["review", "Review status"], ["course", "Course components"], ["progress", "Progress"], ["brand", "Logo and focus"]];
 ---
 
 <BaseLayout title="Components | ARK design system" noindex>
   <div class="bg-surface-2 border-b border-line pt-32 pb-10 px-6">
     <div class="max-w-site mx-auto">
-      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Phase 0 · Hidden style guide</p>
+      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Hidden style guide</p>
       <h1 class="text-display-lg mt-2 text-ink">ARK design system</h1>
       <p class="text-lesson text-ink-soft mt-3 max-w-reading">Tokens from <code class="font-mono text-small">src/styles/theme.css</code> (brief section 3), checked for WCAG AA by <code class="font-mono text-small">npm run check:contrast</code>. Card and progress content below is sample data for layout only.</p>
       <nav aria-label="Style guide sections" class="mt-6">
@@ -211,7 +225,7 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
             </div>
           </div>
           <div class="mt-4 flex flex-wrap gap-2">
-            <Badge variant="draft"><PencilLine aria-hidden="true" /> Draft: under expert review</Badge>
+            <ReviewBadge status="draft" />
           </div>
           <div class="mt-5">
             <div class="mb-2 flex justify-between text-small"><span class="font-bold text-ink">Progress</span><span class="text-ink-soft">0 of 6 steps</span></div>
@@ -243,11 +257,6 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
         {TRACKS.map((t) => <Badge variant={t.id as "explorers" | "investigators" | "architects"}>{t.label} · {t.short}</Badge>)}
         {TRACKS.map((t) => <Badge variant={`${t.id}-solid` as "explorers-solid"}>{t.label}</Badge>)}
       </div>
-      <h3 class="text-title text-ink mt-8">Review status</h3>
-      <div class="mt-3 flex flex-wrap gap-2">
-        <Badge variant="draft"><PencilLine aria-hidden="true" /> Draft: under expert review</Badge>
-        <Badge variant="reviewed"><BadgeCheck aria-hidden="true" /> Reviewed by [names]</Badge>
-      </div>
       <h3 class="text-title text-ink mt-8">Step types</h3>
       <div class="mt-3 flex flex-wrap gap-2">
         {stepTypes.map(([name, Icon]) => <Badge variant="neutral"><Icon aria-hidden="true" /> {name}</Badge>)}
@@ -255,6 +264,56 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
       <h3 class="text-title text-ink mt-8">Other</h3>
       <div class="mt-3 flex flex-wrap gap-2">
         <Badge>Brand</Badge><Badge variant="secondary">Secondary</Badge><Badge variant="outline">Outline</Badge><Badge variant="accent">Completed</Badge><Badge variant="destructive">Error</Badge>
+      </div>
+    </section>
+
+    <!-- Review status -->
+    <section id="review" aria-labelledby="review-h">
+      <h2 id="review-h" class="text-display-md text-ink">Review status</h2>
+      <p class="text-ui text-ink-soft mt-2 max-w-reading">Brief section 5. <code class="font-mono text-small">&lt;ReviewBadge status size /&gt;</code> from <code class="font-mono text-small">status</code> and <code class="font-mono text-small">reviewers</code> in module frontmatter. Each state has its own icon, so it never relies on color alone. Reviewer names below are samples for layout.</p>
+      <div class="mt-8 grid gap-6 lg:grid-cols-2">
+        <div class="rounded-lg border border-line bg-surface p-6">
+          <h3 class="text-title text-ink">Compact: syllabus rows and cards</h3>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <ReviewBadge status="draft" />
+            <ReviewBadge status="in-review" />
+            <ReviewBadge status="reviewed" reviewers={SAMPLE.slice(0, 1)} />
+          </div>
+        </div>
+        <div class="rounded-lg border border-line bg-surface-2 p-6">
+          <h3 class="text-title text-ink">Compact on a muted panel</h3>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <ReviewBadge status="draft" />
+            <ReviewBadge status="in-review" />
+            <ReviewBadge status="reviewed" reviewers={SAMPLE.slice(0, 1)} />
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 rounded-lg border border-line bg-surface-2 p-6">
+        <h3 class="text-title text-ink">Full: module page header</h3>
+        <dl class="mt-4 grid gap-5">
+          <div><dt class="text-small font-bold text-ink-soft">Draft</dt><dd class="mt-2"><ReviewBadge status="draft" size="full" /></dd></div>
+          <div><dt class="text-small font-bold text-ink-soft">In review</dt><dd class="mt-2"><ReviewBadge status="in-review" size="full" /></dd></div>
+          <div><dt class="text-small font-bold text-ink-soft">Reviewed, one reviewer (sample)</dt><dd class="mt-2"><ReviewBadge status="reviewed" size="full" reviewers={SAMPLE.slice(0, 1)} /></dd></div>
+          <div><dt class="text-small font-bold text-ink-soft">Reviewed, two reviewers (sample)</dt><dd class="mt-2"><ReviewBadge status="reviewed" size="full" reviewers={SAMPLE.slice(0, 2)} /></dd></div>
+          <div><dt class="text-small font-bold text-ink-soft">Reviewed, four reviewers (sample)</dt><dd class="mt-2"><ReviewBadge status="reviewed" size="full" reviewers={SAMPLE} /></dd></div>
+          <div><dt class="text-small font-bold text-ink-soft">Reviewed, hover and focus (sample)</dt><dd class="mt-2 flex flex-wrap gap-3"><ReviewBadge status="reviewed" size="full" reviewers={SAMPLE.slice(0, 1)} className="border-brand/60" /><span data-demo="focus" class="inline-flex rounded-full"><ReviewBadge status="reviewed" size="full" reviewers={SAMPLE.slice(0, 1)} /></span></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Course components -->
+    <section id="course" aria-labelledby="course-comp-h">
+      <h2 id="course-comp-h" class="text-display-md text-ink">Course components</h2>
+      <p class="text-ui text-ink-soft mt-2 max-w-reading">Real content from the collection. The track card is one link (its Start button is stretched over the card). Syllabus rows are native <code class="font-mono text-small">&lt;details&gt;</code>, so they work without JavaScript.</p>
+      <div class="mt-8 grid gap-8 lg:grid-cols-[360px_minmax(0,1fr)]">
+        <TrackCard course={courses[1]} />
+        <div class="space-y-3">
+          <SyllabusItem mod={courses[1].modules[1]} open />
+          <SyllabusItem mod={courses[1].modules[2]} />
+          <h3 class="pt-4 text-title text-ink">Step list, empty state</h3>
+          <StepList steps={[]} />
+        </div>
       </div>
     </section>
 

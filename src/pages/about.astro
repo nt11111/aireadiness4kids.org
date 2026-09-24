@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import About from "../app/sections/About";
+import { getCourses, getReviewers } from "../lib/courses";
 export const prerender = true;
+const reviewers = getReviewers(await getCourses());
 ---
 
 <BaseLayout title="About | ARK · AI Readiness for Kids" description="ARK's mission, values, leadership, and roadmap. A nonprofit built with parents, teachers, and students.">
-  <About />
+  <About reviewers={reviewers} />
 </BaseLayout>

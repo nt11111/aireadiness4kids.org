@@ -1,0 +1,151 @@
+---
+// Module overview (brief section 7): what the module covers, its review status, and its steps.
+import { render } from "astro:content";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../../components/Breadcrumbs.astro";
+import StepList from "../../../../components/StepList.astro";
+import { ReviewBadge } from "../../../../app/components/site/ReviewBadge";
+import { Badge } from "../../../../app/components/ui/badge";
+import { buttonVariants } from "../../../../app/components/ui/button";
+import { trackStyle, type TrackId } from "../../../../app/lib/tracks";
+import { cn } from "../../../../app/components/ui/utils";
+import { getCourses, getModuleSteps, moduleHref, moduleSlug, moduleTime, trackHref, type Course, type Module } from "../../../../lib/courses";
+import { ArrowLeft, ArrowRight, Check, Clock, ExternalLink, Layers } from "lucide-react";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  return courses.flatMap((course) =>
+    course.modules.map((mod, index) => ({ params: { track: course.track.id, module: moduleSlug(mod) }, props: { course, mod, index } })),
+  );
+}
+
+const { course, mod, index } = Astro.props as { course: Course; mod: Module; index: number };
+const { track, modules } = course;
+const { title, summary, topics, objectives, vocabulary, status, reviewers, slides_url } = mod.data;
+const s = trackStyle(track.id);
+const steps = getModuleSteps(mod);
+const prev = modules[index - 1];
+const next = modules[index + 1];
+const { Content } = await render(mod);
+const learn = objectives.length ? { heading: "What you'll learn", items: objectives } : { heading: "Key topics", items: topics };
+---
+
+<BaseLayout title={`${title} | ${track.data.title} | ARK`} description={summary}>
+  <section class="border-b border-line bg-surface-2 px-4 pb-10 pt-28 sm:px-6 lg:pb-12 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses", href: "/courses" }, { label: track.data.title, href: trackHref(track) }, { label: title }]} class="text-ink-soft" />
+      <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+        <Badge variant={track.id as TrackId}>{track.data.title} · Grades {track.data.grades}</Badge>
+        <span class="text-small font-bold text-ink-soft">Module {mod.data.order} of {modules.length}</span>
+      </div>
+      <h1 class="mt-4 max-w-4xl text-display-lg text-ink">{title}</h1>
+      <p class="mt-4 max-w-reading text-lesson text-ink-soft">{summary}</p>
+      <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <span class="inline-flex items-center gap-2 text-ui font-bold text-ink"><Clock aria-hidden="true" className="size-5 text-ink-soft" />{moduleTime(mod)}</span>
+        {steps.length > 0 && <span class="inline-flex items-center gap-2 text-ui font-bold text-ink"><Layers aria-hidden="true" className="size-5 text-ink-soft" />{steps.length} steps</span>}
+        <ReviewBadge status={status} reviewers={reviewers} size="full" />
+      </div>
+      {steps.length > 0 && (
+        <a href={steps[0].href} class={cn(buttonVariants({ size: "lg" }), "mt-8")}>Start module <ArrowRight aria-hidden="true" /></a>
+      )}
+    </div>
+  </section>
+
+  <div class="px-4 py-12 sm:px-6 lg:py-16">
+    <div class="mx-auto grid max-w-site gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+      <div class="min-w-0 space-y-12">
+        <section aria-labelledby="learn-h">
+          <h2 id="learn-h" class="text-display-sm text-ink">{learn.heading}</h2>
+          <ul class="mt-5 space-y-3">
+            {learn.items.map((item) => (
+              <li class="flex gap-3 text-lesson text-ink"><Check aria-hidden="true" className="mt-1 size-5 shrink-0 text-brand" />{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        {vocabulary.length > 0 && (
+          <section aria-labelledby="vocab-h">
+            <h2 id="vocab-h" class="text-display-sm text-ink">Words to know</h2>
+            <dl class="mt-5 grid gap-4 sm:grid-cols-2">
+              {vocabulary.map((v) => (
+                <div class="rounded-lg border border-line bg-surface p-4">
+                  <dt class="font-bold text-ink">{v.term}</dt>
+                  <dd class="mt-1 text-ui text-ink-soft">{v.def}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
+        <section aria-labelledby="steps-h">
+          <h2 id="steps-h" class="text-display-sm text-ink">Lesson steps</h2>
+          {steps.length > 0 ? (
+            <StepList steps={steps} class="mt-5" />
+          ) : (
+            <div class="mt-5 rounded-xl border border-dashed border-line-strong bg-surface p-6 sm:p-8">
+              <div class="text-lesson text-ink [&_p]:font-bold"><Content /></div>
+              <p class="mt-2 text-ui text-ink-soft">We're writing this module's lesson steps now. Each one will take 3 to 10 minutes, with stories, choices, and quick checks.</p>
+              {slides_url && (
+                <>
+                  <p class="mt-5 text-ui text-ink-soft">Teaching it before then? The slide deck covers the whole module.</p>
+                  <a href={slides_url} class={cn(buttonVariants({ variant: "outline" }), "mt-3")}>
+                    <ExternalLink aria-hidden="true" /> Open the slide deck<span class="sr-only"> for {title} (Google Drive)</span>
+                  </a>
+                </>
+              )}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <aside aria-labelledby="course-h">
+        <div class="overflow-hidden rounded-xl border border-line bg-surface shadow-1 lg:sticky lg:top-28">
+          <div class={cn("h-2", s.bar)}></div>
+          <div class="p-6">
+            <p class="text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Part of the course</p>
+            <h2 id="course-h" class="mt-1 text-title text-ink"><a href={trackHref(track)} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{track.data.title}</a></h2>
+            <ol class="mt-4 space-y-1">
+              {modules.map((m) => {
+                const current = m.id === mod.id;
+                return (
+                  <li>
+                    <a href={moduleHref(m)} aria-current={current ? "page" : undefined} class={cn("flex gap-3 rounded-md px-2 py-1.5 text-small", current ? "bg-surface-2 font-bold text-ink" : "text-ink-soft hover:bg-surface-2 hover:text-ink")}>
+                      <span class={cn("w-4 shrink-0 text-right font-bold tabular-nums", s.ink)} aria-hidden="true">{m.data.order}</span>
+                      <span>{m.data.title}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <nav aria-label="Other modules" class="mx-auto mt-14 grid max-w-site gap-4 border-t border-line pt-8 sm:grid-cols-2">
+      {prev ? (
+        <a href={moduleHref(prev)} class="group flex flex-col rounded-lg border border-line bg-surface p-5 shadow-1 hover:border-brand/40 hover:shadow-2">
+          <span class="inline-flex items-center gap-1.5 text-small font-bold text-ink-soft"><ArrowLeft aria-hidden="true" className="size-4" />Previous module</span>
+          <span class="mt-1 font-display text-title font-semibold text-ink group-hover:text-brand">{prev.data.title}</span>
+        </a>
+      ) : (
+        <a href={trackHref(track)} class="group flex flex-col rounded-lg border border-line bg-surface p-5 shadow-1 hover:border-brand/40 hover:shadow-2">
+          <span class="inline-flex items-center gap-1.5 text-small font-bold text-ink-soft"><ArrowLeft aria-hidden="true" className="size-4" />Course overview</span>
+          <span class="mt-1 font-display text-title font-semibold text-ink group-hover:text-brand">{track.data.title}</span>
+        </a>
+      )}
+      {next ? (
+        <a href={moduleHref(next)} class="group flex flex-col rounded-lg border border-line bg-surface p-5 shadow-1 sm:text-right hover:border-brand/40 hover:shadow-2">
+          <span class="inline-flex items-center gap-1.5 text-small font-bold text-ink-soft sm:justify-end">Next module<ArrowRight aria-hidden="true" className="size-4" /></span>
+          <span class="mt-1 font-display text-title font-semibold text-ink group-hover:text-brand">{next.data.title}</span>
+        </a>
+      ) : (
+        <a href="/courses" class="group flex flex-col rounded-lg border border-line bg-surface p-5 shadow-1 sm:text-right hover:border-brand/40 hover:shadow-2">
+          <span class="inline-flex items-center gap-1.5 text-small font-bold text-ink-soft sm:justify-end">All courses<ArrowRight aria-hidden="true" className="size-4" /></span>
+          <span class="mt-1 font-display text-title font-semibold text-ink group-hover:text-brand">Browse the catalog</span>
+        </a>
+      )}
+    </nav>
+  </div>
+</BaseLayout>

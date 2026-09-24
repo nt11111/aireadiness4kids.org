@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { ROUTES } from "./routes";
 
 const WIDTHS = [375, 768, 1280];
-const PHASE = process.env.PHASE ?? "phase-0";
+const PHASE = process.env.PHASE ?? "phase-1";
 
 for (const route of ROUTES) {
   for (const width of WIDTHS) {

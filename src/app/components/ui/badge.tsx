@@ -6,7 +6,7 @@ import { cn } from "./utils";
 
 // Chips. Each variant's text/background pair is covered by scripts/check-contrast.mjs.
 const badgeVariants = cva(
-  "inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1 text-small font-bold leading-none [&>svg]:pointer-events-none [&>svg]:size-3.5",
+  "inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1 text-small font-bold leading-none [&>svg]:pointer-events-none [&>svg]:size-3.5 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -16,7 +16,9 @@ const badgeVariants = cva(
         outline: "border-input bg-surface text-ink",
         accent: "border-transparent bg-accent text-accent-foreground",
         destructive: "border-transparent bg-destructive text-destructive-foreground",
-        draft: "border-warning/40 bg-surface-2 text-warning",
+        // Review status (brief section 5). Icons carry the meaning too, never color alone.
+        draft: "border-warning/35 bg-warning-soft text-warning",
+        "in-review": "border-line-strong/50 bg-surface-2 text-ink-soft",
         reviewed: "border-brand/30 bg-brand-soft text-brand",
         explorers: "border-transparent bg-track-explorers-soft text-track-explorers-ink",
         investigators: "border-transparent bg-track-investigators-soft text-track-investigators-ink",

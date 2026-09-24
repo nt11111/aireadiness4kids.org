@@ -16,6 +16,10 @@ export const TRACK_STYLE: Record<TrackId, {
   ink: string;
   /** Thin accent bar color. */
   bar: string;
+  /** Focus-ring color for anything sitting on the fill (3:1 against it). */
+  ring: string;
+  /** Button variant that reads clearly on the fill. */
+  button: "ink" | "light";
 }> = {
   explorers: {
     fill: "bg-track-explorers text-track-explorers-on",
@@ -23,6 +27,8 @@ export const TRACK_STYLE: Record<TrackId, {
     chip: "bg-track-explorers-soft text-track-explorers-ink",
     ink: "text-track-explorers-ink",
     bar: "bg-track-explorers",
+    ring: "[--ring:var(--ink)]",
+    button: "ink",
   },
   investigators: {
     fill: "bg-track-investigators text-track-investigators-on",
@@ -30,6 +36,8 @@ export const TRACK_STYLE: Record<TrackId, {
     chip: "bg-track-investigators-soft text-track-investigators-ink",
     ink: "text-track-investigators-ink",
     bar: "bg-track-investigators",
+    ring: "[--ring:#ffffff]",
+    button: "light",
   },
   architects: {
     fill: "bg-track-architects text-track-architects-on",
@@ -37,6 +45,8 @@ export const TRACK_STYLE: Record<TrackId, {
     chip: "bg-track-architects-soft text-track-architects-ink",
     ink: "text-track-architects-ink",
     bar: "bg-track-architects",
+    ring: "[--ring:#ffffff]",
+    button: "light",
   },
 };
 

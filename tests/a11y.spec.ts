@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { ROUTES } from "./routes";
+import { readdirSync } from "node:fs";
+import { ROUTES, MODULES } from "./routes";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 
@@ -28,9 +29,11 @@ for (const route of ROUTES) {
 
     // Everything a keyboard user should be able to reach: visible, not inert, tabIndex >= 0.
     const expected = await page.evaluate(() => {
-      const sel = "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]";
+      const sel = "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]";
       return [...document.querySelectorAll<HTMLElement>(sel)]
         .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0 && !el.closest("[inert],[hidden]") && getComputedStyle(el).visibility !== "hidden")
+        // Content of a closed <details> is not focusable until the row is opened (its <summary> is).
+        .filter((el) => !(el.closest("details:not([open])") && !el.closest("summary")))
         .map((el, i) => { el.dataset.kbId = String(i); return String(i); });
     });
 
@@ -79,22 +82,54 @@ test("keyboard: nav dropdown opens, is reachable, closes on Escape", async ({ pa
   await page.keyboard.press("Enter");
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: /^Curriculum/ }).first()).toBeFocused();
+  await expect(page.locator("#nav-our-work").getByRole("link", { name: /^Programs & workshops/ })).toBeFocused();
   await axe(page, "nav-dropdown-open");
   await page.keyboard.press("Escape");
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(toggle).toBeFocused();
 });
 
-test("keyboard: curriculum tabs follow the ARIA tabs pattern", async ({ page }) => {
-  await page.goto("/curriculum#investigators", { waitUntil: "networkidle" });
-  const tab = (name: RegExp) => page.getByRole("tab", { name });
-  await expect(tab(/Investigators/)).toHaveAttribute("aria-selected", "true");
-  await tab(/Investigators/).focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(tab(/Architects/)).toBeFocused();
-  await expect(tab(/Architects/)).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel")).toContainText("AI Architects");
-  await page.keyboard.press("Home");
-  await expect(tab(/Explorers/)).toHaveAttribute("aria-selected", "true");
+test("keyboard: syllabus rows open and close with Enter", async ({ page }) => {
+  await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+  const row = page.locator("details").nth(1);
+  const summary = row.locator("summary");
+  await expect(row).not.toHaveAttribute("open", "");
+  await summary.focus();
+  await page.keyboard.press("Enter");
+  await expect(row).toHaveAttribute("open", "");
+  await page.keyboard.press("Tab");
+  await expect(row.getByRole("link", { name: /Module overview: Bias in AI/ })).toBeFocused();
+  await axe(page, "syllabus-open");
+  await summary.focus();
+  await page.keyboard.press("Enter");
+  await expect(row).not.toHaveAttribute("open", "");
+});
+
+test("/curriculum redirects to /courses", async ({ page }) => {
+  const res = await page.goto("/curriculum", { waitUntil: "domcontentloaded" });
+  expect(new URL(page.url()).pathname).toBe("/courses");
+  expect(res?.status()).toBe(200);
+});
+
+test("home hides the credibility strip and impact numbers when there is no data", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator("[data-credibility]")).toHaveCount(0);
+  await expect(page.locator("[data-impact]")).toHaveCount(0);
+  // Never a placeholder logo: every image on the page has a real source and alt attribute.
+  const imgs = await page.locator("img").evaluateAll((els) => els.map((e) => ({ src: e.getAttribute("src") ?? "", alt: e.getAttribute("alt") })));
+  for (const img of imgs) {
+    expect(img.src).not.toMatch(/placeholder|partners\//i);
+    expect(img.alt).not.toBeNull();
+  }
+});
+
+test("every module folder has a page in the route list, and every stub is marked draft", async ({ page }) => {
+  const base = "src/content/modules";
+  const folders = readdirSync(base).flatMap((t) => readdirSync(`${base}/${t}`).map((m) => `${t}/${m}`)).sort();
+  expect(folders).toEqual([...MODULES].sort());
+  expect(folders).toHaveLength(17);
+  for (const m of MODULES) {
+    await page.goto(`/courses/${m}`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByText("Draft: under expert review")).toBeVisible();
+  }
 });

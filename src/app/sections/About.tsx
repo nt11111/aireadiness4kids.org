@@ -1,11 +1,20 @@
 import { Target, Eye, Star, Users, Lightbulb, Check } from "lucide-react";
+import { ReviewBadge, type Reviewer } from "../components/site/ReviewBadge";
 import { ORG, VALUES, ROADMAP, LEADERSHIP, TEAMS } from "../lib/content";
 import { PageHero } from "../components/site/PageHero";
 import { Section, SectionHead, Card, IconBox, CTABand } from "../components/site/Primitives";
 
 const leadIcons = [Star, Users, Lightbulb];
 
-export default function About() {
+const STATUSES = [
+  { status: "draft", text: "Written by the ARK curriculum team. Ready to use, and it may still change after review." },
+  { status: "in-review", text: "An outside expert is checking it for accuracy and for fit with the grade band." },
+  { status: "reviewed", text: "The review is done. The reviewer's name appears on the module page and below." },
+] as const;
+
+type ReviewerEntry = Reviewer & { modules: { title: string; href: string }[] };
+
+export default function About({ reviewers }: { reviewers: ReviewerEntry[] }) {
   return (
     <>
       <PageHero crumb="About" eyebrow="Who we are" title="A nonprofit built with parents, teachers, and students, not just for them."
@@ -35,6 +44,37 @@ export default function About() {
         </div>
       </Section>
 
+      {/* Review process (linked from every module's review badge) */}
+      <Section id="reviewers" className="border-b border-border">
+        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-start">
+          <SectionHead eyebrow="Expert review" title="How modules are reviewed." lead="Every module shows where it stands, so teachers and families know exactly what they are looking at. We would rather say a lesson is a draft than overstate it." />
+          <div className="reveal">
+            <ol className="grid gap-4">
+              {STATUSES.map(({ status, text }) => (
+                <li key={status} className="rounded-xl border border-border bg-surface p-5 shadow-1">
+                  <ReviewBadge status={status} />
+                  <p className="mt-3 text-ink-soft leading-relaxed">{text}</p>
+                </li>
+              ))}
+            </ol>
+            <h3 className="font-display text-2xl font-semibold text-ink mt-10">Our reviewers</h3>
+            {reviewers.length > 0 ? (
+              <ul className="mt-4 grid gap-3">
+                {reviewers.map((r) => (
+                  <li key={r.name} className="rounded-xl border border-border bg-surface p-5 shadow-1">
+                    <p className="font-bold text-ink">{r.name}{r.credentials && <span className="font-normal text-ink-soft">, {r.credentials}</span>}</p>
+                    <p className="mt-1 text-sm text-ink-soft">Reviewed: {r.modules.map((m, i) => <span key={m.href}>{i > 0 && ", "}<a href={m.href} className="text-brand underline underline-offset-4">{m.title}</a></span>)}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-ink-soft leading-relaxed">No module has finished expert review yet, so there are no names to show. Reviewers and their credentials will be listed here as each review is completed.</p>
+            )}
+            <p className="mt-6 text-ink-soft leading-relaxed">Are you a teacher or subject expert? <a href="/get-involved#volunteer" className="font-bold text-brand underline underline-offset-4">Help review a module</a>.</p>
+          </div>
+        </div>
+      </Section>
+
       {/* Team */}
       <Section id="team">
         <SectionHead center eyebrow="Leadership and team" title="How ARK is organized." lead="A lean, accountable structure that pairs strategic direction with deep classroom expertise." />
@@ -55,7 +95,7 @@ export default function About() {
       <section id="roadmap" className="on-dark bg-ink py-24 lg:py-32 px-6 relative overflow-hidden">
         <div className="absolute inset-0 circuit-grid opacity-[0.04]" />
         <img src="/brand/ark-mark-web.png" alt="" aria-hidden="true" className="absolute -left-16 -bottom-16 w-[360px] opacity-[0.07] pointer-events-none select-none" />
-        <div className="relative max-w-7xl mx-auto">
+        <div className="relative max-w-site mx-auto">
           <SectionHead light center eyebrow="Growth roadmap" title="From regional foundation to national model." />
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {ROADMAP.map((r, i) => (

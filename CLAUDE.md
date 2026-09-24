@@ -4,7 +4,8 @@ This repo is being rebuilt from a marketing site into ARK's free course platform
 
 ## Current state
 - `main` is the live site: React 18 + Vite + Tailwind v4 + shadcn/Radix (Figma Make export), with React Router.
-- `platform-v1` (Phase 0 done): Astro 7 + React islands + MDX + Tailwind v4, `output: 'server'` with the Netlify adapter. Every page so far sets `prerender = true`.
+- `platform-v1` (Phases 0 and 1 done): Astro 7 + React islands + MDX + Tailwind v4, `output: 'server'` with the Netlify adapter. Every page so far sets `prerender = true`.
+- Course content lives in content collections (`src/content.config.ts`, zod-validated): `src/content/tracks/*.md` and `src/content/modules/<track>/<slug>/index.mdx` (17 stubs, all `status: draft`). `src/lib/courses.ts` loads and orders them. Course pages are `src/pages/courses/`; their Astro components are in `src/components/`. Reviewer names come from module frontmatter; partner logos and impact numbers come from `src/data/*.json` (see `src/data/README.md`), and those home-page sections stay hidden while empty.
 - Routes are `.astro` files in `src/pages/`; page sections in `src/app/sections/`; shared components in `src/app/components/site/` and shadcn primitives in `src/app/components/ui/`. Copy lives in `src/app/lib/content.ts`, tokens in `src/styles/theme.css`, brand assets in `public/brand/`. Style guide: `/dev/components` (noindex, unlinked).
 - Commands: `npm run dev` (port 5180), `npm run build` (also checks alt text, links, and bundle secrets), `npm run check:contrast`, `npm run check`, `npm run test:visual`, `npm run test:a11y`, `npm test`.
 - **Pushing to `main` deploys to production** (GitHub Pages via `.github/workflows/deploy.yml`).

@@ -1,10 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Programs from "../app/sections/Programs";
+import { getCourses } from "../lib/courses";
 export const prerender = true;
+const tracks = (await getCourses()).map(({ track, modules }) => ({ id: track.id, title: track.data.title, grades: track.data.grades, modules: modules.length }));
 // Brief section 2: becomes /workshops (with a redirect from here) in Phase 6.
 ---
 
-<BaseLayout title="Programs | ARK · AI Readiness for Kids" description="Six ways ARK brings responsible AI to kids, families, and educators: free curriculum, in-school workshops, parent nights, teacher PD, a student summit, and research.">
-  <Programs />
+<BaseLayout title="Programs | ARK · AI Readiness for Kids" description="Six ways ARK brings responsible AI to kids, families, and educators: free online courses, in-school workshops, parent nights, teacher PD, a student summit, and research.">
+  <Programs tracks={tracks} />
 </BaseLayout>

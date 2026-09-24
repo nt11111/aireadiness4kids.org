@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import TrackCard from "../../components/TrackCard.astro";
+import { getCourses, MODULE_MINUTES } from "../../lib/courses";
+import { Footprints, Split, CircleCheck, PenLine, Presentation, BadgeCheck } from "lucide-react";
+export const prerender = true;
+
+const courses = await getCourses();
+
+const includes = [
+  { Icon: Footprints, title: "Short steps", body: `Each ${MODULE_MINUTES.min} to ${MODULE_MINUTES.max} minute module is split into 5 to 8 steps of 3 to 10 minutes, so it fits a class period or a quiet evening.` },
+  { Icon: Split, title: "Real situations", body: "\"What would you do?\" scenarios with feedback that explains why, never a scolding." },
+  { Icon: CircleCheck, title: "Quick checks", body: "A few questions before and after, so learners can see what they picked up." },
+  { Icon: PenLine, title: "Private reflections", body: "Reflection prompts are saved only on the learner's own device. We never see them." },
+  { Icon: Presentation, title: "Slides for teaching", body: "A slide deck for every module, so teachers and workshop leaders can teach it live." },
+  { Icon: BadgeCheck, title: "Honest review status", body: "Every module shows whether an expert has reviewed it yet." },
+];
+---
+
+<BaseLayout title="Courses | ARK · AI Readiness for Kids" description="Three free AI literacy courses for grades K-5, 6-8, and 9-12. Standalone modules with short steps, quick checks, and slides for teaching.">
+  <section class="border-b border-line bg-surface-2 px-4 pb-12 pt-28 sm:px-6 lg:pb-14 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses" }]} class="text-ink-soft" />
+      <h1 class="mt-5 text-display-lg text-ink">Courses</h1>
+      <p class="mt-4 max-w-reading text-lesson text-ink-soft">Three free courses, one for each grade band. Each course is a set of standalone modules you can take in order or on their own.</p>
+    </div>
+  </section>
+
+  <section aria-label="All courses" class="px-4 py-12 sm:px-6 lg:py-16">
+    <ul class="mx-auto grid max-w-site gap-6 lg:gap-8">
+      {courses.map((course) => <li><TrackCard course={course} layout="catalog" headingLevel={2} /></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="includes-h" class="border-t border-line bg-surface px-4 py-16 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-site">
+      <h2 id="includes-h" class="text-display-md text-ink">What every module includes</h2>
+      <ul class="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {includes.map(({ Icon, title, body }) => (
+          <li class="flex gap-4">
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand"><Icon aria-hidden="true" className="size-5" /></span>
+            <div>
+              <h3 class="text-title text-ink">{title}</h3>
+              <p class="mt-1.5 text-ui text-ink-soft">{body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

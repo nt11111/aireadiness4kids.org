@@ -6,7 +6,7 @@ export function PageHero({ crumb, eyebrow, title, lead, actions }: { crumb: stri
   return (
     <header className="relative bg-gradient-to-b from-secondary to-background border-b border-border overflow-hidden pt-36 pb-16 px-6">
       <img src="/brand/ark-mark-web.png" alt="" aria-hidden="true" className="absolute right-[4%] top-1/2 -translate-y-1/2 w-[300px] opacity-90 drop-shadow-[0_20px_40px_rgba(28,36,48,.18)] hidden xl:block pointer-events-none select-none ark-float" />
-      <div className="relative max-w-7xl mx-auto">
+      <div className="relative max-w-site mx-auto">
         <nav className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-6" aria-label="Breadcrumb">
           <a href="/" className="underline decoration-1 underline-offset-2 hover:text-brand">Home</a>
           <ChevronRight size={12} aria-hidden="true" />

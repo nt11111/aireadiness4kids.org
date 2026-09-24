@@ -1,0 +1,105 @@
+---
+// Course page (brief section 7): Coursera-style header in the track color, outcomes, and a syllabus accordion.
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import SyllabusItem from "../../../components/SyllabusItem.astro";
+import { buttonVariants } from "../../../app/components/ui/button";
+import { trackStyle } from "../../../app/lib/tracks";
+import { cn } from "../../../app/components/ui/utils";
+import { courseTime, getCourses, moduleHref, reviewCounts, type Course } from "../../../lib/courses";
+import { ArrowRight, BookOpen, Check, Clock, ExternalLink, FileText, HeartHandshake } from "lucide-react";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  return courses.map((course) => ({ params: { track: course.track.id }, props: { course } }));
+}
+
+const { course } = Astro.props as { course: Course };
+const { track, modules } = course;
+const { title, grades, tagline, summary, outcomes, slides_folder_url } = track.data;
+const s = trackStyle(track.id);
+const time = courseTime(modules);
+const counts = reviewCounts(modules);
+const reviewLine =
+  counts.reviewed === modules.length ? "Every module in this course has been reviewed by an expert."
+  : counts.reviewed === 0 && counts.inReview === 0 ? `All ${modules.length} modules are drafts under expert review.`
+  : `${counts.reviewed} of ${modules.length} modules reviewed so far; the rest are drafts or in review.`;
+---
+
+<BaseLayout title={`${title}, grades ${grades} | ARK courses`} description={summary}>
+  <section class={cn("relative overflow-hidden px-4 pb-12 pt-28 sm:px-6 lg:pb-16 lg:pt-36", s.fill, s.ring)}>
+    <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false" class="pointer-events-none absolute -bottom-16 right-0 hidden w-[360px] opacity-15 lg:block xl:right-[5%]">
+      {track.id === "explorers" && <circle cx="100" cy="100" r="96" fill="currentColor" />}
+      {track.id === "investigators" && <rect x="22" y="22" width="156" height="156" rx="36" fill="currentColor" transform="rotate(-9 100 100)" />}
+      {track.id === "architects" && <path d="M22 196 V 94 a 78 78 0 0 1 156 0 V 196 Z" fill="currentColor" />}
+    </svg>
+    <div class="relative mx-auto max-w-site">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses", href: "/courses" }, { label: title }]} />
+      <div class="mt-8 max-w-3xl">
+        <p class="inline-flex rounded-full border-[1.5px] border-current px-3 py-1 text-small font-bold">Grades {grades}</p>
+        <h1 class="mt-4 text-display-lg sm:text-display-xl">{title}</h1>
+        <p class="mt-2 font-display text-title font-medium">{tagline}</p>
+        <p class="mt-5 max-w-reading text-lesson">{summary}</p>
+        <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-ui font-bold">
+          <li class="inline-flex items-center gap-2"><BookOpen aria-hidden="true" className="size-5" />{modules.length} modules</li>
+          <li class="inline-flex items-center gap-2"><Clock aria-hidden="true" className="size-5" />{time}</li>
+          <li class="inline-flex items-center gap-2"><HeartHandshake aria-hidden="true" className="size-5" />Free</li>
+        </ul>
+        <a href={moduleHref(modules[0])} class={cn(buttonVariants({ variant: s.button, size: "lg" }), "mt-8")}>
+          Start course <ArrowRight aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="px-4 py-12 sm:px-6 lg:py-16">
+    <div class="mx-auto grid max-w-site gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+      <!-- First in source order so it sits right under the header on mobile; the right column on desktop. -->
+      <aside aria-labelledby="educators-h" class="lg:col-start-2 lg:row-start-1">
+        <div class="rounded-xl border border-line bg-surface p-6 shadow-1 lg:sticky lg:top-28">
+          <h2 id="educators-h" class="text-title text-ink">For educators</h2>
+          <p class="mt-2 text-ui text-ink-soft">Teaching this in class or at home? Every module has a slide deck you can present.</p>
+          <ul class="mt-4 space-y-3 text-ui">
+            {slides_folder_url && (
+              <li>
+                <a href={slides_folder_url} class="inline-flex items-center gap-2 rounded-sm font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">
+                  <ExternalLink aria-hidden="true" className="size-4 shrink-0" />
+                  <span>Slides for all {modules.length} modules<span class="sr-only"> (Google Drive folder)</span></span>
+                </a>
+              </li>
+            )}
+            <li class="flex items-center gap-2 text-ink-soft"><FileText aria-hidden="true" className="size-4 shrink-0" />Facilitator guides: coming soon</li>
+          </ul>
+          <div class="mt-5 border-t border-line pt-5">
+            <h3 class="font-sans text-ui font-bold text-ink">Review status</h3>
+            <p class="mt-1 text-small text-ink-soft">{reviewLine}</p>
+            <a href="/about#reviewers" class="mt-1 inline-block rounded-sm text-small font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">How we review modules</a>
+          </div>
+          <a href="/programs#workshops" class={cn(buttonVariants({ variant: "outline" }), "mt-6 w-full sm:w-auto lg:w-full")}>Bring ARK to your school</a>
+        </div>
+      </aside>
+
+      <div class="min-w-0 lg:col-start-1 lg:row-start-1">
+        <section aria-labelledby="learn-h" class="rounded-xl border border-line bg-surface p-6 shadow-1 sm:p-8">
+          <h2 id="learn-h" class="text-display-sm text-ink">What you'll learn</h2>
+          <ul class="mt-5 grid gap-x-8 gap-y-3 md:grid-cols-2">
+            {outcomes.map((o) => (
+              <li class="flex gap-3 text-ui text-ink"><Check aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand" />{o}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="syllabus-h" class="mt-12">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 id="syllabus-h" class="text-display-sm text-ink">Syllabus</h2>
+            <p class="text-small text-ink-soft">{modules.length} modules · {time}</p>
+          </div>
+          <ol class="mt-5 space-y-3">
+            {modules.map((mod) => <li><SyllabusItem mod={mod} /></li>)}
+          </ol>
+        </section>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

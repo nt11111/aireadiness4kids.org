@@ -12,8 +12,22 @@ export default defineConfig({
   output: "server",
   adapter: netlify(),
   integrations: [react(), mdx()],
+  // Old routes that moved (brief section 2). /programs -> /workshops lands in Phase 6.
+  redirects: {
+    "/curriculum": "/courses",
+  },
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rolldownOptions: {
+        // Astro tags MDX content modules with "use astro:head-inject" and reads the tag before
+        // bundling; Rolldown then warns that it drops the directive. Filter only that known-harmless case.
+        onwarn(warning, warn) {
+          if (warning.code === "MODULE_LEVEL_DIRECTIVE" && warning.message.includes("astro:head-inject")) return;
+          warn(warning);
+        },
+      },
+    },
   },
   devToolbar: { enabled: false },
 });

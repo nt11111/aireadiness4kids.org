@@ -54,6 +54,7 @@
   /* Status */
   --success: #2D794D;           /* brief #2E7D4F: 4.40:1 on --surface-2, darkened to pass AA */
   --warning: #936119;           /* brief #B7791F: 3.44:1 as text, darkened to pass AA */
+  --warning-soft: #FBF1DF;      /* draft review badge tint */
   --danger: #B42318;
 
   /* Elevation, layout, motion */
@@ -163,6 +164,7 @@
   --color-track-architects-soft: var(--track-architects-soft);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
 
   /* Brief radii: sm 8, default 14, lg 20 (Tailwind rounded-sm / rounded-lg / rounded-xl) */

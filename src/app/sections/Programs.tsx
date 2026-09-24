@@ -1,5 +1,4 @@
 import { ArrowRight, Clock, Home, GraduationCap, Trophy, BarChart3, Mic, Mail, Share2, BookOpen, Library, Check } from "lucide-react";
-import { TRACKS } from "../lib/content";
 import { trackStyle } from "../lib/tracks";
 import { PageHero } from "../components/site/PageHero";
 import { Section, SectionHead, Btn, Card, IconBox, CTABand, Eyebrow, H2, Lead } from "../components/site/Primitives";
@@ -26,7 +25,9 @@ const channels = [
   { Icon: Library, t: "Resource library", d: "A curated, searchable database of third-party articles, videos, and tools." },
 ];
 
-export default function Programs() {
+type TrackSummary = { id: string; title: string; grades: string; modules: number };
+
+export default function Programs({ tracks }: { tracks: TrackSummary[] }) {
   return (
     <>
       <PageHero crumb="Programs" eyebrow="Our programs" title="Six ways we bring responsible AI to kids, families, and educators."
@@ -37,21 +38,21 @@ export default function Programs() {
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           <div className="reveal">
             <Eyebrow>Program 01 · The centerpiece</Eyebrow>
-            <H2>Free Curriculum Library</H2>
-            <Lead>A downloadable K-12 curriculum in three grade-banded tracks. Lesson plans, slide decks, facilitator guides, worksheets, and discussion banks. Refreshed every year.</Lead>
+            <H2>Free Online Courses</H2>
+            <Lead>Three free online courses, one for each grade band, with a slide deck for every module so teachers and workshop leaders can teach it live.</Lead>
             <ul className="grid gap-3 mt-7">
-              {["No login required, no paywall", "Reviewed by classroom teachers before release", "Standalone modules, teach in any order", "Updated annually to reflect AI developments"].map((x) => (
+              {["Free forever, with no paywall", "Browse every course without an account", "Standalone modules, teach in any order", "Every module shows its expert-review status"].map((x) => (
                 <li key={x} className="flex gap-3 text-foreground/80"><Check size={18} aria-hidden="true" className="text-brand shrink-0 mt-1" />{x}</li>
               ))}
             </ul>
-            <Btn to="/curriculum" className="mt-9" arrow>Browse all 17 modules</Btn>
+            <Btn to="/courses" className="mt-9" arrow>Browse all {tracks.reduce((n, t) => n + t.modules, 0)} modules</Btn>
           </div>
           <div className="grid gap-3 reveal d2">
-            {TRACKS.map((t) => {
+            {tracks.map((t) => {
               const s = trackStyle(t.id);
               return (
-                <a key={t.id} href={`/curriculum#${t.id}`} className={cn("group flex items-center justify-between rounded-2xl p-6 relative overflow-hidden shadow-1 hover:-translate-y-1 hover:shadow-2 transition-[transform,box-shadow] duration-[var(--dur-slow)]", s.fill)}>
-                  <div><div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]">{t.grades} · {t.modules} modules</div><div className="font-display text-2xl font-black mt-1">{t.label}</div></div>
+                <a key={t.id} href={`/courses/${t.id}`} className={cn("group flex items-center justify-between rounded-2xl p-6 relative overflow-hidden shadow-1 hover:-translate-y-1 hover:shadow-2 transition-[transform,box-shadow] duration-[var(--dur-slow)]", s.fill)}>
+                  <div><div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em]">Grades {t.grades} · {t.modules} modules</div><div className="font-display text-2xl font-black mt-1">{t.title}</div></div>
                   <ArrowRight aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
                 </a>
               );
@@ -102,7 +103,7 @@ export default function Programs() {
         </div>
       </Section>
 
-      <CTABand title="Bring a program to your community." lead="Schools, districts, libraries, and after-school programs, let us find the right format for your learners." primary={{ label: "Partner with us", to: "/get-involved#partners" }} secondary={{ label: "Explore the curriculum", to: "/curriculum" }} />
+      <CTABand title="Bring a program to your community." lead="Schools, districts, libraries, and after-school programs, let us find the right format for your learners." primary={{ label: "Partner with us", to: "/get-involved#partners" }} secondary={{ label: "Browse the courses", to: "/courses" }} />
     </>
   );
 }

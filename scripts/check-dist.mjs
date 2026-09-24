@@ -2,6 +2,7 @@
 //  - any <img> lacks an alt attribute (alt="" is allowed for decorative images)
 //  - any internal link, asset, or #anchor doesn't resolve to something in dist/
 //  - a service-account "private_key" appears in any client bundle
+//  - a redirect in dist/_redirects points at a page that doesn't exist
 import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, relative, extname } from "node:path";
@@ -42,6 +43,11 @@ for (const file of html) {
   }
 }
 
+const redirects = existsSync(join(DIST, "_redirects")) ? readFileSync(join(DIST, "_redirects"), "utf8").split("\n").map((l) => l.trim().split(/\s+/)).filter(([f, t]) => f && t && !f.startsWith("#")) : [];
+for (const [from, to] of redirects) {
+  if (to.startsWith("/") && !pageFor(to.split("#")[0])) problems.push(`_redirects: ${from} points to missing page ${to}`);
+}
+
 for (const js of files.filter((f) => f.endsWith(".js") && f.includes("/_astro/"))) {
   if (readFileSync(js, "utf8").includes("private_key")) problems.push(`${relative(DIST, js)}: contains "private_key"`);
 }
@@ -50,4 +56,4 @@ if (problems.length) {
   console.error(`\ncheck-dist: ${problems.length} problem(s)\n` + problems.map((p) => `  - ${p}`).join("\n"));
   process.exit(1);
 }
-console.log(`check-dist: ${html.length} pages OK (alt text, internal links and anchors, no secrets in client bundles)`);
+console.log(`check-dist: ${html.length} pages OK and ${redirects.length} redirects OK (alt text, internal links and anchors, redirect targets, no secrets in client bundles)`);
