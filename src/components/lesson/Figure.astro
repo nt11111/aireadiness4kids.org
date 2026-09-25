@@ -1,0 +1,12 @@
+---
+// <Figure src alt caption>: images for lessons. Put files in public/lessons/<track>/<module>/.
+// alt is required: describe what the image shows. The build fails without it.
+interface Props { src: string; alt: string; caption?: string; width?: number; height?: number }
+const { src, alt, caption, width, height } = Astro.props;
+if (typeof alt !== "string" || !alt.trim()) throw new Error(`<Figure src="${src}">: add alt="..." describing the image for people who can't see it.`);
+---
+
+<figure class="lesson-block mx-auto" style={width ? `max-width:${width}px` : undefined}>
+  <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" class="h-auto w-full rounded-xl border border-line bg-surface" />
+  {caption && <figcaption class="mt-2 text-small text-ink-soft">{caption}</figcaption>}
+</figure>

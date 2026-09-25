@@ -9,7 +9,7 @@ import { join, extname, normalize } from "node:path";
 
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
 const port = Number(process.argv[process.argv.indexOf("--port") + 1]) || 4321;
-const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff", ".ico": "image/x-icon", ".json": "application/json", ".txt": "text/plain" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff", ".ico": "image/x-icon", ".json": "application/json", ".txt": "text/plain", ".webm": "video/webm", ".mp4": "video/mp4", ".vtt": "text/vtt" };
 
 const REDIRECTS = new Map(
   (existsSync(join(DIST, "_redirects")) ? readFileSync(join(DIST, "_redirects"), "utf8") : "")

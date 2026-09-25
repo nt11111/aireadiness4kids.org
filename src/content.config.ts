@@ -23,15 +23,38 @@ const tracks = defineCollection({
   }),
 });
 
+const unique = (ids: string[]) => new Set(ids).size === ids.length;
+
+// A multiple-choice or true/false question (for true/false, list "True" and "False" as the options).
 const question = z
   .object({
     id: z.string().min(1),
     prompt: z.string().min(1),
-    options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1) })).min(2),
+    options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1) })).min(2).max(5),
     answer: z.string().min(1),
-    explanation: z.string().optional(),
+    // Shown after the learner checks their answer, right or wrong. Explain why; never scold.
+    explanation: z.string().min(1),
   })
-  .refine((q) => q.options.some((o) => o.id === q.answer), { message: "answer must match one of the option ids" });
+  .refine((q) => q.options.some((o) => o.id === q.answer), { message: "answer must match one of the option ids" })
+  .refine((q) => unique(q.options.map((o) => o.id)), { message: "option ids must be unique" });
+
+// <Scenario>: "What would you do?" Every option gets its own feedback; none is "wrong" (brief section 6).
+const scenario = z
+  .object({
+    prompt: z.string().min(1),
+    options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1), feedback: z.string().min(1) })).min(2).max(5),
+  })
+  .refine((s) => unique(s.options.map((o) => o.id)), { message: "option ids must be unique" });
+
+// <Sort>: put each item in the right bucket. Works by tapping or keyboard; dragging is optional.
+const sort = z
+  .object({
+    prompt: z.string().min(1),
+    buckets: z.array(z.object({ id: z.string().min(1), label: z.string().min(1) })).min(2).max(4),
+    items: z.array(z.object({ id: z.string().min(1), text: z.string().min(1), bucket: z.string().min(1), why: z.string().min(1) })).min(2).max(10),
+  })
+  .refine((s) => s.items.every((i) => s.buckets.some((b) => b.id === i.bucket)), { message: "every item's bucket must match a bucket id" })
+  .refine((s) => unique(s.items.map((i) => i.id)) && unique(s.buckets.map((b) => b.id)), { message: "item and bucket ids must be unique" });
 
 const modules = defineCollection({
   // Entry id is "<track>/<module-slug>", taken from the folder path.
@@ -55,8 +78,9 @@ const modules = defineCollection({
       status: z.enum(REVIEW_STATUSES),
       reviewers: z.array(z.object({ name: z.string().min(1), credentials: z.string().optional() })).default([]),
       slides_url: z.union([z.url(), z.literal("")]).default(""),
-      pre_check: z.array(question).default([]),
-      post_check: z.array(question).default([]),
+      // Optional "See what you already know" check on the module page, repeated after the module (brief section 7).
+      pre_check: z.array(question).max(5).default([]),
+      post_check: z.array(question).max(5).default([]),
     })
     .superRefine((m, ctx) => {
       if (m.status === "reviewed" && m.reviewers.length === 0) {
@@ -72,5 +96,45 @@ const modules = defineCollection({
     }),
 });
 
-// The steps collection arrives with the first lesson steps (Phase 2); an empty glob only produces a build warning.
-export const collections = { tracks, modules };
+// Lesson steps: src/content/modules/<track>/<module>/NN-step-slug.mdx. The two-digit prefix sets the
+// order; the URL is the slug without it (/courses/<track>/<module>/<step-slug>).
+const steps = defineCollection({
+  loader: glob({
+    pattern: "*/*/[0-9][0-9]-*.mdx",
+    base: "./src/content/modules",
+    generateId: ({ entry }) => entry.replace(/\.mdx$/, ""),
+  }),
+  schema: z
+    .object({
+      title: z.string().min(1),
+      type: z.enum(STEP_TYPES),
+      // Brief section 4: steps are 3 to 10 minutes.
+      minutes: z.number().int().min(1).max(15),
+      questions: z.array(question).max(5).default([]),
+      scenario: scenario.optional(),
+      sort: sort.optional(),
+    })
+    .superRefine((s, ctx) => {
+      if (s.type === "check" && s.questions.length === 0) ctx.addIssue({ code: "custom", path: ["questions"], message: "A check step needs 1 to 5 questions" });
+      if (s.type === "scenario" && !s.scenario) ctx.addIssue({ code: "custom", path: ["scenario"], message: "A scenario step needs a scenario" });
+      if (!unique(s.questions.map((q) => q.id))) ctx.addIssue({ code: "custom", path: ["questions"], message: "question ids must be unique" });
+    }),
+});
+
+// Facilitator guide for a module: src/content/modules/<track>/<module>/guide.mdx (rendered on /educators in Phase 5).
+const guides = defineCollection({
+  loader: glob({
+    pattern: "*/*/guide.mdx",
+    base: "./src/content/modules",
+    generateId: ({ entry }) => entry.replace(/\/guide\.mdx$/, ""),
+  }),
+  schema: z.object({
+    title: z.string().min(1),
+    status: z.enum(REVIEW_STATUSES),
+    // Classroom time for the whole lesson plan.
+    duration_minutes: z.number().int().positive(),
+    materials: z.array(z.string().min(1)).default([]),
+  }),
+});
+
+export const collections = { tracks, modules, steps, guides };

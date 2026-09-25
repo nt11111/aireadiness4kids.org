@@ -28,7 +28,8 @@ for (const file of html) {
   }
   const refs = [
     ...[...src.matchAll(/<a\b[^>]*\bhref="([^"]*)"/g)].map((m) => ["link", m[1]]),
-    ...[...src.matchAll(/<(?:img|script)\b[^>]*\bsrc="([^"]*)"/g)].map((m) => ["asset", m[1]]),
+    ...[...src.matchAll(/<(?:img|script|source|track|video)\b[^>]*\bsrc="([^"]*)"/g)].map((m) => ["asset", m[1]]),
+    ...[...src.matchAll(/<video\b[^>]*\bposter="([^"]*)"/g)].map((m) => ["asset", m[1]]),
     ...[...src.matchAll(/<link\b[^>]*\bhref="([^"]*)"/g)].map((m) => ["asset", m[1]]),
   ];
   for (const [kind, raw] of refs) {

@@ -286,6 +286,13 @@
 @keyframes sheen { to { left: 130% } }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Page transitions (Astro View Transitions). Astro only ships its own reduced-motion rule on pages
+     that use transition: directives, so turn them off here for every page, and hide the old snapshot
+     so the swap is instant instead of blending for a few frames. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+  ::view-transition-old(*) { opacity: 0 !important; }
   *, *::before, *::after {
     animation-duration: .001ms !important;
     animation-delay: 0s !important;

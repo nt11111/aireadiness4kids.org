@@ -1,0 +1,22 @@
+---
+// Focused layout for lesson steps: no marketing header or footer, just the lesson.
+// The client router keeps the outline, progress, and keyboard handling alive between steps.
+import "../styles/index.css";
+import SiteHead from "../components/SiteHead.astro";
+import LessonKeys from "../components/lesson/LessonKeys.astro";
+
+interface Props { title: string; description?: string; noindex?: boolean }
+const { title, description, noindex } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SiteHead title={title} description={description} noindex={noindex} viewTransitions />
+  </head>
+  <body class="bg-bg">
+    <a href="#lesson-main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-5 focus:py-3 focus:font-bold focus:text-ink focus:shadow-2">Skip to the lesson</a>
+    <slot />
+    <LessonKeys />
+  </body>
+</html>

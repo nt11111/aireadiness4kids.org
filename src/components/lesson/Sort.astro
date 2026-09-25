@@ -1,0 +1,12 @@
+---
+// <Sort />: the buckets and cards come from this step's `sort:` frontmatter (or props).
+import { Sort as SortIsland } from "../../app/components/lesson/Sort";
+import type { SortData } from "../../lib/lesson-types";
+
+type Props = Partial<SortData>;
+const lesson = Astro.locals.lesson;
+const data = Astro.props.prompt && Astro.props.buckets && Astro.props.items ? (Astro.props as SortData) : lesson?.sort;
+if (!data) throw new Error("<Sort />: add sort: (prompt, buckets, items) to this step's frontmatter.");
+---
+
+<div class="lesson-block"><SortIsland client:idle prompt={data.prompt} buckets={data.buckets} items={data.items} stepId={lesson?.stepId} /></div>

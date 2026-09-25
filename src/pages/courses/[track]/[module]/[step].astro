@@ -1,0 +1,51 @@
+---
+// Lesson player page for one step (brief section 7).
+// Phase 3 gates steps 2+ on the server (session check + redirect to /signin); until then every step is prerendered.
+import { render } from "astro:content";
+import LessonLayout from "../../../../layouts/LessonLayout.astro";
+import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
+import { lessonComponents } from "../../../../components/lesson";
+import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref, type Course, type Module } from "../../../../lib/courses";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  return courses.flatMap((course) =>
+    course.modules.flatMap((mod) =>
+      getModuleSteps(course, mod).map((step, index) => ({
+        params: { track: course.track.id, module: moduleSlug(mod), step: step.slug },
+        props: { course, mod, index },
+      })),
+    ),
+  );
+}
+
+const { course, mod, index } = Astro.props as { course: Course; mod: Module; index: number };
+const steps = getModuleSteps(course, mod);
+const step = steps[index];
+
+// MDX components read this step's data from here, so authors can write <Check /> with no props.
+Astro.locals.lesson = {
+  stepId: step.id,
+  moduleId: mod.id,
+  track: course.track.id,
+  vocabulary: mod.data.vocabulary,
+  questions: step.entry.data.questions,
+  scenario: step.entry.data.scenario,
+  sort: step.entry.data.sort,
+};
+const { Content } = await render(step.entry);
+// Islands get plain step info only, not the whole content entry.
+const stepRefs = steps.map(({ entry: _entry, ...ref }) => ref);
+---
+
+<LessonLayout title={`${step.title} | ${mod.data.title} | ARK`} description={mod.data.summary}>
+  <LessonPlayer
+    track={{ id: course.track.id, title: course.track.data.title, href: trackHref(course.track) }}
+    module={{ title: mod.data.title, href: moduleHref(mod), status: mod.data.status }}
+    steps={stepRefs}
+    index={index}
+  >
+    <Content components={lessonComponents} />
+  </LessonPlayer>
+</LessonLayout>

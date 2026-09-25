@@ -46,16 +46,21 @@ for (const route of ROUTES) {
         if (!el || el === document.body) return null;
         const cs = getComputedStyle(el);
         const r = el.getBoundingClientRect();
-        const ring = cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2;
-        // WCAG 2.4.11: the focused element must not be entirely covered, e.g. by the fixed header.
+        // Media elements put focus on their built-in controls (inside the browser's shadow DOM), which draw their own ring.
+        const ring = el.matches("video, audio") || (cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2);
+        // WCAG 2.4.11: the focused element must not be covered by the fixed header or the lesson's sticky bars.
         const top = document.elementFromPoint(Math.min(Math.max(r.left + r.width / 2, 0), innerWidth - 1), Math.min(Math.max(r.top + r.height / 2, 0), innerHeight - 1));
-        const obscured = !!top && !el.contains(top) && !top.contains(el) && !!top.closest("header") && !el.closest("header");
-        return { id: el.dataset.kbId ?? null, desc: `${el.tagName.toLowerCase()} "${(el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 40)}"`, ring, obscured };
+        const sticky = "header, [data-sticky]";
+        const obscured = !!top && !el.contains(top) && !top.contains(el) && !!top.closest(sticky) && !el.closest(sticky);
+        // Count focus landing inside an element as reaching it: Radix radio groups pass focus straight to a radio.
+        const ids: string[] = [];
+        for (let n: HTMLElement | null = el; n; n = n.parentElement) if (n.dataset.kbId) ids.push(n.dataset.kbId);
+        return { ids, desc: `${el.tagName.toLowerCase()} "${(el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 40)}"`, ring, obscured };
       });
       if (!info) break; // wrapped past the end of the page
-      if (info.id) reached.add(info.id);
+      info.ids.forEach((id) => reached.add(id));
       if (!info.ring) problems.push(`no visible focus ring on ${info.desc}`);
-      if (info.obscured) problems.push(`focused element hidden under the fixed header: ${info.desc}`);
+      if (info.obscured) problems.push(`focused element hidden under a sticky bar: ${info.desc}`);
     }
     const missed = expected.filter((id) => !reached.has(id));
     const missedDesc = await page.evaluate((ids) => ids.map((id) => { const el = document.querySelector<HTMLElement>(`[data-kb-id="${id}"]`)!; return `${el.tagName.toLowerCase()} "${(el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 40)}"`; }), missed);
@@ -97,8 +102,9 @@ test("keyboard: syllabus rows open and close with Enter", async ({ page }) => {
   await summary.focus();
   await page.keyboard.press("Enter");
   await expect(row).toHaveAttribute("open", "");
+  // Bias in AI has lesson steps, so Tab reaches the first step link inside the row.
   await page.keyboard.press("Tab");
-  await expect(row.getByRole("link", { name: /Module overview: Bias in AI/ })).toBeFocused();
+  await expect(row.getByRole("link", { name: /What is bias\?/ })).toBeFocused();
   await axe(page, "syllabus-open");
   await summary.focus();
   await page.keyboard.press("Enter");

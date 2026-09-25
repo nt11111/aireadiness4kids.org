@@ -1,0 +1,38 @@
+---
+// Facilitator guide preview (guide.mdx). The real educator pages, with print styles, arrive in Phase 5.
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { lessonComponents } from "../../../components/lesson";
+import { ReviewBadge } from "../../../app/components/site/ReviewBadge";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides");
+  return guides.map((guide) => ({ params: { id: guide.id }, props: { guide } }));
+}
+const { guide } = Astro.props;
+const [modules] = await Promise.all([getCollection("modules")]);
+const mod = modules.find((m) => m.id === guide.id);
+Astro.locals.lesson = { stepId: `${guide.id}/guide`, moduleId: guide.id, track: mod?.data.track ?? "", vocabulary: mod?.data.vocabulary ?? [], questions: [] };
+const { Content } = await render(guide);
+---
+
+<BaseLayout title={`${guide.data.title} (preview) | ARK`} noindex>
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <article class="mx-auto max-w-reading">
+      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Preview · educator pages arrive in Phase 5</p>
+      <h1 class="mt-2 text-display-lg text-ink">{guide.data.title}</h1>
+      <div class="mt-4 flex flex-wrap items-center gap-3 text-ui text-ink-soft">
+        <span>{guide.data.duration_minutes} minutes</span>
+        <ReviewBadge status={guide.data.status} />
+      </div>
+      {guide.data.materials.length > 0 && (
+        <section aria-labelledby="materials-h" class="mt-8 rounded-xl border border-line bg-surface p-5">
+          <h2 id="materials-h" class="text-title text-ink">Materials</h2>
+          <ul class="mt-2 list-disc space-y-1 pl-6 text-ui text-ink">{guide.data.materials.map((m) => <li>{m}</li>)}</ul>
+        </section>
+      )}
+      <div class="lesson-prose mt-8 text-lesson"><Content components={lessonComponents} /></div>
+    </article>
+  </div>
+</BaseLayout>

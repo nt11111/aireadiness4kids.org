@@ -1,0 +1,39 @@
+---
+// Shared <head> contents for every layout.
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+  /** Astro View Transitions: pages that opt in share in-memory state as the learner moves between them. */
+  viewTransitions?: boolean;
+}
+
+const {
+  title,
+  description = "ARK (AI Readiness for Kids) is a nonprofit that equips K-12 students, teachers, and parents with the knowledge, skills, and ethical grounding to use AI responsibly.",
+  noindex = false,
+  viewTransitions = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta name="theme-color" content="#1C2430" />
+<link rel="icon" type="image/png" href="/brand/ark-mark-180.png" />
+<link rel="apple-touch-icon" href="/brand/ark-mark-180.png" />
+<!-- Reveal animations only hide content once JS is confirmed running. -->
+<script is:inline>document.documentElement.classList.add("js");</script>
+{viewTransitions && <ClientRouter fallback="none" />}

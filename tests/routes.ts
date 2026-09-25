@@ -20,13 +20,22 @@ export const MODULES = [
   "architects/advocacy-and-action",
 ];
 
-export const ROUTES = [
+// The sample module's lesson steps, in order (src/content/modules/investigators/bias-in-ai/NN-*.mdx).
+export const BIAS_MODULE = "/courses/investigators/bias-in-ai";
+export const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiring-bot", "check", "reflect", "recap"];
+
+export type Route = { name: string; path: string; lesson?: boolean };
+
+export const ROUTES: Route[] = [
   { name: "home", path: "/" },
   { name: "courses", path: "/courses" },
   { name: "course-explorers", path: "/courses/explorers" },
   { name: "course-investigators", path: "/courses/investigators" },
   { name: "course-architects", path: "/courses/architects" },
   ...MODULES.map((m) => ({ name: `module-${m.replace("/", "-")}`, path: `/courses/${m}` })),
+  ...BIAS_STEPS.map((s) => ({ name: `step-${s}`, path: `${BIAS_MODULE}/${s}`, lesson: true })),
+  ...["1", "2", "3"].map((n) => ({ name: `dev-explorers-preview-${n}`, path: `/dev/lesson-preview/${n}`, lesson: true })),
+  { name: "dev-guide-bias-in-ai", path: "/dev/guides/investigators/bias-in-ai" },
   { name: "about", path: "/about" },
   { name: "get-involved", path: "/get-involved" },
   { name: "donate", path: "/donate" },

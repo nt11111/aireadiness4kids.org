@@ -8,13 +8,56 @@ topics:
   - "Real cases: facial recognition failures, hiring algorithms, predictive policing"
   - "Who is most affected by biased AI?"
   - "What can be done to reduce AI bias?"
-objectives: []
-vocabulary: []
+objectives:
+  - "Explain what bias means and how it can get into an AI tool"
+  - "Name three places bias can enter: the data, the goal people choose, and how a tool is tested and used"
+  - "Recognize who can be harmed when an AI tool works better for some people than others"
+  - "Suggest practical ways to catch and reduce bias before a tool is used"
+vocabulary:
+  - term: "bias"
+    def: "A pattern that unfairly favors or works against some people or groups."
+  - term: "training data"
+    def: "The examples an AI tool learns from, like labeled photos, emails, or past decisions."
+  - term: "algorithm"
+    def: "A set of step-by-step instructions that a computer follows."
+  - term: "feedback loop"
+    def: "When a tool's results become its future data, so a pattern keeps repeating and can grow."
+  - term: "audit"
+    def: "A careful check of a system, often by outside experts, to see whether it works fairly for everyone."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1IQUN-oLoW1I0Xd0OFtDKMBES9eGuY_Hn/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it, so learners can see what they gained.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-training-data
+    prompt: "An AI tool learns to spot spam by studying lots of emails that people already labeled \"spam\" or \"not spam.\" What are those labeled emails called?"
+    options:
+      - { id: a, text: "Training data" }
+      - { id: b, text: "An algorithm" }
+      - { id: c, text: "A feedback loop" }
+      - { id: d, text: "The tool's output" }
+    answer: a
+    explanation: "The labeled examples an AI tool learns from are its training data."
+  - id: pc-past-hiring
+    prompt: "A company trains an AI tool on its past hiring decisions. In the past, it mostly hired people from one group. What is the tool likely to do?"
+    options:
+      - { id: a, text: "Pick the best people, because computers are neutral" }
+      - { id: b, text: "Favor applicants who resemble the people hired before" }
+      - { id: c, text: "Pick people at random" }
+      - { id: d, text: "Refuse to rank anyone" }
+    answer: b
+    explanation: "AI tools copy patterns in their training data. If past decisions leaned toward one group, the tool can learn to lean the same way."
+  - id: pc-catch-bias
+    prompt: "Which step does the most to catch bias before an AI tool is used on real people?"
+    options:
+      - { id: a, text: "Make the tool run faster" }
+      - { id: b, text: "Test how well it works for many different groups of people" }
+      - { id: c, text: "Keep how it works a secret" }
+      - { id: d, text: "Give the app a friendlier design" }
+    answer: b
+    explanation: "Testing with many different groups shows whether a tool works well for everyone, not just for some people."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

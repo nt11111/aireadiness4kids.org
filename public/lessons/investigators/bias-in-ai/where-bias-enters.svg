@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 560" width="440" height="560" role="img" aria-labelledby="t">
+  <title id="t">Three places bias can enter an AI tool</title>
+  <style>
+    text { font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #1C2430; }
+    .h { font-size: 19px; font-weight: 700; }
+    .s { font-size: 15px; fill: #4A5563; }
+    .n { font-size: 16px; font-weight: 700; fill: #FFFFFF; }
+    .box { fill: #FFFFFF; stroke: #908776; stroke-width: 1.5; }
+    .model { fill: #E3F1EC; stroke: #1F6F5C; stroke-width: 1.5; }
+    .arrow { stroke: #4A5563; stroke-width: 2; fill: none; marker-end: url(#a); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4A5563" />
+    </marker>
+  </defs>
+  <rect width="440" height="560" rx="16" fill="#F4EFE6" />
+
+  <rect class="box" x="70" y="24" width="340" height="76" rx="12" />
+  <circle cx="44" cy="62" r="17" fill="#C74D37" /><text class="n" x="44" y="68" text-anchor="middle">1</text>
+  <text class="h" x="90" y="56">The data it learns from</text>
+  <text class="s" x="90" y="82">Who is in the examples? Who is missing?</text>
+  <path class="arrow" d="M240 102 V 128" />
+
+  <rect class="box" x="70" y="132" width="340" height="76" rx="12" />
+  <circle cx="44" cy="170" r="17" fill="#C74D37" /><text class="n" x="44" y="176" text-anchor="middle">2</text>
+  <text class="h" x="90" y="164">The goal people choose</text>
+  <text class="s" x="90" y="190">What counts as a "good" answer?</text>
+  <path class="arrow" d="M240 210 V 236" />
+
+  <rect class="model" x="70" y="240" width="340" height="76" rx="12" />
+  <text class="h" x="90" y="272">The AI model</text>
+  <text class="s" x="90" y="298">Finds patterns and makes predictions</text>
+  <path class="arrow" d="M240 318 V 344" />
+
+  <rect class="box" x="70" y="348" width="340" height="76" rx="12" />
+  <circle cx="44" cy="386" r="17" fill="#C74D37" /><text class="n" x="44" y="392" text-anchor="middle">3</text>
+  <text class="h" x="90" y="380">How it's tested and used</text>
+  <text class="s" x="90" y="406">Who checked it? Who is it used on?</text>
+  <path class="arrow" d="M240 426 V 452" />
+
+  <rect x="70" y="456" width="340" height="76" rx="12" fill="#1C2430" />
+  <text class="h" x="90" y="488" style="fill:#FFFFFF">People affected</text>
+  <text class="s" x="90" y="514" style="fill:#FADDB1">Students, job seekers, neighbors...</text>
+</svg>

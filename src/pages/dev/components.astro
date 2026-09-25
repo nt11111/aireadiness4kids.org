@@ -2,11 +2,23 @@
 // Hidden style guide (brief section 6). Not linked anywhere; noindex.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import themeCss from "../../styles/theme.css?raw";
-import { getCourses } from "../../lib/courses";
+import { getCourses, getModuleSteps } from "../../lib/courses";
 import { ReviewBadge } from "../../app/components/site/ReviewBadge";
 import TrackCard from "../../components/TrackCard.astro";
 import SyllabusItem from "../../components/SyllabusItem.astro";
 import StepList from "../../components/StepList.astro";
+import Callout from "../../components/lesson/Callout.astro";
+import Vocab from "../../components/lesson/Vocab.astro";
+import Figure from "../../components/lesson/Figure.astro";
+import Video from "../../components/lesson/Video.astro";
+import Scenario from "../../components/lesson/Scenario.astro";
+import Check from "../../components/lesson/Check.astro";
+import Sort from "../../components/lesson/Sort.astro";
+import Reflect from "../../components/lesson/Reflect.astro";
+import Discuss from "../../components/lesson/Discuss.astro";
+import Recap from "../../components/lesson/Recap.astro";
+import { ReadAloud } from "../../app/components/lesson/ReadAloud";
+import { SAMPLE_CHECK, SAMPLE_SCENARIO, SAMPLE_SORT } from "../../lib/dev-samples";
 import { Button } from "../../app/components/ui/button";
 import { Badge } from "../../app/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../../app/components/ui/card";
@@ -76,7 +88,7 @@ const demo: Record<string, string | undefined> = { Hover: "hover", Focus: "focus
 
 const stepTypes = [["explainer", BookOpen], ["video", PlayCircle], ["scenario", Split], ["check", CircleCheck], ["reflect", PenLine], ["recap", ListChecks], ["activity", Hammer]] as const;
 const inv = TRACKS[1];
-const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], ["cards", "Cards"], ["chips", "Chips"], ["review", "Review status"], ["course", "Course components"], ["progress", "Progress"], ["brand", "Logo and focus"]];
+const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], ["cards", "Cards"], ["chips", "Chips"], ["review", "Review status"], ["course", "Course components"], ["lesson", "Lesson components"], ["progress", "Progress"], ["brand", "Logo and focus"]];
 ---
 
 <BaseLayout title="Components | ARK design system" noindex>
@@ -84,7 +96,7 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
     <div class="max-w-site mx-auto">
       <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Hidden style guide</p>
       <h1 class="text-display-lg mt-2 text-ink">ARK design system</h1>
-      <p class="text-lesson text-ink-soft mt-3 max-w-reading">Tokens from <code class="font-mono text-small">src/styles/theme.css</code> (brief section 3), checked for WCAG AA by <code class="font-mono text-small">npm run check:contrast</code>. Card and progress content below is sample data for layout only.</p>
+      <p class="text-lesson text-ink-soft mt-3 max-w-reading">Tokens from <code class="font-mono text-small">src/styles/theme.css</code> (brief section 3), checked for WCAG AA by <code class="font-mono text-small">npm run check:contrast</code>. Card, progress, and lesson content below is sample data for layout only, not lesson material.</p>
       <nav aria-label="Style guide sections" class="mt-6">
         <ul class="flex flex-wrap gap-2">
           {sections.map(([id, label]) => <li><a href={`#${id}`} class="inline-flex min-h-11 items-center rounded-full border-[1.5px] border-input bg-surface px-4 text-ui font-bold text-ink hover:border-brand hover:text-brand">{label}</a></li>)}
@@ -309,10 +321,103 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
       <div class="mt-8 grid gap-8 lg:grid-cols-[360px_minmax(0,1fr)]">
         <TrackCard course={courses[1]} />
         <div class="space-y-3">
-          <SyllabusItem mod={courses[1].modules[1]} open />
-          <SyllabusItem mod={courses[1].modules[2]} />
+          <SyllabusItem mod={courses[1].modules[1]} steps={getModuleSteps(courses[1], courses[1].modules[1])} open />
+          <SyllabusItem mod={courses[1].modules[2]} steps={[]} />
           <h3 class="pt-4 text-title text-ink">Step list, empty state</h3>
           <StepList steps={[]} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Lesson components -->
+    <section id="lesson" aria-labelledby="lesson-h">
+      <h2 id="lesson-h" class="text-display-md text-ink">Lesson components</h2>
+      <p class="text-ui text-ink-soft mt-2 max-w-reading">Brief section 6. Lesson and guide MDX files can use these without an import. <code class="font-mono text-small">&lt;Check /&gt;</code>, <code class="font-mono text-small">&lt;Scenario /&gt;</code>, and <code class="font-mono text-small">&lt;Sort /&gt;</code> read their questions from the step's frontmatter, and <code class="font-mono text-small">&lt;Vocab /&gt;</code> reads definitions from the module's vocabulary. Every example here is sample text.</p>
+      <ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-ui">
+        <li><a class="font-bold text-brand underline underline-offset-4" href="/courses/investigators/bias-in-ai/what-is-bias">The full sample module: Bias in AI</a></li>
+        <li><a class="font-bold text-brand underline underline-offset-4" href="/dev/lesson-preview/1">Explorers (K-5) player preview</a></li>
+        <li><a class="font-bold text-brand underline underline-offset-4" href="/dev/guides/investigators/bias-in-ai">Facilitator guide preview</a></li>
+      </ul>
+
+      <div class="mt-10 grid gap-12">
+        <div class="demo">
+          <h3 class="text-title text-ink">Callout <code class="font-mono text-small font-normal text-ink-soft">&lt;Callout kind="think | tip | warning | fact"&gt;</code></h3>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Callout kind="think"><p>What's one app you use every day that might use AI?</p></Callout>
+            <Callout kind="tip"><p>Read the question twice before you answer.</p></Callout>
+            <Callout kind="warning"><p>Never type a password or your home address into an AI chatbot.</p></Callout>
+            <Callout kind="fact"><p>Fact callouts need a source before review. Until then, mark them [CITATION NEEDED].</p></Callout>
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Vocab <code class="font-mono text-small font-normal text-ink-soft">&lt;Vocab term="training data" /&gt;</code></h3>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <p>An AI tool learns from its <Vocab term="training data" def="The examples an AI tool learns from, like labeled photos, emails, or past decisions." />, then uses what it found to make guesses about new things.</p>
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Figure <code class="font-mono text-small font-normal text-ink-soft">&lt;Figure src alt caption /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">alt is required; the build fails without it.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Figure src="/lessons/investigators/bias-in-ai/where-bias-enters.svg" alt="A chain of five boxes: the data, the goal people choose, the AI model, how it's tested and used, and the people affected." caption="Three places bias can enter an AI tool." width={440} height={560} />
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Video <code class="font-mono text-small font-normal text-ink-soft">&lt;Video src captions title poster /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">Captions are required. Never autoplays.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Video src="/dev/sample-video.webm" captions="/dev/sample-video.vtt" poster="/dev/sample-video-poster.png" title="Sample video (4 seconds, captioned)" />
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Scenario <code class="font-mono text-small font-normal text-ink-soft">&lt;Scenario /&gt;</code></h3>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson"><Scenario {...SAMPLE_SCENARIO} /></div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Check <code class="font-mono text-small font-normal text-ink-soft">&lt;Check /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">1 to 5 multiple-choice or true/false questions. Reports only a score bucket to analytics.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson"><Check questions={SAMPLE_CHECK} /></div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Sort <code class="font-mono text-small font-normal text-ink-soft">&lt;Sort /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">Tap or use the keyboard; dragging is optional.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson"><Sort {...SAMPLE_SORT} /></div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Reflect <code class="font-mono text-small font-normal text-ink-soft">&lt;Reflect prompt="" /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">Saved only in this browser (localStorage). Never sent anywhere.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson"><Reflect prompt="What's one thing you'd like to ask an AI tool, and why?" id="style-guide" /></div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Discuss <code class="font-mono text-small font-normal text-ink-soft">&lt;Discuss&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">Collapsed in lessons; open in the facilitator guide.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Discuss><ul><li>When is it okay to let an app decide something for you?</li><li>Who should you ask if an app's answer seems wrong?</li></ul></Discuss>
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">Recap <code class="font-mono text-small font-normal text-ink-soft">&lt;Recap&gt;</code></h3>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Recap><ul><li>AI tools learn from examples.</li><li>They can be helpful, and they can make mistakes.</li><li>It's smart to double-check what they tell you.</li></ul></Recap>
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">ReadAloud <code class="font-mono text-small font-normal text-ink-soft">&lt;ReadAloud /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">Uses the browser's own speech. On every Explorers step; hidden when a browser can't speak.</p>
+          <div id="read-demo" class="lesson-prose mt-4 max-w-reading text-lesson">
+            <div class="lesson-block"><ReadAloud client:idle target="#read-demo" /></div>
+            <p>AI is a computer program that learns from lots of examples. It can be helpful. It can also make mistakes, so always check!</p>
+          </div>
         </div>
       </div>
     </section>

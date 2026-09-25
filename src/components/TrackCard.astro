@@ -14,7 +14,7 @@ const { title, grades, tagline, summary } = track.data;
 const s = trackStyle(track.id);
 const H = `h${headingLevel}` as "h2" | "h3";
 const count = `${modules.length} modules`;
-const time = courseTime(modules);
+const time = courseTime(course);
 ---
 
 {layout === "home" ? (

@@ -6,7 +6,7 @@ import SyllabusItem from "../../../components/SyllabusItem.astro";
 import { buttonVariants } from "../../../app/components/ui/button";
 import { trackStyle } from "../../../app/lib/tracks";
 import { cn } from "../../../app/components/ui/utils";
-import { courseTime, getCourses, moduleHref, reviewCounts, type Course } from "../../../lib/courses";
+import { courseTime, getCourses, getModuleSteps, moduleHref, reviewCounts, type Course } from "../../../lib/courses";
 import { ArrowRight, BookOpen, Check, Clock, ExternalLink, FileText, HeartHandshake } from "lucide-react";
 export const prerender = true;
 
@@ -19,7 +19,7 @@ const { course } = Astro.props as { course: Course };
 const { track, modules } = course;
 const { title, grades, tagline, summary, outcomes, slides_folder_url } = track.data;
 const s = trackStyle(track.id);
-const time = courseTime(modules);
+const time = courseTime(course);
 const counts = reviewCounts(modules);
 const reviewLine =
   counts.reviewed === modules.length ? "Every module in this course has been reviewed by an expert."
@@ -96,7 +96,7 @@ const reviewLine =
             <p class="text-small text-ink-soft">{modules.length} modules · {time}</p>
           </div>
           <ol class="mt-5 space-y-3">
-            {modules.map((mod) => <li><SyllabusItem mod={mod} /></li>)}
+            {modules.map((mod) => <li><SyllabusItem mod={mod} steps={getModuleSteps(course, mod)} /></li>)}
           </ol>
         </section>
       </div>

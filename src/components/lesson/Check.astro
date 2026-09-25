@@ -1,0 +1,12 @@
+---
+// <Check />: the questions come from this step's `questions:` frontmatter (or a questions prop).
+import { Check as CheckIsland } from "../../app/components/lesson/Check";
+import type { Question } from "../../lib/lesson-types";
+
+interface Props { questions?: Question[] }
+const lesson = Astro.locals.lesson;
+const questions = Astro.props.questions ?? lesson?.questions ?? [];
+if (!questions.length) throw new Error("<Check />: this step has no questions. Add questions: to its frontmatter.");
+---
+
+<div class="lesson-block"><CheckIsland client:idle questions={questions} stepId={lesson?.stepId} /></div>

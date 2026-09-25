@@ -22,7 +22,7 @@ const pairs = [
   ["ink", "brand-soft", TEXT, "text on brand tint"], ["brand", "brand-soft", TEXT, "brand text on tint"],
   ["brand-ink", "brand", TEXT, "primary button label"], ["glow", "brand", TEXT, "emphasis on dark brand"], ["glow", "ink", TEXT, "emphasis on ink"],
   ["ink", "accent", TEXT, "text on marigold"], ["white", "danger", TEXT, "destructive button"], ["white", "success", TEXT, "success fill"], ["white", "warning", TEXT, "warning fill"],
-  ["warning", "warning-soft", TEXT, "draft badge"], ["ink-soft", "surface-2", TEXT, "in-review badge"], ["brand", "brand-soft", TEXT, "reviewed badge"],
+  ["warning", "warning-soft", TEXT, "draft badge"], ["ink-soft", "surface-2", TEXT, "in-review badge"], ["brand", "brand-soft", TEXT, "reviewed badge"], ["success", "brand-soft", TEXT, "correct answer on tint"], ["warning", "surface-2", UI, "hint icon"],
   ...LIGHT.map((bg) => ["accent-strong", bg, UI, "progress fill"]),
   ...LIGHT.map((bg) => ["line-strong", bg, UI, "control border"]),
   ...LIGHT.map((bg) => ["brand", bg, UI, "focus ring"]),

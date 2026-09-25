@@ -5,13 +5,12 @@ import StepList from "./StepList.astro";
 import { ReviewBadge } from "../app/components/site/ReviewBadge";
 import { trackStyle } from "../app/lib/tracks";
 import { cn } from "../app/components/ui/utils";
-import { getModuleSteps, moduleHref, moduleTime, type Module } from "../lib/courses";
+import { moduleHref, moduleTime, type Module, type Step } from "../lib/courses";
 
-interface Props { mod: Module; open?: boolean }
-const { mod, open = false } = Astro.props;
+interface Props { mod: Module; steps: Step[]; open?: boolean }
+const { mod, steps, open = false } = Astro.props;
 const { title, order, summary, status, reviewers, track } = mod.data;
 const s = trackStyle(track);
-const steps = getModuleSteps(mod);
 ---
 
 <details class="group rounded-lg border border-line bg-surface shadow-1 transition-shadow duration-[var(--dur)] open:shadow-2" open={open}>
@@ -21,7 +20,7 @@ const steps = getModuleSteps(mod);
       <span class="sr-only">Module {order}: </span>
       <span class="block font-display text-title font-semibold text-ink">{title}</span>
       <span class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-small text-ink-soft">
-        <span class="inline-flex items-center gap-1.5"><Clock aria-hidden="true" className="size-4" />{moduleTime(mod)}</span>
+        <span class="inline-flex items-center gap-1.5"><Clock aria-hidden="true" className="size-4" />{moduleTime(mod, steps)}</span>
         {steps.length > 0 && <span>0/{steps.length} steps</span>}
         <ReviewBadge status={status} reviewers={reviewers} />
       </span>

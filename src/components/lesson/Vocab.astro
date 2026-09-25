@@ -1,0 +1,14 @@
+---
+// <Vocab term="training data" /> or <Vocab term="bias">biased</Vocab>. The definition comes from the
+// module's `vocabulary` list (or a def="" prop), so a typo fails the build instead of showing nothing.
+import { Vocab as VocabIsland } from "../../app/components/lesson/Vocab";
+
+interface Props { term: string; def?: string }
+const { term } = Astro.props;
+const entry = Astro.locals.lesson?.vocabulary.find((v) => v.term.toLowerCase() === term.toLowerCase());
+const def = Astro.props.def ?? entry?.def;
+if (!def) throw new Error(`<Vocab term="${term}">: add "${term}" to this module's vocabulary in index.mdx, or pass def="...".`);
+const label = Astro.slots.has("default") ? (await Astro.slots.render("default")).replace(/<[^>]+>/g, "").trim() : undefined;
+---
+
+<VocabIsland client:idle term={entry?.term ?? term} def={def} label={label} />

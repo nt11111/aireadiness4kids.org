@@ -1,0 +1,46 @@
+---
+// Explorers (K-5) player preview for the style guide: 20px text, read-aloud on every step, 48px targets.
+// Sample text for layout only; there is no Explorers lesson content yet. Not linked publicly; noindex.
+import LessonLayout from "../../../layouts/LessonLayout.astro";
+import LessonPlayer from "../../../components/lesson/LessonPlayer.astro";
+import Callout from "../../../components/lesson/Callout.astro";
+import Vocab from "../../../components/lesson/Vocab.astro";
+import Check from "../../../components/lesson/Check.astro";
+import Sort from "../../../components/lesson/Sort.astro";
+import type { StepRef } from "../../../lib/lesson-types";
+import { SAMPLE_CHECK, SAMPLE_SORT } from "../../../lib/dev-samples";
+export const prerender = true;
+
+const steps: StepRef[] = [
+  { id: "dev/preview/01", n: 1, slug: "1", title: "AI is all around us", type: "explainer", minutes: 4, href: "/dev/lesson-preview/1" },
+  { id: "dev/preview/02", n: 2, slug: "2", title: "AI or not AI?", type: "activity", minutes: 5, href: "/dev/lesson-preview/2" },
+  { id: "dev/preview/03", n: 3, slug: "3", title: "Quick check", type: "check", minutes: 3, href: "/dev/lesson-preview/3" },
+];
+
+export function getStaticPaths() {
+  return ["1", "2", "3"].map((n) => ({ params: { n } }));
+}
+const index = Number(Astro.params.n) - 1;
+---
+
+<LessonLayout title={`${steps[index].title} | Explorers preview | ARK`} noindex>
+  <LessonPlayer
+    track={{ id: "explorers", title: "AI Explorers", href: "/courses/explorers" }}
+    module={{ title: "Sample lesson (preview)", href: "/dev/components", status: "draft" }}
+    steps={steps}
+    index={index}
+    finishHref="/dev/components#lesson"
+  >
+    <Callout kind="warning" title="Style guide preview"><p>Sample text to show the Explorers layout. This is not lesson content.</p></Callout>
+    {index === 0 && (
+      <>
+        <p>AI is a computer program that learns from lots of examples.</p>
+        <p>It can help us find a song, sort photos, or answer a question.</p>
+        <p>It learns from <Vocab term="examples" def="Things we show a computer so it can learn, like lots of pictures of cats." />. It can also make mistakes. Always check!</p>
+        <Callout kind="think"><p>Can you think of something at home that might use AI?</p></Callout>
+      </>
+    )}
+    {index === 1 && <Sort {...SAMPLE_SORT} />}
+    {index === 2 && <Check questions={SAMPLE_CHECK} />}
+  </LessonPlayer>
+</LessonLayout>

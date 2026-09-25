@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { ROUTES } from "./routes";
 
 const WIDTHS = [375, 768, 1280];
-const PHASE = process.env.PHASE ?? "phase-1";
+const PHASE = process.env.PHASE ?? "phase-2";
 
 for (const route of ROUTES) {
   for (const width of WIDTHS) {
@@ -10,7 +10,15 @@ for (const route of ROUTES) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(route.path, { waitUntil: "networkidle" });
       await page.evaluate(() => document.fonts.ready);
-      await page.screenshot({ path: `screenshots/${PHASE}/${route.name}-${width}.png`, fullPage: true });
+      if (route.lesson) {
+        // The lesson player uses a full-height sidebar and a sticky bottom bar, so capture it as one tall
+        // screen (as on a tall monitor) instead of stitching, which leaves the sticky bar mid-page.
+        const height = await page.evaluate(() => document.documentElement.scrollHeight);
+        await page.setViewportSize({ width, height: Math.min(height, 8000) });
+        await page.screenshot({ path: `screenshots/${PHASE}/${route.name}-${width}.png` });
+      } else {
+        await page.screenshot({ path: `screenshots/${PHASE}/${route.name}-${width}.png`, fullPage: true });
+      }
     });
   }
 
