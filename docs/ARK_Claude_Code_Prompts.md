@@ -74,6 +74,7 @@ Phase 3 writes `docs/SETUP_FIREBASE.md` with exact click-paths and env var names
 Read docs/ARK_UI_BUILD_BRIEF.md (especially sections 7 and 8) and CLAUDE.md. Build Phase 3 only. Security matters more than speed here, so go carefully and explain your choices.
 
 - Write docs/SETUP_FIREBASE.md: a step-by-step guide a high schooler can follow for the new ARK Firebase project, App Check, API key restrictions, authorized domains, and Netlify env vars. Say exactly which values are public-safe and which are secret.
+- Use exactly these env var names (they are already set in Netlify): PUBLIC_FIREBASE_API_KEY, PUBLIC_FIREBASE_AUTH_DOMAIN, PUBLIC_FIREBASE_PROJECT_ID, PUBLIC_FIREBASE_APP_ID, PUBLIC_FIREBASE_MESSAGING_SENDER_ID, PUBLIC_RECAPTCHA_SITE_KEY (all public-safe), and FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY (secret, server only; init firebase-admin with cert({ projectId, clientEmail, privateKey }), and convert literal \n in the private key to real newlines). Keep the total size of all env vars under 4 KB (Netlify Functions limit). Add a .env.example with these names and empty values, and make sure .env is gitignored.
 - Add firebase (client) and firebase-admin (server). Create src/lib/firebase-client.ts (inMemoryPersistence) and src/lib/firebase-admin.ts (server only; import it only from server code).
 - Implement the session-cookie flow in 8.1: /api/session (create), /api/signout (clear + revoke), and Origin checks on every POST route.
 - Add firestore.rules with deny-all client access, and firebase.json for the emulators.
