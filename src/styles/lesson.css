@@ -63,3 +63,43 @@ html:has([data-lesson-root]) {
 .lesson-prose > table { width: 100%; border-collapse: collapse; font-size: var(--text-ui); }
 .lesson-prose th, .lesson-prose td { border-bottom: 1px solid var(--line); padding: 0.6em 0.75em 0.6em 0; text-align: left; vertical-align: top; }
 .lesson-prose th { font-weight: 700; color: var(--ink); border-bottom-color: var(--line-strong); }
+
+/* Sources: Markdown footnotes ([^name]) render as numbered links and a list at the end of the step. */
+/* Underlined, not just colored, so they stand out from the text without relying on color (WCAG 1.4.1). */
+.lesson-prose a[data-footnote-ref] {
+  padding: 0 0.15em;
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.lesson-prose > .footnotes {
+  margin-top: 3em;
+  border-top: 1px solid var(--line);
+  padding-top: 1.25em;
+  font-size: var(--text-small);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+/* The processor marks this heading sr-only; show it, since "Sources" is useful to everyone. */
+.lesson-prose .footnotes > #footnote-label {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  font-family: var(--font-sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lesson-prose .footnotes ol { list-style: decimal; margin-top: 0.75em; padding-left: 1.4em; }
+.lesson-prose .footnotes li + li { margin-top: 0.6em; }
+.lesson-prose .footnotes a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.lesson-prose .footnotes .data-footnote-backref { margin-left: 0.25em; }

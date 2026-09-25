@@ -5,16 +5,21 @@ import { cn } from "../ui/utils";
 
 const READABLE = "h1, h2, h3, h4, p, li, legend, label, figcaption, dt, dd, blockquote, [data-read]";
 
-/** The text a listener should hear: headings, paragraphs, list items, and question text, each once, skipping controls. */
+/** The text a listener should hear: headings, paragraphs, list items, and question text, each once, skipping controls and sources. */
 function collect(root: Element) {
-  const all = [...root.querySelectorAll<HTMLElement>(READABLE)].filter((el) => !el.closest("[data-read-skip], button, [hidden], [aria-hidden='true']"));
+  const all = [...root.querySelectorAll<HTMLElement>(READABLE)].filter((el) => !el.closest("[data-read-skip], [data-footnotes], button, [hidden], [aria-hidden='true']"));
   const set = new Set(all);
   return all
     .filter((el) => {
       for (let p = el.parentElement; p && p !== root; p = p.parentElement) if (set.has(p)) return false;
       return el.checkVisibility ? el.checkVisibility() : true;
     })
-    .map((el) => el.innerText.replace(/\s+/g, " ").trim())
+    .map((el) => {
+      // Drop citation numbers ("...systems.1") so they aren't read out mid-sentence.
+      const copy = el.cloneNode(true) as HTMLElement;
+      copy.querySelectorAll("sup, [data-footnote-ref]").forEach((n) => n.remove());
+      return (copy.textContent ?? "").replace(/\s+/g, " ").trim();
+    })
     .filter(Boolean);
 }
 

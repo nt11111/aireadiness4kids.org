@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
+import { satteri } from "@astrojs/markdown-satteri";
 import netlify from "@astrojs/netlify";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -12,6 +13,13 @@ export default defineConfig({
   output: "server",
   adapter: netlify(),
   integrations: [react(), mdx()],
+  // Lessons cite facts with Markdown footnotes ([^name]); label that list "Sources".
+  // (Sätteri is Astro's default Markdown processor; this only changes the footnote wording.)
+  markdown: {
+    processor: satteri({
+      features: { gfm: { footnotes: { label: "Sources", backLabel: "Back to the text for source {reference}" } } },
+    }),
+  },
   // Old routes that moved (brief section 2). /programs -> /workshops lands in Phase 6.
   redirects: {
     "/curriculum": "/courses",
