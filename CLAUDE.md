@@ -10,6 +10,7 @@ This repo is being rebuilt from a marketing site into ARK's free course platform
 - Routes are `.astro` files in `src/pages/`; page sections in `src/app/sections/`; shared components in `src/app/components/site/` and shadcn primitives in `src/app/components/ui/`. Copy lives in `src/app/lib/content.ts`, tokens in `src/styles/theme.css`, brand assets in `public/brand/`. Style guide: `/dev/components` (noindex, unlinked).
 - Commands: `npm run dev` (port 5180), `npm run build` (also checks alt text, links, and bundle secrets), `npm run check:contrast`, `npm run check`, `npm run test:visual`, `npm run test:a11y`, `npm test`.
 - **Pushing to `main` deploys to production** (GitHub Pages via `.github/workflows/deploy.yml`).
+- Domain and DNS: **Cloudflare** (stays there). Hosting target after cutover: **Netlify**. At cutover, only Cloudflare DNS records change.
 
 ## Rules
 1. **Work on the `platform-v1` branch. Never push or merge to `main`** unless the user explicitly says to do the cutover.

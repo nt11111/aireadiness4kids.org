@@ -40,7 +40,8 @@ Teacher/classroom dashboards, forums, public profiles, search, mentorship matchi
 | Analytics | **Umami Cloud** (free tier) or Cloudflare Web Analytics. Pluggable through one `analytics.ts` module | Cookie-free, supports custom events (Umami) |
 | Knowledge-check submissions | Stored in Firestore `checkResults`. Anonymous workshop submissions go through a server endpoint (`/api/checks`) that validates input and rate-limits; they never use a client-side insert | One place for all impact data |
 | QR codes | `qrcode` npm package, rendered at build or client-side | Used for workshop presenter mode |
-| Hosting | **Netlify** (free tier) with `@astrojs/netlify`. GitHub Pages can't run server code. Firebase Hosting would need the paid Blaze plan for server code. Cloudflare's runtime doesn't support `firebase-admin` well | $0 |
+| Hosting | **Netlify** (free tier) with `@astrojs/netlify`. GitHub Pages can't run server code. Firebase Hosting would need the paid Blaze plan for server code. Cloudflare Workers/Pages can't run `firebase-admin`'s Firestore client, which would mean hand-written token checks | $0 |
+| Domain + DNS | **Cloudflare** (where `aireadiness4kids.org` is registered and its DNS lives). It stays there. At cutover, the DNS records are changed to point at Netlify | $0 |
 | Testing | Playwright (screenshots and smoke tests) + `@axe-core/playwright` | Lets Claude Code check its own visual and a11y work |
 
 **Current site and migration:** The live site is `ark-website/`. It's a React 18 + Vite + Tailwind v4 + shadcn/Radix single-page app (exported from Figma Make), using React Router, with all copy in `src/app/lib/content.ts` and pages in `src/app/pages/`. **It auto-deploys to GitHub Pages on every push to `main`** (`.github/workflows/deploy.yml`, custom domain via `public/CNAME`).
@@ -48,7 +49,7 @@ Teacher/classroom dashboards, forums, public profiles, search, mentorship matchi
 - Convert the repo in place to Astro with the React + MDX + Tailwind integrations. Reuse the existing pages, `components/site/*`, and `components/ui/*` as React components or port them to `.astro` where they have no interactivity. Keep all copy from `content.ts`.
 - Keep the existing routes working: `/`, `/about`, `/get-involved`, `/donate`, `/contact`. Redirect `/curriculum` → `/courses` and `/programs` → `/workshops`.
 - Remove dependencies the new site doesn't use (MUI/Emotion, react-slick, react-dnd, recharts, and so on, if unused). List what was removed and why.
-- Cutover (Phase 6) moves hosting from GitHub Pages to Netlify, keeping `aireadiness4kids.org`. Replace the GitHub Pages workflow with a CI workflow that only runs build + tests.
+- Cutover (Phase 6) moves hosting from GitHub Pages to Netlify, keeping `aireadiness4kids.org`. **The domain and DNS stay in Cloudflare.** Only the DNS records change, so they point at Netlify instead of GitHub Pages. Set those records to **DNS only (grey cloud)**, so Netlify can issue the SSL certificate. Replace the GitHub Pages workflow with a CI workflow that only runs build + tests.
 - The old hand-written static site is in `../_archive/old-static-site/` for reference only.
 
 ---
@@ -415,7 +416,7 @@ After every phase:
 ## 11. Open questions for the team (Claude Code: flag them, don't guess)
 - Final brand colors and logo. The tokens above are a starting point.
 - The analytics provider choice (Umami vs. Cloudflare).
-- Who owns the Firebase/Google Cloud project and the Netlify account. Use an ARK organization email, not a personal one, with two founders as admins.
+- Who owns the Firebase/Google Cloud project and the Netlify account. The Cloudflare account (domain + DNS) should also be under ARK ownership. Use an ARK organization email, not a personal one, with two founders as admins.
 - Legal review of the privacy policy, terms, and parent notice before launch (a pro bono lawyer or a law school clinic).
 - Reviewer names and credentials for badges.
 - UYS Academy learners' age range, which decides which track leads the pilot.

@@ -6,7 +6,7 @@ export const ORG = {
   name: "ARK",
   fullName: "AI Readiness for Kids",
   tagline: "Think. Prompt. Responsibly.",
-  email: "neiltodkar@gmail.com",
+  email: "contact@aireadiness4kids.org",
   mission:
     "ARK is a 501(c)(3) nonprofit dedicated to equipping K-12 students with the knowledge, skills, and ethical grounding to use artificial intelligence responsibly, safely, and thoughtfully, for themselves, their communities, and the world.",
   vision:

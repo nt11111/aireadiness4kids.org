@@ -63,7 +63,7 @@ export function ContactPanel() {
       </Card>
 
       <div className="grid gap-4">
-        <Card className="reveal d1"><Eyebrow>Email</Eyebrow><a href={`mailto:${ORG.email}`} className="block font-display text-xl font-black text-ink mt-2 underline decoration-2 decoration-brand/40 underline-offset-4 hover:text-brand hover:decoration-brand break-all">{ORG.email}</a></Card>
+        <Card className="reveal d1"><Eyebrow>Email</Eyebrow><a href={`mailto:${ORG.email}`} className="block font-display text-lg sm:text-xl font-black text-ink mt-2 underline decoration-2 decoration-brand/40 underline-offset-4 hover:text-brand hover:decoration-brand break-words">{/* Let a long address wrap after the @, never mid-word. */}{ORG.email.split("@")[0]}@<wbr />{ORG.email.split("@")[1]}</a></Card>
         <div id="newsletter" className="on-dark rounded-2xl bg-ink text-white p-8 relative overflow-hidden reveal d2">
           <div className="absolute inset-0 circuit-grid opacity-[0.05]" />
           <div className="relative">
