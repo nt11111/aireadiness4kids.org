@@ -10,6 +10,7 @@
  * Each change and its stats counters are written in one transaction, so a module start or
  * completion is counted exactly once even if the same request arrives twice.
  */
+import { createHash } from "node:crypto";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import type { AstroCookies } from "astro";
 import { db } from "./firebase-admin";
@@ -44,6 +45,13 @@ export async function activeLearner(uid: string, cookies: AstroCookies): Promise
   const learner = learners.find((l) => l.id === wanted) ?? learners.find((l) => l.isSelf) ?? learners[0] ?? null;
   return { learner, learners };
 }
+
+/**
+ * A tag for the signed-in account (a hash of its uid). A browser where the account was created keeps
+ * the same tag with its guest progress (guest.ts accountTag), so that account gets the progress
+ * without being asked; nobody else's does.
+ */
+export const accountTag = (uid: string) => createHash("sha256").update(`ark-guest-claim|${uid}`).digest("hex").slice(0, 32);
 
 /** Remembers which learner a parent picked (a UI choice, not a credential: the server re-checks ownership every time). */
 export function setActiveLearnerCookie(cookies: AstroCookies, learnerId: string) {

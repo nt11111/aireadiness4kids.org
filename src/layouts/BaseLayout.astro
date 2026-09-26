@@ -3,6 +3,7 @@ import "../styles/index.css";
 import SiteHead from "../components/SiteHead.astro";
 import { Nav } from "../app/components/site/Nav";
 import { Footer } from "../app/components/site/Footer";
+import { GuestProgressOffer } from "../app/components/lesson/GuestProgressOffer";
 import LessonKeys from "../components/lesson/LessonKeys.astro";
 import { REVEAL_SCRIPT } from "../lib/security/inline-scripts.mjs";
 
@@ -29,6 +30,8 @@ const pathname = Astro.url.pathname;
       <slot />
     </main>
     <Footer />
+    <!-- Asks before adding this device's guest progress to a newly signed-in account (shared computers). -->
+    <GuestProgressOffer client:idle />
     {viewTransitions && <LessonKeys />}
     <!-- Allowed by hash in the Content-Security-Policy (src/lib/security). -->
     <script is:inline set:html={REVEAL_SCRIPT} />

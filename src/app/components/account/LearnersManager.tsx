@@ -104,6 +104,24 @@ export function LearnersManager({ initial, setup }: { initial: Learner[]; setup:
   );
 }
 
+/**
+ * "Add your first learner": a parent with no learner profile who opens a lesson or My learning comes
+ * here first, because progress is saved to a learner profile. Adding one goes straight back.
+ */
+export function FirstLearner({ next }: { next: string }) {
+  return (
+    <LearnerForm
+      submitLabel="Add and continue"
+      onSubmit={async (v) => {
+        const res = await postJSON("/api/account/learners/create", v);
+        if (!res.ok) return apiErrorMessage(res.data.error);
+        location.assign(next);
+        return null;
+      }}
+    />
+  );
+}
+
 function LearnerForm({ initial, submitLabel, onSubmit, onCancel }: {
   initial?: Learner;
   submitLabel: string;

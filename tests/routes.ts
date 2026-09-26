@@ -48,7 +48,7 @@ export const ROUTES: Route[] = [
   { name: "account-deleted", path: "/account-deleted" },
   { name: "account-learner", path: "/account", auth: "learner" },
   { name: "account-parent", path: "/account", auth: "parent" },
-  { name: "my-learning", path: "/my-learning", auth: "parent" },
+  { name: "add-first-learner", path: "/account/add-learner?next=%2Fcourses%2Finvestigators%2Fbias-in-ai%2Fwhere-it-comes-from", auth: "parent" },
   { name: "my-learning-empty", path: "/my-learning", auth: "learner" },
   { name: "my-learning-progress", path: "/my-learning", auth: "learner", progress: true },
   { name: "my-learning-parent-progress", path: "/my-learning", auth: "parent", progress: true },

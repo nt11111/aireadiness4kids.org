@@ -6,7 +6,7 @@
 import { HttpError, requireUser } from "../../../lib/authz";
 import { getRoute, methodNotAllowed } from "../../../lib/api";
 import { getProfile } from "../../../lib/accounts";
-import { activeLearner, learnerProgress } from "../../../lib/learning";
+import { accountTag, activeLearner, learnerProgress } from "../../../lib/learning";
 export const prerender = false;
 
 export const GET = getRoute(async ({ locals, cookies }) => {
@@ -15,6 +15,7 @@ export const GET = getRoute(async ({ locals, cookies }) => {
   if (!profile) throw new HttpError(404, "no-profile");
   const { learner, learners } = await activeLearner(uid, cookies);
   return {
+    account: accountTag(uid),
     accountType: profile.accountType,
     learner: learner ? { id: learner.id, nickname: learner.nickname } : null,
     learners: profile.accountType === "parent" ? learners.map((l) => ({ id: l.id, nickname: l.nickname })) : [],

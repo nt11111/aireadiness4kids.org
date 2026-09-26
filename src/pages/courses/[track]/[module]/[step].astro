@@ -6,6 +6,7 @@ import LessonLayout from "../../../../layouts/LessonLayout.astro";
 import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
 import { lessonComponents } from "../../../../components/lesson";
 import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
+import { listLearners } from "../../../../lib/accounts";
 export const prerender = false;
 
 const courses = await getCourses();
@@ -18,6 +19,10 @@ if (!course || !mod || index < 0) return Astro.rewrite("/404");
 const signedIn = Boolean(Astro.locals.user);
 // Defense in depth: the middleware already redirected signed-out requests for steps 2+.
 if (index > 0 && !signedIn) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
+// A parent with no learner profile yet would have nowhere to save progress: add one first, then come back.
+if (Astro.locals.user && (await listLearners(Astro.locals.user.uid)).length === 0) {
+  return Astro.redirect(`/account/add-learner?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
+}
 
 const step = steps[index];
 // MDX components read this step's data from here, so authors can write <Check /> with no props.

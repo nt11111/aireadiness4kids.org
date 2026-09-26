@@ -6,8 +6,8 @@
  */
 import { test, expect, type Page } from "@playwright/test";
 import { BIAS_MODULE, BIAS_STEPS } from "./routes";
-import { account, adminAuth, adminDb, call, createUser, idTokenFor, LEARNER_SIGNUP, sessionCookieFrom, signInBrowser, unique, type Account } from "./support/firebase";
-import { hydrated } from "./support/hydration";
+import { account, adminAuth, adminDb, BASE, call, createUser, idTokenFor, LEARNER_SIGNUP, sessionCookieFrom, signInBrowser, unique, type Account } from "./support/firebase";
+import { beforeHydration, hydrated } from "./support/hydration";
 import { chooseBirth, confirmEmail, PASSWORD, signInWithForm } from "./support/flows";
 
 const MOD = "investigators/bias-in-ai";
@@ -194,6 +194,8 @@ test("a guest does step 1 and the pre-check, signs up, and both carry over (with
   await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0]]);
   expect((await progressDoc(uid, learnerId).get()).get("pre")).toMatchObject({ score: 2, outOf: 3 });
   await expect.poll(() => page.evaluate(() => localStorage.getItem("ark.guest.v1"))).toBeNull();
+  // Made in this browser, so nobody is asked: the progress was theirs.
+  await expect(page.getByRole("dialog", { name: "Progress found on this device" })).toHaveCount(0);
   expect((await adminDb.doc(`users/${uid}`).get()).get("firstSrc")).toBe(src);
   expect(await bySrc(src)).toMatchObject({ accounts_13to17: 1, learners: 1, moduleStarts: 1, preCount: 1 });
 
@@ -268,4 +270,133 @@ test("a parent switches between two learner profiles, and each keeps its own pro
   await expect(page.getByText("2 of 6 steps done")).toBeVisible();
   expect(await stepsIn(parent.uid, sam)).toEqual([BIAS_STEPS[0], BIAS_STEPS[1]].sort());
   expect(await stepsIn(parent.uid, kit)).toEqual([BIAS_STEPS[0]]);
+});
+
+// --- Phase 4 follow-ups: shared computers, and parents with no learner profile yet ---
+
+const OFFER = "Progress found on this device";
+const guestKey = (page: Page) => page.evaluate(() => localStorage.getItem("ark.guest.v1"));
+
+/** Someone else's guest progress left in this browser (step 1 of Bias in AI). */
+async function leaveGuestProgress(page: Page) {
+  await page.goto("/");
+  await page.evaluate((mod) => localStorage.setItem("ark.guest.v1", JSON.stringify({ v: 1, steps: { [mod]: ["what-is-bias"] }, pre: {} })), MOD);
+}
+
+async function selfLearner(uid: string) {
+  return (await adminDb.collection(`users/${uid}/learners`).get()).docs[0].id;
+}
+
+test("signing in where someone left guest progress asks first, and \"Add it\" adds it", async ({ page, context }) => {
+  const acct = await account("learner", { name: "Ada" });
+  const learnerId = await selfLearner(acct.uid);
+  await leaveGuestProgress(page);
+  await signInBrowser(context, acct);
+  await page.goto(BIAS_MODULE);
+  const dialog = page.getByRole("dialog", { name: OFFER });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("We found progress on this device from before you signed in. Add it to your account?");
+  // Nothing is added before the person answers.
+  expect((await progressDoc(acct.uid, learnerId).get()).exists).toBe(false);
+  await page.screenshot({ path: `screenshots/${PHASE}/progress/guest-offer.png` });
+  await dialog.getByRole("button", { name: "Add it" }).click();
+  await expect(dialog).toBeHidden();
+  await expect.poll(() => stepsIn(acct.uid, learnerId)).toEqual([BIAS_STEPS[0]]);
+  expect(await guestKey(page)).toBeNull();
+  await expect(page.getByRole("status").filter({ hasText: "steps done" })).toHaveText("1 of 6 steps done.");
+});
+
+test("\"No thanks\" deletes this device's copy and adds nothing", async ({ page, context }) => {
+  const acct = await account("learner", { name: "Bo" });
+  const learnerId = await selfLearner(acct.uid);
+  await leaveGuestProgress(page);
+  await signInBrowser(context, acct);
+  await page.goto("/my-learning");
+  const dialog = page.getByRole("dialog", { name: OFFER });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "No thanks" }).click();
+  await expect(dialog).toBeHidden();
+  expect(await guestKey(page)).toBeNull();
+  expect((await progressDoc(acct.uid, learnerId).get()).exists).toBe(false);
+  // It's gone for good: the next page doesn't ask again.
+  await page.goto(BIAS_MODULE);
+  await hydrated(page);
+  await expect(page.getByRole("link", { name: /Start module/ })).toBeVisible();
+  await expect(dialog).toHaveCount(0);
+});
+
+test("confirming the email on another device still brings this device's progress in, without asking", async ({ page, browser }) => {
+  // This device: step 1 as a guest, then sign up from the gate panel.
+  await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[0]}`);
+  await hydrated(page);
+  await page.locator("[data-lesson-next]").click();
+  await page.getByRole("dialog", { name: "Keep going for free" }).getByRole("link", { name: "Sign up with email" }).click();
+  await chooseBirth(page, 17, 4);
+  const email = `x-${unique()}@example.test`;
+  await page.getByLabel("What should we call you?").fill("Cam");
+  await page.getByLabel("Email", { exact: true }).fill(email);
+  await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
+
+  // Another device (say, a phone) opens the email link and signs in. It has no guest progress.
+  const phone = await (await browser.newContext({ baseURL: BASE, reducedMotion: "reduce" })).newPage();
+  const step2 = `${BIAS_MODULE}/${BIAS_STEPS[1]}`;
+  await confirmEmail(phone, email, step2);
+  await signInWithForm(phone, email);
+  await expect(phone).toHaveURL(step2);
+  const uid = (await adminAuth.getUserByEmail(email)).uid;
+  const learnerId = await selfLearner(uid);
+  await phone.context().close();
+
+  // Back on this device: signing in adds step 1 straight away, because this account was made here.
+  await page.goto(`/signin?next=${encodeURIComponent(BIAS_MODULE)}`);
+  await signInWithForm(page, email);
+  await expect(page).toHaveURL((u) => u.pathname === BIAS_MODULE);
+  await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0]]);
+  await expect.poll(() => guestKey(page)).toBeNull();
+  await expect(page.getByRole("dialog", { name: OFFER })).toHaveCount(0);
+});
+
+test("a parent with no learner profile is asked to add one before a lesson, then goes back to it", async ({ page, context }) => {
+  const parent = await account("parent", { name: "Pia" });
+  await signInBrowser(context, parent);
+  const step2 = `${BIAS_MODULE}/${BIAS_STEPS[1]}`;
+  await page.goto(step2);
+  await expect(page).toHaveURL((u) => u.pathname === "/account/add-learner" && u.searchParams.get("next") === step2);
+  await expect(page.getByRole("heading", { level: 1, name: "Add your first learner" })).toBeVisible();
+  await page.screenshot({ path: `screenshots/${PHASE}/progress/add-first-learner.png`, fullPage: true });
+
+  // Typed before the page's JavaScript loads, and kept.
+  await beforeHydration(page, page.url(), async () => {
+    await page.getByLabel("Nickname").fill("Remy");
+    await page.getByLabel("Grade").selectOption("6-8");
+  });
+  await expect(page.getByLabel("Nickname")).toHaveValue("Remy");
+  await page.getByRole("button", { name: "Add and continue" }).click();
+  await expect(page).toHaveURL((u) => u.pathname === step2);
+  await expect(page.getByRole("heading", { level: 1, name: "Where does bias come from?" })).toBeVisible();
+
+  // Progress now has somewhere to go.
+  await hydrated(page);
+  await next(page, "Scenario: the summer jobs bot");
+  const remy = (await adminDb.collection(`users/${parent.uid}/learners`).get()).docs[0];
+  expect(remy.get("nickname")).toBe("Remy");
+  await expect.poll(() => stepsIn(parent.uid, remy.id)).toEqual([BIAS_STEPS[1]]);
+
+  // With a learner, the page isn't in the way any more.
+  await page.goto(`/account/add-learner?next=${encodeURIComponent("/my-learning")}`);
+  await expect(page).toHaveURL((u) => u.pathname === "/my-learning");
+});
+
+test("My learning sends a parent with no learner profile to add one first", async ({ page, context }) => {
+  const parent = await account("parent", { name: "Quin" });
+  await signInBrowser(context, parent);
+  await page.goto("/my-learning");
+  await expect(page).toHaveURL((u) => u.pathname === "/account/add-learner" && u.searchParams.get("next") === "/my-learning");
+  await hydrated(page);
+  await page.getByLabel("Nickname").fill("Ola");
+  await page.getByLabel("Grade").selectOption("3-5");
+  await page.getByRole("button", { name: "Add and continue" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Ola's learning" })).toBeVisible();
 });

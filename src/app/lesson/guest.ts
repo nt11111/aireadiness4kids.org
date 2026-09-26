@@ -6,12 +6,16 @@
  *   anonSid  a random id for anonymous workshop checks, so they can be linked on sign-up
  *   steps    { moduleId: [stepSlug] }    completed steps (a guest can only reach step 1)
  *   pre      { moduleId: { answers, score, total } }   the optional pre-check
+ *   claim    set when an account is created in this browser (a hash of its id, never the id):
+ *            that account gets this progress without being asked, even if the person confirms
+ *            their email on another device and signs in here later. Anyone else who signs in
+ *            here is asked first (a shared computer), see GuestProgressOffer.
  *
  * Storage can be blocked (private mode, school policies), so every access is wrapped in try/catch
  * and the site works the same without it; progress just isn't kept.
  */
 export type GuestPre = { answers: Record<string, string>; score: number; total: number };
-export type Guest = { v: 1; src?: string; anonSid?: string; steps: Record<string, string[]>; pre: Record<string, GuestPre> };
+export type Guest = { v: 1; src?: string; anonSid?: string; claim?: string; steps: Record<string, string[]>; pre: Record<string, GuestPre> };
 
 export const GUEST_KEY = "ark.guest.v1";
 const VISIT_SRC_KEY = "ark.src.v1";
@@ -68,6 +72,23 @@ export function guestProgress(g: Guest) {
 }
 
 export const hasGuestProgress = (g: Guest) => Object.keys(g.steps).length > 0 || Object.keys(g.pre).length > 0 || Boolean(g.anonSid);
+
+/** The account tag the server returns from /api/progress: a hash of the uid, so the id itself is never stored here. */
+export async function accountTag(uid: string): Promise<string> {
+  const bytes = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`ark-guest-claim|${uid}`)));
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+}
+
+/** Called when an account is created in this browser: its guest progress belongs to that account. */
+export async function claimGuest(uid: string) {
+  if (!hasGuestProgress(readGuest())) return;
+  try {
+    const tag = await accountTag(uid);
+    updateGuest((g) => { g.claim = tag; });
+  } catch {
+    // no Web Crypto: the person is simply asked, like on a shared computer
+  }
+}
 
 /** The browser's anonymous id for workshop checks, created the first time it's needed. */
 export function anonSid(): string {

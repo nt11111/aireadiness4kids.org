@@ -423,7 +423,7 @@ After every phase:
 
 ## 11. Open questions for the team (Claude Code: flag them, don't guess)
 - Final brand colors and logo. The tokens above are a starting point.
-- The analytics provider choice (Umami vs. Cloudflare).
+- **Pick analytics provider** (Umami vs. Cloudflare Web Analytics). Analytics stay off until then: `PUBLIC_UMAMI_ID` is unset, so no script loads and no events are sent (section 8.7).
 - Who owns the Firebase/Google Cloud project and the Netlify account. The Cloudflare account (domain + DNS) should also be under ARK ownership. Use an ARK organization email, not a personal one, with two founders as admins.
 - Legal review of the privacy policy, terms, and parent notice before launch (a pro bono lawyer or a law school clinic).
 - Reviewer names and credentials for badges.

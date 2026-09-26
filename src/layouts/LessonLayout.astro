@@ -4,6 +4,7 @@
 import "../styles/index.css";
 import SiteHead from "../components/SiteHead.astro";
 import LessonKeys from "../components/lesson/LessonKeys.astro";
+import { GuestProgressOffer } from "../app/components/lesson/GuestProgressOffer";
 
 interface Props { title: string; description?: string; noindex?: boolean }
 const { title, description, noindex } = Astro.props;
@@ -17,6 +18,7 @@ const { title, description, noindex } = Astro.props;
   <body class="bg-bg">
     <a href="#lesson-main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-5 focus:py-3 focus:font-bold focus:text-ink focus:shadow-2">Skip to the lesson</a>
     <slot />
+    <GuestProgressOffer client:idle />
     <LessonKeys />
   </body>
 </html>

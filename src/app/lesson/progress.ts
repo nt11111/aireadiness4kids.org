@@ -49,9 +49,14 @@ type State = {
   modules: ReadonlyMap<string, ModuleState>;
   completed: StepSet;
   precheck: ReadonlyMap<string, PrecheckResult>;
+  /**
+   * Signed in, and this browser holds guest progress that isn't known to be this account's (a shared
+   * computer): GuestProgressOffer asks before anything is added.
+   */
+  offer: boolean;
 };
 
-const EMPTY: State = { status: "loading", accountType: null, learner: null, learners: [], modules: new Map(), completed: new StepSet(), precheck: new Map() };
+const EMPTY: State = { status: "loading", accountType: null, learner: null, learners: [], modules: new Map(), completed: new StepSet(), precheck: new Map(), offer: false };
 let state: State = EMPTY;
 const listeners = new Set<() => void>();
 
@@ -69,14 +74,14 @@ function setModules(modules: Map<string, ModuleState>, patch: Partial<State> = {
 const blankModule = (): ModuleState => ({ steps: new Set(), pre: null, startedAt: null, updatedAt: null, completedAt: null });
 
 type ServerModule = { steps: string[]; pre: { score: number; outOf: number } | null; startedAt: string | null; updatedAt: string | null; completedAt: string | null };
-type ServerProgress = { accountType: "learner" | "parent"; learner: LearnerRef | null; learners: LearnerRef[]; modules: Record<string, ServerModule> };
+type ServerProgress = { account: string; accountType: "learner" | "parent"; learner: LearnerRef | null; learners: LearnerRef[]; modules: Record<string, ServerModule> };
 
 async function getProgress(): Promise<ServerProgress | null> {
   const res = await fetch("/api/progress", { credentials: "same-origin" });
   return res.ok ? res.json() : null;
 }
 
-function fromServer(data: ServerProgress) {
+function fromServer(data: ServerProgress, offer = false) {
   const modules = new Map<string, ModuleState>();
   for (const [moduleId, m] of Object.entries(data.modules)) {
     modules.set(moduleId, {
@@ -87,7 +92,7 @@ function fromServer(data: ServerProgress) {
       completedAt: m.completedAt,
     });
   }
-  setModules(modules, { status: data.learner ? "account" : "no-learner", accountType: data.accountType, learner: data.learner, learners: data.learners });
+  setModules(modules, { status: data.learner ? "account" : "no-learner", accountType: data.accountType, learner: data.learner, learners: data.learners, offer });
 }
 
 function fromGuest() {
@@ -95,12 +100,11 @@ function fromGuest() {
   const modules = new Map<string, ModuleState>();
   for (const [moduleId, slugs] of Object.entries(g.steps)) modules.set(moduleId, { ...blankModule(), steps: new Set(slugs) });
   for (const [moduleId, p] of Object.entries(g.pre)) modules.set(moduleId, { ...(modules.get(moduleId) ?? blankModule()), pre: { score: p.score, total: p.total } });
-  setModules(modules, { status: "guest", accountType: null, learner: null, learners: [] });
+  setModules(modules, { status: "guest", accountType: null, learner: null, learners: [], offer: false });
 }
 
 /**
- * Signed in with guest progress on this browser: merge it into the active learner, then clear the
- * key. A parent with no learner profile yet keeps the key until they add one. A 4xx (say, content
+ * Merges this browser's guest progress into a learner, then clears the key. A 4xx (say, content
  * that's gone) clears it too, so a bad key can't retry forever; a network or server error keeps it.
  */
 async function mergeGuestInto(learnerId: string) {
@@ -115,13 +119,27 @@ type Action = { kind: "step"; stepId: string } | { kind: "pre"; moduleId: string
 let pending: Action[] = [];
 let loading: Promise<void> | null = null;
 
+/**
+ * Signed in: the learner's progress from the server. If this browser also holds guest progress,
+ * it's added straight away only when this account was created here (the guest key's claim); for
+ * anyone else it waits for their answer (state.offer). A parent with no learner profile yet keeps
+ * the key until they add one.
+ */
 async function load() {
   if (signedInHint()) {
     try {
       let data = await getProgress();
-      if (data?.learner && (await mergeGuestInto(data.learner.id))) data = await getProgress();
       if (data) {
-        fromServer(data);
+        const g = readGuest();
+        let offer = false;
+        if (hasGuestProgress(g) && data.learner) {
+          if (g.claim && g.claim === data.account) {
+            if (await mergeGuestInto(data.learner.id)) data = (await getProgress()) ?? data;
+          } else {
+            offer = true;
+          }
+        }
+        fromServer(data, offer);
         return;
       }
     } catch {
@@ -129,6 +147,22 @@ async function load() {
     }
   }
   fromGuest();
+}
+
+/** "Add it": the guest progress goes into the active learner. Returns false if that failed. */
+export async function acceptGuestProgress(): Promise<boolean> {
+  if (!state.learner) return false;
+  const ok = await mergeGuestInto(state.learner.id);
+  const data = ok ? await getProgress().catch(() => null) : null;
+  if (data) fromServer(data, false);
+  else setModules(new Map(state.modules), { offer: hasGuestProgress(readGuest()) });
+  return ok;
+}
+
+/** "No thanks": the browser's copy is deleted and nothing is added. */
+export function declineGuestProgress() {
+  clearGuest();
+  setModules(new Map(state.modules), { offer: false });
 }
 
 /** Starts loading (once). Called by useProgress in the browser, never on the server. */

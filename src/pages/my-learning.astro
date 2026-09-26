@@ -19,6 +19,8 @@ const profile = await getProfile(user.uid);
 if (!profile) return Astro.redirect("/signup", 302);
 const parent = profile.accountType === "parent";
 const { learner, learners } = await activeLearner(user.uid, Astro.cookies);
+// Progress is saved to a learner profile, so a parent without one adds it first.
+if (parent && learners.length === 0) return Astro.redirect(`/account/add-learner?next=${encodeURIComponent("/my-learning")}`, 302);
 const progress = learner ? await learnerProgress(user.uid, learner.id) : {};
 
 type Row = { id: string; title: string; href: string; track: "explorers" | "investigators" | "architects"; trackTitle: string; done: number; total: number; next: { href: string; n: number; title: string } | null; at: string };
@@ -52,7 +54,7 @@ const who = parent ? learner?.nickname : null;
 ---
 
 <BaseLayout title="My learning | ARK · AI Readiness for Kids" noindex>
-  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36" data-server-progress>
     <div class="mx-auto max-w-site">
       <h1 class="text-display-lg text-ink">{who ? `${who}'s learning` : `Hi, ${profile.displayName}`}</h1>
       {parent && learners.length > 0 && (
@@ -62,55 +64,46 @@ const who = parent ? learner?.nickname : null;
         </div>
       )}
 
-      {parent && learners.length === 0 ? (
-        <div class="mt-6 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1">
-          <p class="text-lesson text-ink">Add a profile for each child who'll learn with ARK. It only needs a nickname and a grade. Their progress is saved under their profile.</p>
-          <a href="/account?setup=learners" class={buttonVariants({ className: "mt-5" })}>Add a learner</a>
-        </div>
-      ) : (
-        <>
-          <section aria-labelledby="continue-h" class="mt-10">
-            <h2 id="continue-h" class="text-display-sm text-ink">Continue</h2>
-            {inProgress.length ? (
-              <ul class="mt-5 grid gap-4 lg:grid-cols-2">
-                {inProgress.map((r) => (
-                  <li class="flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 sm:flex-row sm:items-center sm:p-6">
-                    <ProgressRing done={r.done} total={r.total} label={`${r.title}: steps done`} track={r.track} />
-                    <div class="min-w-0 flex-1">
-                      <p class="text-small font-bold text-ink-soft">{r.trackTitle}</p>
-                      <h3 class="mt-0.5 font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
-                      <p class="mt-1 text-small text-ink-soft">{r.done} of {r.total} steps done · Next: step {r.next!.n}, {r.next!.title}</p>
-                    </div>
-                    <a href={r.next!.href} class={cn(buttonVariants(), "self-start sm:self-center")}>Continue<span class="sr-only"> {r.title}</span> <ArrowRight aria-hidden="true" /></a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div class="mt-5 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1">
-                <p class="text-lesson text-ink">{finished.length ? "Nothing in progress right now. Pick your next module and keep going." : "You haven't started a module yet. Pick a course and your progress will show up here."}</p>
-                <a href="/courses" class={buttonVariants({ className: "mt-5" })}>Browse courses <ArrowRight aria-hidden="true" /></a>
-              </div>
-            )}
-          </section>
+      <section aria-labelledby="continue-h" class="mt-10">
+        <h2 id="continue-h" class="text-display-sm text-ink">Continue</h2>
+        {inProgress.length ? (
+          <ul class="mt-5 grid gap-4 lg:grid-cols-2">
+            {inProgress.map((r) => (
+              <li class="flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 sm:flex-row sm:items-center sm:p-6">
+                <ProgressRing done={r.done} total={r.total} label={`${r.title}: steps done`} track={r.track} />
+                <div class="min-w-0 flex-1">
+                  <p class="text-small font-bold text-ink-soft">{r.trackTitle}</p>
+                  <h3 class="mt-0.5 font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
+                  <p class="mt-1 text-small text-ink-soft">{r.done} of {r.total} steps done · Next: step {r.next!.n}, {r.next!.title}</p>
+                </div>
+                <a href={r.next!.href} class={cn(buttonVariants(), "self-start sm:self-center")}>Continue<span class="sr-only"> {r.title}</span> <ArrowRight aria-hidden="true" /></a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="mt-5 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1">
+            <p class="text-lesson text-ink">{finished.length ? "Nothing in progress right now. Pick your next module and keep going." : "You haven't started a module yet. Pick a course and your progress will show up here."}</p>
+            <a href="/courses" class={buttonVariants({ className: "mt-5" })}>Browse courses <ArrowRight aria-hidden="true" /></a>
+          </div>
+        )}
+      </section>
 
-          {finished.length > 0 && (
-            <section aria-labelledby="done-h" class="mt-12">
-              <h2 id="done-h" class="text-display-sm text-ink">Finished</h2>
-              <ul class="mt-5 grid gap-3 lg:grid-cols-2">
-                {finished.map((r) => (
-                  <li class="flex items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1">
-                    <CircleCheck aria-hidden="true" className="size-8 shrink-0 text-success" />
-                    <div class="min-w-0 flex-1">
-                      <h3 class="font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
-                      <p class="text-small text-ink-soft">{r.trackTitle}{r.at && ` · Finished ${day(r.at)}`}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <p class="mt-4 text-small text-ink-soft">Certificates for finished modules are coming soon.</p>
-            </section>
-          )}
-        </>
+      {finished.length > 0 && (
+        <section aria-labelledby="done-h" class="mt-12">
+          <h2 id="done-h" class="text-display-sm text-ink">Finished</h2>
+          <ul class="mt-5 grid gap-3 lg:grid-cols-2">
+            {finished.map((r) => (
+              <li class="flex items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1">
+                <CircleCheck aria-hidden="true" className="size-8 shrink-0 text-success" />
+                <div class="min-w-0 flex-1">
+                  <h3 class="font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
+                  <p class="text-small text-ink-soft">{r.trackTitle}{r.at && ` · Finished ${day(r.at)}`}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 text-small text-ink-soft">Certificates for finished modules are coming soon.</p>
+        </section>
       )}
       <a href="/courses" class={buttonVariants({ variant: "outline", className: "mt-10" })}>Browse courses</a>
     </div>
