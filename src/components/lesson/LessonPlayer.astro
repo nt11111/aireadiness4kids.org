@@ -19,9 +19,11 @@ interface Props {
   index: number;
   /** Where Next goes from the last step. Phase 5 points this at the completion page. */
   finishHref?: string;
+  /** Signed-out visitors can do step 1; pressing Next there opens the sign-up panel. */
+  signedIn?: boolean;
 }
 
-const { track, module, steps, index, finishHref = `${Astro.props.module.href}#steps` } = Astro.props;
+const { track, module, steps, index, finishHref = `${Astro.props.module.href}#steps`, signedIn = true } = Astro.props;
 const step = steps[index];
 const explorers = track.id === "explorers";
 const s = trackStyle(track.id);
@@ -79,7 +81,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         </div>
         <div data-lesson-end aria-hidden="true" class="h-px"></div>
       </article>
-      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} />
+      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === 0 && steps.length > 1} />
     </main>
   </div>
 </div>

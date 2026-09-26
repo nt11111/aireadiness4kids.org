@@ -24,7 +24,8 @@ export const MODULES = [
 export const BIAS_MODULE = "/courses/investigators/bias-in-ai";
 export const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiring-bot", "check", "reflect", "recap"];
 
-export type Route = { name: string; path: string; lesson?: boolean };
+/** auth: sign in as this kind of account first (steps 2+ and account pages need a session). */
+export type Route = { name: string; path: string; lesson?: boolean; auth?: "learner" | "parent" | "facilitator" | "admin" };
 
 export const ROUTES: Route[] = [
   { name: "home", path: "/" },
@@ -33,9 +34,20 @@ export const ROUTES: Route[] = [
   { name: "course-investigators", path: "/courses/investigators" },
   { name: "course-architects", path: "/courses/architects" },
   ...MODULES.map((m) => ({ name: `module-${m.replace("/", "-")}`, path: `/courses/${m}` })),
-  ...BIAS_STEPS.map((s) => ({ name: `step-${s}`, path: `${BIAS_MODULE}/${s}`, lesson: true })),
+  ...BIAS_STEPS.map((s, i): Route => ({ name: `step-${s}`, path: `${BIAS_MODULE}/${s}`, lesson: true, ...(i > 0 ? { auth: "learner" } : {}) })),
   ...["1", "2", "3"].map((n) => ({ name: `dev-explorers-preview-${n}`, path: `/dev/lesson-preview/${n}`, lesson: true })),
   { name: "dev-guide-bias-in-ai", path: "/dev/guides/investigators/bias-in-ai" },
+  { name: "signin", path: "/signin" },
+  { name: "signup", path: "/signup" },
+  { name: "reset-password", path: "/reset-password" },
+  { name: "auth-callback-invalid", path: "/auth/callback" },
+  { name: "account-deleted", path: "/account-deleted" },
+  { name: "account-learner", path: "/account", auth: "learner" },
+  { name: "account-parent", path: "/account", auth: "parent" },
+  { name: "my-learning", path: "/my-learning", auth: "parent" },
+  { name: "admin", path: "/admin", auth: "admin" },
+  { name: "forbidden", path: "/admin", auth: "learner" },
+  { name: "present", path: "/present/investigators/bias-in-ai", auth: "facilitator" },
   { name: "about", path: "/about" },
   { name: "get-involved", path: "/get-involved" },
   { name: "donate", path: "/donate" },

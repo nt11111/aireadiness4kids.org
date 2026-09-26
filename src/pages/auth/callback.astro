@@ -1,0 +1,11 @@
+---
+// Where links in Firebase's emails land (confirm email, set a new password), once the Firebase
+// action URL points here (docs/SETUP_FIREBASE.md).
+import AuthShell from "../../components/AuthShell.astro";
+import { AuthCallback } from "../../app/components/auth/AuthCallback";
+export const prerender = true;
+---
+
+<AuthShell title="Account | ARK · AI Readiness for Kids">
+  <AuthCallback client:load />
+</AuthShell>

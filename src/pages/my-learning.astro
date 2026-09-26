@@ -1,0 +1,50 @@
+---
+// /my-learning (brief section 7). Phase 3 adds the page and the gate; Phase 4 fills in progress,
+// "Continue" buttons, and the learner switcher for parents.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buttonVariants } from "../app/components/ui/button";
+import { GRADE_BANDS } from "../lib/account-rules";
+import { getProfile, listLearners } from "../lib/accounts";
+export const prerender = false;
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent("/my-learning")}`, 302);
+const profile = await getProfile(user.uid);
+if (!profile) return Astro.redirect("/signup", 302);
+const learners = (await listLearners(user.uid)).filter((l) => !l.isSelf);
+const grade = (id: string | null) => GRADE_BANDS.find((g) => g.id === id)?.label ?? "";
+---
+
+<BaseLayout title="My learning | ARK · AI Readiness for Kids" noindex>
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <h1 class="text-display-lg text-ink">Hi, {profile.displayName}</h1>
+      {profile.accountType === "parent" ? (
+        learners.length ? (
+          <section aria-labelledby="kids-h" class="mt-8">
+            <h2 id="kids-h" class="text-display-sm text-ink">Learner profiles</h2>
+            <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {learners.map((l) => (
+                <li class="rounded-xl border border-line bg-surface p-5 shadow-1">
+                  <p class="font-display text-title font-semibold text-ink">{l.nickname}</p>
+                  <p class="text-small text-ink-soft">{grade(l.gradeBand)}</p>
+                </li>
+              ))}
+            </ul>
+            <p class="mt-4 text-ui text-ink-soft">Soon each profile will show its progress here. <a href="/account#learners" class="font-bold text-brand underline underline-offset-4">Manage profiles</a></p>
+          </section>
+        ) : (
+          <div class="mt-6 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1">
+            <p class="text-lesson text-ink">Add a profile for each child who'll learn with ARK. It only needs a nickname and a grade.</p>
+            <a href="/account?setup=learners" class={buttonVariants({ className: "mt-5" })}>Add a learner</a>
+          </div>
+        )
+      ) : (
+        <div class="mt-6 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1">
+          <p class="text-lesson text-ink">Your saved progress will show up here soon. For now, pick a course and keep going.</p>
+        </div>
+      )}
+      <a href="/courses" class={buttonVariants({ variant: "outline", className: "mt-8" })}>Browse courses</a>
+    </div>
+  </div>
+</BaseLayout>

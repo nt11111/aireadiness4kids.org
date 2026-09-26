@@ -48,6 +48,7 @@ export function Nav({ pathname }: { pathname: string }) {
   const [dd, setDd] = useState<string | null>(null);
   const toggles = useRef<Record<string, HTMLButtonElement | null>>({});
   const menuBtn = useRef<HTMLButtonElement>(null);
+  const me = useSignedIn();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -136,11 +137,38 @@ export function Nav({ pathname }: { pathname: string }) {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <a href="/donate" aria-current={path === "/donate" ? "page" : undefined} className={link(path === "/donate")}>Donate</a>
-          <a href="/courses" className={buttonVariants()}>
-            Start learning <ArrowRight aria-hidden="true" />
-          </a>
+        <div className="hidden items-center gap-1 lg:flex">
+          {/* Donate is also in the footer and the phone menu; it joins the header where there's room. */}
+          <a href="/donate" aria-current={path === "/donate" ? "page" : undefined} className={cn(link(path === "/donate"), "hidden xl:inline-flex")}>Donate</a>
+          {me ? (
+            <div data-nav-group className="relative" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDd((d) => (d === "account" ? null : d)); }}>
+              <button
+                ref={(el) => { toggles.current.account = el; }}
+                type="button"
+                aria-expanded={dd === "account"}
+                aria-controls="nav-account"
+                onClick={() => setDd(dd === "account" ? null : "account")}
+                className="flex min-h-11 items-center gap-2 rounded-full py-1 pl-1 pr-3 font-bold text-ink transition-colors hover:bg-surface-2"
+              >
+                <span aria-hidden="true" className="grid size-9 place-items-center rounded-full bg-brand-soft font-display text-title text-brand">{me.displayName.slice(0, 1).toUpperCase()}</span>
+                <span className="max-w-[10rem] truncate text-[0.9375rem]"><span className="sr-only">Account menu for </span>{me.displayName}</span>
+                <ChevronDown aria-hidden="true" className={cn("size-4 transition-transform duration-[var(--dur)]", dd === "account" && "rotate-180")} />
+              </button>
+              <div id="nav-account" hidden={dd !== "account"} className="absolute right-0 top-full pt-2">
+                <ul className="w-56 rounded-lg border border-line bg-surface p-2 shadow-2">
+                  {accountLinks(me).map(([label, href]) => (
+                    <li key={href}><a href={href} className="block rounded-md px-4 py-3 text-ui font-bold text-ink transition-colors hover:bg-surface-2 hover:text-brand">{label}</a></li>
+                  ))}
+                  <li><button type="button" onClick={signOut} className="block w-full rounded-md px-4 py-3 text-left text-ui font-bold text-ink transition-colors hover:bg-surface-2 hover:text-brand">Sign out</button></li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <>
+              <a href="/signin" aria-current={path === "/signin" ? "page" : undefined} className={link(path === "/signin")}>Sign in</a>
+              <a href="/signup" className={buttonVariants()}>Create free account</a>
+            </>
+          )}
         </div>
 
         <button
@@ -174,10 +202,62 @@ export function Nav({ pathname }: { pathname: string }) {
           </ul>
         </nav>
         <div className="mt-6 flex flex-col gap-3">
-          <a href="/courses" className={buttonVariants({ size: "lg" })}>Start learning <ArrowRight aria-hidden="true" /></a>
-          <a href="/donate" className={buttonVariants({ variant: "outline", size: "lg" })}>Donate</a>
+          {me ? (
+            <>
+              <p className="text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Signed in as {me.displayName}</p>
+              {accountLinks(me).map(([label, href]) => (
+                <a key={href} href={href} className={buttonVariants({ variant: "outline", size: "lg" })}>{label}</a>
+              ))}
+              <button type="button" onClick={signOut} className={buttonVariants({ variant: "ghost", size: "lg" })}>Sign out</button>
+            </>
+          ) : (
+            <>
+              <a href="/signup" className={buttonVariants({ size: "lg" })}>Create free account <ArrowRight aria-hidden="true" /></a>
+              <a href="/signin" className={buttonVariants({ variant: "outline", size: "lg" })}>Sign in</a>
+            </>
+          )}
+          <a href="/donate" className={buttonVariants({ variant: "ghost", size: "lg" })}>Donate</a>
         </div>
       </div>
     </header>
   );
+}
+
+type Me = { displayName: string; accountType: string; role: string | null };
+
+function accountLinks(me: Me): [string, string][] {
+  const links: [string, string][] = [["My learning", "/my-learning"], ["Account", "/account"]];
+  if (me.role === "admin") links.push(["Admin", "/admin"]);
+  return links;
+}
+
+/**
+ * Who's signed in, for the header. The session cookie is httpOnly, so pages ask /api/me, but only
+ * when the non-secret "ark_si" hint cookie says there may be a session. Signed-out visitors cost nothing.
+ */
+function useSignedIn(): Me | null {
+  const [me, setMe] = useState<Me | null>(null);
+  useEffect(() => {
+    if (!/(?:^|;\s*)ark_si=1/.test(document.cookie)) return;
+    let live = true;
+    fetch("/api/me", { credentials: "same-origin" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!live) return;
+        if (data?.signedIn) setMe({ displayName: data.displayName, accountType: data.accountType, role: data.role ?? null });
+        else document.cookie = "ark_si=; Max-Age=0; Path=/; Secure; SameSite=Lax";
+      })
+      .catch(() => {});
+    return () => { live = false; };
+  }, []);
+  return me;
+}
+
+/** Signs out on the server (clears the cookie and revokes sessions), then goes home. */
+async function signOut() {
+  try {
+    await fetch("/api/signout", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: "{}" });
+  } finally {
+    location.assign("/");
+  }
 }

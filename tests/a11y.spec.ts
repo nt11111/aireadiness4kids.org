@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readdirSync } from "node:fs";
 import { ROUTES, MODULES } from "./routes";
+import { prepare } from "./support/routes";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 
@@ -18,6 +19,7 @@ for (const route of ROUTES) {
   for (const width of [375, 1280]) {
     test(`axe: ${route.name} @ ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
+      await prepare(page, route);
       await page.goto(route.path, { waitUntil: "networkidle" });
       await axe(page, `${route.name}@${width}`);
     });
@@ -25,6 +27,7 @@ for (const route of ROUTES) {
 
   test(`keyboard: ${route.name}`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
+    await prepare(page, route);
     await page.goto(route.path, { waitUntil: "networkidle" });
 
     // Everything a keyboard user should be able to reach: visible, not inert, tabIndex >= 0.

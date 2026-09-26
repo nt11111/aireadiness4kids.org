@@ -4,6 +4,7 @@ import SiteHead from "../components/SiteHead.astro";
 import { Nav } from "../app/components/site/Nav";
 import { Footer } from "../app/components/site/Footer";
 import LessonKeys from "../components/lesson/LessonKeys.astro";
+import { REVEAL_SCRIPT } from "../lib/security/inline-scripts.mjs";
 
 interface Props {
   title: string;
@@ -29,15 +30,7 @@ const pathname = Astro.url.pathname;
     </main>
     <Footer />
     {viewTransitions && <LessonKeys />}
-    <script is:inline>
-      (function () {
-        var els = document.querySelectorAll(".reveal");
-        if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("in"); }); return; }
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-        }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-        els.forEach(function (e) { io.observe(e); });
-      })();
-    </script>
+    <!-- Allowed by hash in the Content-Security-Policy (src/lib/security). -->
+    <script is:inline set:html={REVEAL_SCRIPT} />
   </body>
 </html>

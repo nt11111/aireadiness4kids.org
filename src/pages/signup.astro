@@ -1,0 +1,10 @@
+---
+import AuthShell from "../components/AuthShell.astro";
+import { SignupFlow } from "../app/components/auth/SignupFlow";
+export const prerender = true;
+---
+
+<!-- The flow renders its own heading, which changes with each step. -->
+<AuthShell title="Create a free account | ARK · AI Readiness for Kids" description="Create a free ARK account to save your progress and earn certificates.">
+  <SignupFlow client:load />
+</AuthShell>

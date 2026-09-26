@@ -1,29 +1,25 @@
 ---
-// Lesson player page for one step (brief section 7).
-// Phase 3 gates steps 2+ on the server (session check + redirect to /signin); until then every step is prerendered.
+// Lesson player page for one step (brief section 7). Server-rendered: step 1 of every module is open
+// to everyone; steps 2+ need a session, checked on the server in src/middleware.ts and again below.
 import { render } from "astro:content";
 import LessonLayout from "../../../../layouts/LessonLayout.astro";
 import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
 import { lessonComponents } from "../../../../components/lesson";
-import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref, type Course, type Module } from "../../../../lib/courses";
-export const prerender = true;
+import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
+export const prerender = false;
 
-export async function getStaticPaths() {
-  const courses = await getCourses();
-  return courses.flatMap((course) =>
-    course.modules.flatMap((mod) =>
-      getModuleSteps(course, mod).map((step, index) => ({
-        params: { track: course.track.id, module: moduleSlug(mod), step: step.slug },
-        props: { course, mod, index },
-      })),
-    ),
-  );
-}
+const courses = await getCourses();
+const course = courses.find((c) => c.track.id === Astro.params.track);
+const mod = course?.modules.find((m) => moduleSlug(m) === Astro.params.module);
+const steps = course && mod ? getModuleSteps(course, mod) : [];
+const index = steps.findIndex((s) => s.slug === Astro.params.step);
+if (!course || !mod || index < 0) return Astro.rewrite("/404");
 
-const { course, mod, index } = Astro.props as { course: Course; mod: Module; index: number };
-const steps = getModuleSteps(course, mod);
+const signedIn = Boolean(Astro.locals.user);
+// Defense in depth: the middleware already redirected signed-out requests for steps 2+.
+if (index > 0 && !signedIn) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
+
 const step = steps[index];
-
 // MDX components read this step's data from here, so authors can write <Check /> with no props.
 Astro.locals.lesson = {
   stepId: step.id,
@@ -45,6 +41,7 @@ const stepRefs = steps.map(({ entry: _entry, ...ref }) => ref);
     module={{ title: mod.data.title, href: moduleHref(mod), status: mod.data.status }}
     steps={stepRefs}
     index={index}
+    signedIn={signedIn}
   >
     <Content components={lessonComponents} />
   </LessonPlayer>

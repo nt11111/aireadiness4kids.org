@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { ArrowLeft, ArrowRight, ListOrdered } from "lucide-react";
 import type { StepRef } from "../../../lib/lesson-types";
 import { progress, useProgress } from "../../lesson/progress";
 import { track as trackEvent } from "../../../lib/analytics";
 import { OutlineList } from "./OutlineList";
+import { GatePanel } from "./GatePanel";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { buttonVariants } from "../ui/button";
 import { cn } from "../ui/utils";
@@ -15,18 +16,21 @@ type Props = {
   moduleTitle: string;
   prevHref: string;
   nextHref: string;
+  /** Signed out on step 1: Next opens the sign-up panel instead of going to step 2. */
+  gated?: boolean;
 };
 
 /**
  * The sticky Back / Next bar (brief section 7), and on phones the "Step 3 of 6" button that opens
  * the outline as a bottom sheet. Next marks the step complete. Arrow keys press these links (keys.ts).
  */
-export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref }: Props) {
+export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref, gated = false }: Props) {
   const step = steps[index];
   const isFirst = index === 0;
   const isLast = index === steps.length - 1;
   const [atEnd, setAtEnd] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [gateOpen, setGateOpen] = useState(false);
   const { completed } = useProgress();
 
   // "Next" becomes "Mark complete & continue" once the learner reaches the end of the step.
@@ -39,9 +43,14 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
     return () => io.disconnect();
   }, [step.id]);
 
-  const markComplete = () => {
+  const markComplete = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!completed.has(step.id)) trackEvent({ name: "step_complete", props: { type: step.type } });
     progress.complete(step.id);
+    if (gated) {
+      e.preventDefault();
+      trackEvent({ name: "gate_shown", props: {} });
+      setGateOpen(true);
+    }
   };
 
   const tap = "min-h-[var(--tap)]";
@@ -91,6 +100,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </nav>
         </SheetContent>
       </Sheet>
+      {gated && <GatePanel open={gateOpen} onOpenChange={setGateOpen} next={nextHref} />}
     </div>
   );
 }

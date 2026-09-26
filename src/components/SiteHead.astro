@@ -1,6 +1,7 @@
 ---
 // Shared <head> contents for every layout.
 import { ClientRouter } from "astro:transitions";
+import { JS_FLAG_SCRIPT } from "../lib/security/inline-scripts.mjs";
 
 interface Props {
   title: string;
@@ -35,5 +36,6 @@ const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
 <link rel="icon" type="image/png" href="/brand/ark-mark-180.png" />
 <link rel="apple-touch-icon" href="/brand/ark-mark-180.png" />
 <!-- Reveal animations only hide content once JS is confirmed running. -->
-<script is:inline>document.documentElement.classList.add("js");</script>
+<!-- Allowed by hash in the Content-Security-Policy (src/lib/security). -->
+<script is:inline set:html={JS_FLAG_SCRIPT} />
 {viewTransitions && <ClientRouter fallback="none" />}

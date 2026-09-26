@@ -25,7 +25,7 @@ function collect(root: Element) {
 
 /**
  * <ReadAloud />: reads the step aloud with the browser's built-in speech (Web Speech API).
- * Shown on every Explorers step; other tracks can add it. Renders nothing if the browser can't speak.
+ * Shown on every Explorers step; other tracks can add it. Stays hidden if the browser can't speak.
  * It never starts on its own.
  */
 export function ReadAloud({ target = "[data-lesson-article]", className }: { target?: string; className?: string }) {
@@ -39,8 +39,6 @@ export function ReadAloud({ target = "[data-lesson-article]", className }: { tar
     document.addEventListener("astro:before-preparation", stop);
     return () => { document.removeEventListener("astro:before-preparation", stop); stop(); };
   }, []);
-
-  if (!supported) return null;
 
   const stop = () => { run.current++; speechSynthesis.cancel(); setSpeaking(false); };
 
@@ -62,8 +60,10 @@ export function ReadAloud({ target = "[data-lesson-article]", className }: { tar
     setSpeaking(parts.length > 0);
   };
 
+  // Always render the wrapper (hidden until the browser says it can speak), so the server and the
+  // browser produce the same markup and Astro can tell this is a React component.
   return (
-    <div data-read-skip className={cn("flex items-center gap-3", className)}>
+    <div data-read-skip hidden={!supported} className={cn("flex items-center gap-3", className)}>
       <Button type="button" variant="secondary" className="min-h-[var(--tap)]" onClick={speaking ? stop : start} aria-pressed={speaking}>
         {speaking ? <Square aria-hidden="true" /> : <Volume2 aria-hidden="true" />}
         {speaking ? "Stop reading" : "Read aloud"}

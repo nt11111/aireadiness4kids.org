@@ -4,7 +4,8 @@
  */
 export type AnalyticsEvent =
   | { name: "check_submit"; props: { phase: "pre" | "lesson" | "post"; score_bucket: "low" | "mid" | "high" } }
-  | { name: "step_complete"; props: { type: string } };
+  | { name: "step_complete"; props: { type: string } }
+  | { name: "gate_shown"; props: Record<string, never> };
 
 export function track(_event: AnalyticsEvent): void {
   // Intentionally empty until the provider is chosen (brief section 11).

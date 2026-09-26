@@ -1,0 +1,19 @@
+---
+// Centered card for the sign-in and sign-up pages.
+import BaseLayout from "../layouts/BaseLayout.astro";
+interface Props { title: string; description?: string; heading?: string; lead?: string }
+const { title, description, heading, lead } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="bg-surface-2 px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto max-w-[34rem] rounded-xl border border-line bg-surface p-6 shadow-1 sm:p-10">
+      {heading && <h1 class="text-display-md text-ink">{heading}</h1>}
+      {lead && <p class="mt-2 text-ui text-ink-soft">{lead}</p>}
+      <div class:list={[heading && "mt-7"]}>
+        <slot />
+      </div>
+    </div>
+    <slot name="after" />
+  </div>
+</BaseLayout>

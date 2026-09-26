@@ -10,15 +10,15 @@
   "scripts": {
     "dev": "astro dev --port 5180",
     "build": "astro build && node scripts/check-dist.mjs",
-    "preview": "node scripts/serve-dist.mjs",
+    "build:test": "node scripts/build-test.mjs",
+    "emulators": "firebase emulators:start --project demo-ark --only auth,firestore",
+    "preview": "node scripts/test-server.mjs",
     "check": "astro check",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "pretest:visual": "npm run build",
-    "test:visual": "playwright test tests/visual.spec.ts",
-    "pretest:a11y": "npm run build",
-    "test:a11y": "playwright test tests/a11y.spec.ts",
-    "pretest": "npm run build && npm run check:contrast",
-    "test": "playwright test"
+    "test": "npm run check:contrast && npm run build:test && firebase emulators:exec --project demo-ark --only auth,firestore \"playwright test\"",
+    "test:visual": "npm run build:test && firebase emulators:exec --project demo-ark --only auth,firestore \"playwright test tests/visual.spec.ts\"",
+    "test:a11y": "npm run build:test && firebase emulators:exec --project demo-ark --only auth,firestore \"playwright test tests/a11y.spec.ts tests/lesson.spec.ts\"",
+    "test:security": "npm run build:test && firebase emulators:exec --project demo-ark --only auth,firestore \"playwright test tests/security.spec.ts tests/rules.spec.ts tests/auth.spec.ts\""
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.2",
@@ -52,6 +52,8 @@
     "canvas-confetti": "1.9.4",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "firebase": "12.19.0",
+    "firebase-admin": "14.5.0",
     "lucide-react": "0.487.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -62,7 +64,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@astrojs/node": "11.1.6",
     "@axe-core/playwright": "4.13.0",
+    "@firebase/rules-unit-testing": "5.0.2",
     "@playwright/test": "1.63.0",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",

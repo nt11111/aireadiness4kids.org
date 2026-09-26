@@ -1,18 +1,62 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { defineConfig, envField } from "astro/config";
+import { loadEnv } from "vite";
 import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import { satteri } from "@astrojs/markdown-satteri";
 import netlify from "@astrojs/netlify";
+import node from "@astrojs/node";
 import tailwindcss from "@tailwindcss/vite";
+import { netlifyHeadersFile } from "./src/lib/security/policy.mjs";
 
-// Every page that doesn't need a session sets `export const prerender = true`.
-// Gated routes (lesson steps 2+, /my-learning, /account, /present, /admin) arrive in Phase 3.
+// Production builds for Netlify. Tests build the same site with the Node adapter (ARK_ADAPTER=node)
+// so middleware and server routes run locally against the Firebase emulators.
+const testBuild = process.env.ARK_ADAPTER === "node";
+const env = loadEnv(process.env.NODE_ENV ?? "production", process.cwd(), "");
+
+/** Writes the security headers for static pages into the build (brief section 8.4). */
+const staticSecurityHeaders = () => ({
+  name: "ark-static-security-headers",
+  hooks: {
+    /** @param {{ dir: URL }} opts */
+    "astro:build:done": ({ dir }) => {
+      const emulator = env.PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
+      writeFileSync(
+        fileURLToPath(new URL("_headers", dir)),
+        netlifyHeadersFile({ authDomain: env.PUBLIC_FIREBASE_AUTH_DOMAIN, emulatorOrigins: emulator ? [emulator] : [], https: !testBuild }),
+      );
+    },
+  },
+});
+
+// Pages that don't need a session set `export const prerender = true` and are served as static files.
+// Server-rendered: lesson steps, /account, /my-learning, /present, /admin, /forbidden, and /api/*.
 export default defineConfig({
   site: "https://aireadiness4kids.org",
   output: "server",
-  adapter: netlify(),
-  integrations: [react(), mdx()],
+  outDir: process.env.ARK_OUT_DIR ?? "./dist",
+  adapter: testBuild ? node({ mode: "standalone" }) : netlify(),
+  integrations: [react(), mdx(), staticSecurityHeaders()],
+  // Environment variables (docs/SETUP_FIREBASE.md). Server secrets are read at runtime on the server
+  // and Astro refuses to build if client code imports them.
+  env: {
+    schema: {
+      PUBLIC_FIREBASE_API_KEY: envField.string({ context: "client", access: "public", optional: true }),
+      PUBLIC_FIREBASE_AUTH_DOMAIN: envField.string({ context: "client", access: "public", optional: true }),
+      PUBLIC_FIREBASE_PROJECT_ID: envField.string({ context: "client", access: "public", optional: true }),
+      PUBLIC_FIREBASE_APP_ID: envField.string({ context: "client", access: "public", optional: true }),
+      PUBLIC_FIREBASE_MESSAGING_SENDER_ID: envField.string({ context: "client", access: "public", optional: true }),
+      PUBLIC_RECAPTCHA_SITE_KEY: envField.string({ context: "client", access: "public", optional: true }),
+      // Test builds only: the local Auth emulator, e.g. http://127.0.0.1:9099.
+      PUBLIC_FIREBASE_AUTH_EMULATOR_URL: envField.string({ context: "client", access: "public", optional: true }),
+      FIREBASE_CLIENT_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
+      FIREBASE_PRIVATE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      // Test runs only: talk to the local emulators and skip App Check. Refuses to run with a real project.
+      ARK_EMULATORS: envField.boolean({ context: "server", access: "secret", default: false }),
+    },
+  },
   // Lessons cite facts with Markdown footnotes ([^name]); label that list "Sources".
   // (Sätteri is Astro's default Markdown processor; this only changes the footnote wording.)
   markdown: {
@@ -27,6 +71,9 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     build: {
+      // Keep every bundled script a file on this site (never inlined), so the CSP can allow 'self'
+      // and a fixed list of inline scripts only.
+      assetsInlineLimit: 0,
       rolldownOptions: {
         // Astro tags MDX content modules with "use astro:head-inject" and reads the tag before
         // bundling; Rolldown then warns that it drops the directive. Filter only that known-harmless case.
