@@ -30,7 +30,7 @@ This repo is being rebuilt from a marketing site into ARK's free course platform
 7. **Content:**
    - Never invent statistics, studies, or quotes. Use `[CITATION NEEDED]`.
    - New modules start as `status: draft`.
-8. **Dependencies:** use Tailwind and the existing `src/app/components/ui` primitives before adding any UI library, and explain any new dependency.
+8. **Dependencies:** use Tailwind and the existing `src/app/components/ui` primitives before adding any UI library, and explain any new dependency. Keep the `overrides` pin of `jose` 5 under `jwks-rsa` in `package.json`: firebase-admin 14 pulls in `jose` 6, which is ES-module-only, and Netlify's function runtime can't `require()` it, so every server route crashes with `ERR_REQUIRE_ESM`. Check before removing it with `node --no-experimental-require-module` against the built `.netlify/v1/functions/ssr/ssr.mjs`.
 9. **After each phase:**
    - Run the build, visual screenshots (375/768/1280), and a11y tests.
    - Look at the screenshots and fix problems.
