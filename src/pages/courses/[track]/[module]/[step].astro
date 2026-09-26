@@ -14,7 +14,7 @@ const course = courses.find((c) => c.track.id === Astro.params.track);
 const mod = course?.modules.find((m) => moduleSlug(m) === Astro.params.module);
 const steps = course && mod ? getModuleSteps(course, mod) : [];
 const index = steps.findIndex((s) => s.slug === Astro.params.step);
-if (!course || !mod || index < 0) return Astro.rewrite("/404");
+if (!course || !mod || index < 0) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
 
 const signedIn = Boolean(Astro.locals.user);
 // Defense in depth: the middleware already redirected signed-out requests for steps 2+.

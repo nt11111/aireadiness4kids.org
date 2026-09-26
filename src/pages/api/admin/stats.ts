@@ -1,13 +1,12 @@
-/** GET /api/admin/stats: running totals for the admin page (Phase 5 builds the full dashboard). Admins only. */
+/** GET /api/admin/stats?source=&from=&to=: the admin impact numbers as JSON. Admins only; aggregates only. */
 import { requireRole } from "../../../lib/authz";
 import { getRoute, methodNotAllowed } from "../../../lib/api";
-import { db } from "../../../lib/firebase-admin";
+import { filterFrom, impactReport } from "../../../lib/impact";
 export const prerender = false;
 
-export const GET = getRoute(async ({ locals }) => {
+export const GET = getRoute(async ({ locals, url }) => {
   requireRole(locals, "admin");
-  const snap = await db().doc("stats/global").get();
-  return { global: snap.exists ? snap.data() : {} };
+  return impactReport(filterFrom(url.searchParams));
 });
 
 export const ALL = methodNotAllowed;

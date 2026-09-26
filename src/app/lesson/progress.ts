@@ -118,6 +118,13 @@ async function mergeGuestInto(learnerId: string) {
 type Action = { kind: "step"; stepId: string } | { kind: "pre"; moduleId: string; answers: Record<string, string>; result: PrecheckResult };
 let pending: Action[] = [];
 let loading: Promise<void> | null = null;
+/** Saves on their way to the server, so the last step can wait for them before the completion page loads. */
+const inflight = new Set<Promise<unknown>>();
+function sending<T>(p: Promise<T>) {
+  inflight.add(p);
+  void p.finally(() => inflight.delete(p)).catch(() => {});
+  return p;
+}
 
 /**
  * Signed in: the learner's progress from the server. If this browser also holds guest progress,
@@ -188,7 +195,7 @@ function saveStep(stepId: string) {
   const modules = new Map(state.modules).set(moduleId, { ...current, steps: new Set(current.steps).add(slug), startedAt: current.startedAt ?? now, updatedAt: now });
   setModules(modules);
   if (state.status === "account" && state.learner) {
-    void post<{ completed?: boolean }>("/api/progress/step", { learnerId: state.learner.id, moduleId, step: slug }).then(({ data }) => {
+    void sending(post<{ completed?: boolean }>("/api/progress/step", { learnerId: state.learner.id, moduleId, step: slug })).then(({ data }) => {
       if (data?.completed) track({ name: "module_complete", props: { track: moduleId.split("/")[0] } });
     });
   } else if (state.status === "guest") {
@@ -201,7 +208,7 @@ function savePre(moduleId: string, answers: Record<string, string>, result: Prec
   if (current.pre) return; // the first pre-check is the "before" number; it isn't replaced
   setModules(new Map(state.modules).set(moduleId, { ...current, pre: result }));
   if (state.status === "account" && state.learner) {
-    void post<{ score: number; outOf: number }>("/api/progress/precheck", { learnerId: state.learner.id, moduleId, answers }).then(({ data }) => {
+    void sending(post<{ score: number; outOf: number }>("/api/progress/precheck", { learnerId: state.learner.id, moduleId, answers })).then(({ data }) => {
       // The server's score is the one that counts (it scores against the answer key itself).
       const latest = state.modules.get(moduleId);
       if (data && latest) setModules(new Map(state.modules).set(moduleId, { ...latest, pre: { score: data.score, total: data.outOf } }));
@@ -223,6 +230,11 @@ export const progress = {
       pending.push({ kind: "step", stepId });
       void startProgress();
     } else saveStep(stepId);
+  },
+  /** Resolves once everything recorded so far has reached the server (or failed trying). */
+  async flush() {
+    await startProgress();
+    await Promise.allSettled([...inflight]);
   },
   savePrecheck(moduleId: string, result: PrecheckResult, answers: Record<string, string>) {
     const action: Action = { kind: "pre", moduleId, answers, result };

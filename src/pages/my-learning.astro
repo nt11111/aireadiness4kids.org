@@ -9,8 +9,9 @@ import { buttonVariants } from "../app/components/ui/button";
 import { cn } from "../app/components/ui/utils";
 import { getProfile } from "../lib/accounts";
 import { activeLearner, learnerProgress } from "../lib/learning";
+import { learnerCertificates } from "../lib/certificates";
 import { getCourses, getModuleSteps, moduleHref } from "../lib/courses";
-import { ArrowRight, CircleCheck } from "lucide-react";
+import { ArrowRight, Award, CircleCheck } from "lucide-react";
 export const prerender = false;
 
 const user = Astro.locals.user;
@@ -21,7 +22,9 @@ const parent = profile.accountType === "parent";
 const { learner, learners } = await activeLearner(user.uid, Astro.cookies);
 // Progress is saved to a learner profile, so a parent without one adds it first.
 if (parent && learners.length === 0) return Astro.redirect(`/account/add-learner?next=${encodeURIComponent("/my-learning")}`, 302);
-const progress = learner ? await learnerProgress(user.uid, learner.id) : {};
+const [progress, certificates]: [Awaited<ReturnType<typeof learnerProgress>>, Awaited<ReturnType<typeof learnerCertificates>>] = learner
+  ? await Promise.all([learnerProgress(user.uid, learner.id), learnerCertificates(user.uid, learner.id)])
+  : [{}, new Map()];
 
 type Row = { id: string; title: string; href: string; track: "explorers" | "investigators" | "architects"; trackTitle: string; done: number; total: number; next: { href: string; n: number; title: string } | null; at: string };
 const rows: Row[] = [];
@@ -93,16 +96,20 @@ const who = parent ? learner?.nickname : null;
           <h2 id="done-h" class="text-display-sm text-ink">Finished</h2>
           <ul class="mt-5 grid gap-3 lg:grid-cols-2">
             {finished.map((r) => (
-              <li class="flex items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1">
+              <li class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1">
                 <CircleCheck aria-hidden="true" className="size-8 shrink-0 text-success" />
                 <div class="min-w-0 flex-1">
                   <h3 class="font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
                   <p class="text-small text-ink-soft">{r.trackTitle}{r.at && ` · Finished ${day(r.at)}`}</p>
                 </div>
+                {certificates.has(r.id) ? (
+                  <a href={`/certificates/${certificates.get(r.id)!.id}`} class={buttonVariants({ variant: "outline", size: "sm", className: "min-h-11" })}><Award aria-hidden="true" />Reprint certificate<span class="sr-only"> for {r.title}</span></a>
+                ) : (
+                  <a href={`${r.href}/complete`} class={buttonVariants({ variant: "outline", size: "sm", className: "min-h-11" })}><Award aria-hidden="true" />Get certificate<span class="sr-only"> for {r.title}</span></a>
+                )}
               </li>
             ))}
           </ul>
-          <p class="mt-4 text-small text-ink-soft">Certificates for finished modules are coming soon.</p>
         </section>
       )}
       <a href="/courses" class={buttonVariants({ variant: "outline", className: "mt-10" })}>Browse courses</a>

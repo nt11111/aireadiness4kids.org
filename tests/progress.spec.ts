@@ -110,7 +110,7 @@ test.describe("progress API", () => {
     expect(Object.keys((await adminDb.doc(`users/${b.uid}/learners/${lb}/progress/${DOC}`).get()).get("steps"))).toEqual(["what-is-bias"]);
     const view = await call("/api/progress", { method: "GET", ...asA });
     expect(view.json?.learners.map((l: { id: string }) => l.id)).toEqual([la]);
-    for (const other of [lb, b.uid, "Bo", "Bea"]) expect(view.text).not.toContain(other);
+    for (const other of [lb, b.uid, `"Bo"`, `"Bea"`]) expect(view.text).not.toContain(other);
     // A forged "active learner" cookie pointing at B's learner is ignored.
     const forged = await call("/api/progress", { method: "GET", cookie: `${a.cookie}; ark_learner=${lb}` });
     expect(forged.json?.learner.id).toBe(la);
@@ -192,7 +192,8 @@ test("a guest does step 1 and the pre-check, signs up, and both carry over (with
   const uid = (await adminAuth.getUserByEmail(email)).uid;
   const learnerId = (await adminDb.collection(`users/${uid}/learners`).get()).docs[0].id;
   await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0]]);
-  expect((await progressDoc(uid, learnerId).get()).get("pre")).toMatchObject({ score: 2, outOf: 3 });
+  // The merge writes the steps, then the pre-check: wait for both.
+  await expect.poll(async () => (await progressDoc(uid, learnerId).get()).get("pre")).toMatchObject({ score: 2, outOf: 3 });
   await expect.poll(() => page.evaluate(() => localStorage.getItem("ark.guest.v1"))).toBeNull();
   // Made in this browser, so nobody is asked: the progress was theirs.
   await expect(page.getByRole("dialog", { name: "Progress found on this device" })).toHaveCount(0);

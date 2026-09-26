@@ -31,6 +31,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
   const [atEnd, setAtEnd] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [gateOpen, setGateOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const { completed } = useProgress();
 
   // Opening a module's first step starts the lesson (brief section 8.7; the track only, no ids).
@@ -51,6 +52,16 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
   const markComplete = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!completed.has(step.id)) trackEvent({ name: "step_complete", props: { type: step.type } });
     progress.complete(step.id);
+    if (isLast && !gated) {
+      // The completion page is rendered on the server from saved progress, so wait for this last
+      // step to be saved first (at most a few seconds; the page copes if it still isn't).
+      e.preventDefault();
+      if (leaving) return;
+      setLeaving(true);
+      const wait = new Promise((resolve) => setTimeout(resolve, 5000));
+      void Promise.race([progress.flush(), wait]).then(() => window.location.assign(nextHref));
+      return;
+    }
     if (gated) {
       e.preventDefault();
       trackEvent({ name: "gate_shown", props: {} });
@@ -78,9 +89,9 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </SheetTrigger>
           <p className="hidden text-small font-bold text-ink-soft lg:block" aria-hidden="true">{counter}</p>
 
-          <a href={nextHref} data-lesson-next onClick={markComplete} className={cn(buttonVariants(), tap, "px-4 sm:px-6")}>
+          <a href={nextHref} data-lesson-next onClick={markComplete} aria-busy={leaving || undefined} className={cn(buttonVariants(), tap, "px-4 sm:px-6")}>
             {isLast ? (
-              <span>Finish module</span>
+              <span>{leaving ? "Saving..." : "Finish module"}</span>
             ) : atEnd ? (
               <>
                 <span className="sm:hidden">Complete &amp; next</span>

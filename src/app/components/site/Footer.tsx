@@ -4,14 +4,14 @@ import { ORG } from "../../lib/content";
 
 const cols = [
   { heading: "Learn", links: [["All courses", "/courses"], ["AI Explorers (K-5)", "/courses/explorers"], ["AI Investigators (6-8)", "/courses/investigators"], ["AI Architects (9-12)", "/courses/architects"]] },
-  { heading: "Our Work", links: [["Programs & workshops", "/programs"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"], ["How we review modules", "/about#reviewers"]] },
+  { heading: "Our Work", links: [["Programs & workshops", "/programs"], ["For educators", "/educators"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"], ["How we review modules", "/about#reviewers"]] },
   { heading: "Join Us", links: [["Become an Ambassador", "/get-involved#ambassadors"], ["Volunteer", "/get-involved#volunteer"], ["Partner With Us", "/get-involved#partners"], ["Mailing List", "/contact#newsletter"]] },
   { heading: "Organization", links: [["About", "/about"], ["Leadership", "/about#team"], ["Donate", "/donate"], ["Contact", "/contact"]] },
 ];
 
 export function Footer() {
   return (
-    <footer className="on-dark relative overflow-hidden bg-ink text-white">
+    <footer className="on-dark relative overflow-hidden bg-ink text-white print:hidden">
       <div className="relative mx-auto max-w-[calc(var(--container)+3rem)] px-4 pb-10 pt-16 sm:px-6">
         <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div>

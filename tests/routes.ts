@@ -26,10 +26,19 @@ export const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiri
 
 /**
  * auth: sign in as this kind of account first (steps 2+ and account pages need a session).
- * progress: give that account saved progress first (3 steps and the pre-check of Bias in AI; parents
- * get two learner profiles, the first with that progress).
+ * progress: give that account saved progress first (3 steps, or all of them, and the pre-check of
+ * Bias in AI; parents get two learner profiles, the first with that progress). See support/routes.ts.
  */
-export type Route = { name: string; path: string; lesson?: boolean; auth?: "learner" | "parent" | "facilitator" | "admin"; progress?: boolean };
+export type Route = {
+  name: string;
+  path: string;
+  lesson?: boolean;
+  auth?: "learner" | "parent" | "facilitator" | "admin";
+  /** "complete": every step of Bias in AI done. A path with "{cert}" gets a certificate issued for it. */
+  progress?: true | "complete";
+  /** Set up the account (and certificate), but look at the page signed out. */
+  signedOut?: boolean;
+};
 
 export const ROUTES: Route[] = [
   { name: "home", path: "/" },
@@ -40,7 +49,8 @@ export const ROUTES: Route[] = [
   ...MODULES.map((m) => ({ name: `module-${m.replace("/", "-")}`, path: `/courses/${m}` })),
   ...BIAS_STEPS.map((s, i): Route => ({ name: `step-${s}`, path: `${BIAS_MODULE}/${s}`, lesson: true, ...(i > 0 ? { auth: "learner" } : {}) })),
   ...["1", "2", "3"].map((n) => ({ name: `dev-explorers-preview-${n}`, path: `/dev/lesson-preview/${n}`, lesson: true })),
-  { name: "dev-guide-bias-in-ai", path: "/dev/guides/investigators/bias-in-ai" },
+  { name: "educators", path: "/educators" },
+  { name: "educators-guide-bias-in-ai", path: "/educators/investigators/bias-in-ai" },
   { name: "signin", path: "/signin" },
   { name: "signup", path: "/signup" },
   { name: "reset-password", path: "/reset-password" },
@@ -57,7 +67,17 @@ export const ROUTES: Route[] = [
   { name: "module-bias-in-ai-progress", path: BIAS_MODULE, auth: "learner", progress: true },
   { name: "check-bias-in-ai-pre", path: "/check/bias-in-ai/pre" },
   { name: "check-bias-in-ai-post", path: "/check/bias-in-ai/post?src=test-workshop" },
+  { name: "complete-not-yet", path: `${BIAS_MODULE}/complete`, auth: "learner", progress: true },
+  { name: "complete-learner", path: `${BIAS_MODULE}/complete`, auth: "learner", progress: "complete" },
+  { name: "complete-parent", path: `${BIAS_MODULE}/complete`, auth: "parent", progress: "complete" },
+  { name: "certificate-learner", path: "/certificates/{cert}", auth: "learner", progress: "complete" },
+  { name: "certificate-child", path: "/certificates/{cert}", auth: "parent", progress: "complete" },
+  { name: "verify", path: "/verify/{cert}", auth: "learner", progress: "complete", signedOut: true },
+  { name: "verify-not-found", path: "/verify/AAAAAAAAAAAAAAAAAAAAAA" },
   { name: "admin", path: "/admin", auth: "admin" },
+  { name: "admin-filtered", path: "/admin?source=_none&from=2026-01-01", auth: "admin" },
+  { name: "present-index", path: "/present", auth: "facilitator" },
+  { name: "present-check-slide", path: "/present/investigators/bias-in-ai?src=test-workshop#slide-5", auth: "facilitator" },
   { name: "forbidden", path: "/admin", auth: "learner" },
   { name: "present", path: "/present/investigators/bias-in-ai", auth: "facilitator" },
   { name: "about", path: "/about" },

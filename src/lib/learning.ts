@@ -5,7 +5,7 @@
  *
  *   users/{uid}/learners/{learnerId}/progress/{track__module}
  *     moduleId, steps: { [stepSlug]: timestamp }, startedAt, updatedAt, completedAt?,
- *     pre?: { score, outOf, at }, post?: { score, outOf, at }
+ *     pre?: { score, outOf, at }, post?: { score, outOf, at }, certificateId? (certificates.ts)
  *
  * Each change and its stats counters are written in one transaction, so a module start or
  * completion is counted exactly once even if the same request arrives twice.
@@ -28,6 +28,7 @@ export type ModuleProgress = {
   startedAt: string | null;
   updatedAt: string | null;
   completedAt: string | null;
+  certificateId: string | null;
 };
 
 const progressRef = (uid: string, learnerId: string, moduleId: string) =>
@@ -73,6 +74,7 @@ export async function learnerProgress(uid: string, learnerId: string): Promise<R
       startedAt: iso(data.startedAt),
       updatedAt: iso(data.updatedAt),
       completedAt: iso(data.completedAt),
+      certificateId: typeof data.certificateId === "string" ? data.certificateId : null,
     };
   }
   return out;

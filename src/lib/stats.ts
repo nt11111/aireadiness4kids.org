@@ -4,10 +4,12 @@
  * loads individual learners.
  *
  *   stats/global                  everything
- *   stats/bySrc_{src}             one workshop or partner ("bySrc__none" for no src)
+ *   stats/bySrc_{src}             one workshop or partner ("bySrc__none" for no src), with a
+ *                                 nested byModule map
  *   stats/byModule_{track__slug}  one module (starts, completions, pre/post scores)
- *   stats/daily_{yyyy-mm-dd}      one UTC day, with a nested bySrc map so /admin can filter
- *                                 by src and date range together
+ *   stats/daily_{yyyy-mm-dd}      one UTC day, with nested byModule and bySrc maps (each src has
+ *                                 its own byModule), so /admin can filter by src and date range
+ *                                 together, down to each module's pre/post scores
  *
  * Counters only go up: they count sign-ups, starts, and check submissions as they happen, so
  * deleting an account later doesn't rewrite past totals (and they hold nothing personal).
@@ -51,9 +53,10 @@ export function bumpStats(writer: Writer, counts: Counts, { src, moduleId, at = 
   const stats = db().collection("stats");
   const merge = { merge: true };
   writer.set(stats.doc("global"), inc, merge);
-  writer.set(stats.doc(`bySrc_${srcKey(src)}`), { src: src ?? null, ...inc }, merge);
+  const byModule = moduleId ? { byModule: { [moduleDocId(moduleId)]: inc } } : {};
+  writer.set(stats.doc(`bySrc_${srcKey(src)}`), { src: src ?? null, ...inc, ...byModule }, merge);
   if (moduleId) writer.set(stats.doc(`byModule_${moduleDocId(moduleId)}`), { moduleId, ...inc }, merge);
-  writer.set(stats.doc(`daily_${day(at)}`), { date: day(at), ...inc, bySrc: { [srcKey(src)]: inc } }, merge);
+  writer.set(stats.doc(`daily_${day(at)}`), { date: day(at), ...inc, ...byModule, bySrc: { [srcKey(src)]: { ...inc, ...byModule } } }, merge);
 }
 
 /** A score as whole percentage points, for the score-sum counters. */

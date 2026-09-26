@@ -8,3 +8,9 @@ declare namespace App {
     user?: import("./lib/session").SessionUser | null;
   }
 }
+
+/** canvas-confetti ships no types; this is the one call the completion page makes (Completion.tsx). */
+declare module "canvas-confetti" {
+  type Options = { particleCount?: number; spread?: number; startVelocity?: number; origin?: { x?: number; y?: number }; colors?: string[]; disableForReducedMotion?: boolean };
+  export default function confetti(options?: Options): Promise<null> | null;
+}

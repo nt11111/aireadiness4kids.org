@@ -11,6 +11,8 @@ interface Props {
   noindex?: boolean;
   /** Astro View Transitions: pages that opt in share in-memory state as the learner moves between them. */
   viewTransitions?: boolean;
+  /** Presenter mode reads ?src= itself (for its QR codes) and must not tag the presenter's own browser. */
+  captureSrc?: boolean;
 }
 
 const {
@@ -18,6 +20,7 @@ const {
   description = "ARK (AI Readiness for Kids) is a nonprofit that equips K-12 students, teachers, and parents with the knowledge, skills, and ethical grounding to use AI responsibly.",
   noindex = false,
   viewTransitions = false,
+  captureSrc = true,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
@@ -42,6 +45,6 @@ const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
 <script is:inline set:html={JS_FLAG_SCRIPT} />
 {viewTransitions && <ClientRouter fallback="none" />}
 <!-- ?src= tags are kept for sign-up and workshop checks, then removed from the address bar (brief section 8.5). -->
-<script>import "../app/lib/src-capture";</script>
+{captureSrc && <script>import "../app/lib/src-capture";</script>}
 <!-- Cookie-free analytics when configured (brief section 8.7): no query strings or #hashes, and Do Not Track is respected. -->
 {PUBLIC_UMAMI_ID && <script is:inline defer src={UMAMI.script} data-website-id={PUBLIC_UMAMI_ID} data-exclude-search="true" data-exclude-hash="true" data-do-not-track="true"></script>}

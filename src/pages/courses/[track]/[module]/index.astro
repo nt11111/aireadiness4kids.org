@@ -1,6 +1,6 @@
 ---
 // Module overview (brief section 7): what the module covers, its review status, and its steps.
-import { render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import Breadcrumbs from "../../../../components/Breadcrumbs.astro";
 import { ReviewBadge } from "../../../../app/components/site/ReviewBadge";
@@ -30,6 +30,7 @@ const stepRefs = steps.map(({ entry: _entry, ...ref }) => ref);
 const prev = modules[index - 1];
 const next = modules[index + 1];
 const { Content } = await render(mod);
+const hasGuide = (await getCollection("guides")).some((g) => g.id === mod.id);
 const learn = objectives.length ? { heading: "What you'll learn", items: objectives } : { heading: "Key topics", items: topics };
 ---
 
@@ -136,7 +137,16 @@ const learn = objectives.length ? { heading: "What you'll learn", items: objecti
                     </a>
                   </li>
                 )}
-                <li class="flex items-center gap-2 text-ink-soft"><FileText aria-hidden="true" className="size-4 shrink-0" />Facilitator guide: coming soon</li>
+                {hasGuide ? (
+                  <li>
+                    <a href={`/educators/${track.id}/${moduleSlug(mod)}`} class="inline-flex items-center gap-2 rounded-sm font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">
+                      <FileText aria-hidden="true" className="size-4 shrink-0" />
+                      <span>Facilitator guide<span class="sr-only"> for {title}</span></span>
+                    </a>
+                  </li>
+                ) : (
+                  <li class="flex items-center gap-2 text-ink-soft"><FileText aria-hidden="true" className="size-4 shrink-0" />Facilitator guide: coming soon</li>
+                )}
               </ul>
             </div>
           )}

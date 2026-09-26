@@ -197,11 +197,14 @@ test("keyboard only: the whole Bias in AI module at 375px", async ({ page }) => 
   await arrive(page, BIAS_STEPS[5]);
   await snap(page, "step6-recap");
 
-  // Finish: back to the overview, where every step shows as done.
+  // Finish: the last step is saved, then the completion page; the overview shows every step done.
   const finish = page.getByRole("link", { name: "Finish module" });
   await tabTo(page, finish, 120);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}#steps$`));
+  await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}/complete$`));
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("You finished Bias in AI");
+  await snap(page, "complete");
+  await page.goto(`${BIAS_MODULE}#steps`);
   await hydrated(page);
   await expect(page.getByText("You finished every step. Nice work!")).toBeVisible();
   await expect(page.locator("#steps").getByText("completed", { exact: false })).toHaveCount(6);

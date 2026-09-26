@@ -61,7 +61,8 @@ test.describe("(a) user A can't read or write user B's data through any API rout
     expect(exp.status).toBe(200);
     expect(exp.headers.get("content-disposition")).toContain("attachment");
     expect(exp.text).toContain(la);
-    for (const other of [lb, b.uid, b.email, certB, checkB.id, "Bea", "Bo"]) expect(exp.text).not.toContain(other);
+    // Names as JSON values: a random id can contain "Bo" by chance.
+    for (const other of [lb, b.uid, b.email, certB, checkB.id, `"Bea"`, `"Bo"`]) expect(exp.text).not.toContain(other);
 
     // A deletes their account; B's data is untouched.
     expect((await call("/api/account/delete", { cookie: a.cookie, body: { confirm: "DELETE" } })).status).toBe(200);
@@ -200,7 +201,7 @@ test.describe("(d) roles are checked on the server", () => {
     expect((await call("/admin", { method: "GET", cookie: admin.cookie })).status).toBe(200);
     const stats = await call("/api/admin/stats", { method: "GET", cookie: admin.cookie });
     expect(stats.status).toBe(200);
-    expect(stats.json).toHaveProperty("global");
+    expect(stats.json).toHaveProperty("totals");
   });
 });
 

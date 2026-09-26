@@ -17,8 +17,9 @@ type Props = {
    * lesson: check each answer and explain it right away.
    * pre: the optional "See what you already know" check. Shows a score only, so the answers
    * stay fresh for the post-check at the end of the module.
+   * post: the same questions again on the completion page, also score only.
    */
-  mode?: "lesson" | "pre";
+  mode?: "lesson" | "pre" | "post";
   /** answers: question id -> chosen option id (the server re-scores these; see /api/progress/precheck). */
   onScore?: (score: number, total: number, answers: Record<string, string>) => void;
 };
@@ -64,13 +65,13 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
     if (unanswered) { setPreResult({ score: 0, nudge: true }); return; }
     const score = questions.filter((q) => qs[q.id].selected === q.answer).length;
     setPreResult({ score, nudge: false });
-    track({ name: "check_submit", props: { phase: "pre", score_bucket: scoreBucket(score, questions.length) } });
+    track({ name: "check_submit", props: { phase: mode === "post" ? "post" : "pre", score_bucket: scoreBucket(score, questions.length) } });
     onScore?.(score, questions.length, Object.fromEntries(questions.map((q) => [q.id, qs[q.id].selected ?? ""])));
   };
 
   const allChecked = questions.every((q) => qs[q.id].checked);
   const firstTryScore = questions.filter((q) => qs[q.id].firstTry).length;
-  const preLocked = mode === "pre" && preResult !== null && !preResult.nudge;
+  const preLocked = mode !== "lesson" && preResult !== null && !preResult.nudge;
 
   return (
     <div className="grid gap-5">
@@ -152,14 +153,15 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
         </p>
       )}
 
-      {mode === "pre" && (
+      {mode !== "lesson" && (
         <div className="grid gap-3">
           {!preLocked && (
             <Button type="button" className="min-h-[var(--tap)] justify-self-start" onClick={submitPre}>See my score</Button>
           )}
           <p role="status" className="text-ui text-ink empty:hidden">
             {preResult?.nudge && "Answer all the questions first, or skip the check. It's optional."}
-            {preLocked && `You got ${preResult!.score} of ${questions.length}. That's your starting point. You'll see the answers as you go, and can try these again at the end.`}
+            {preLocked && mode === "pre" && `You got ${preResult!.score} of ${questions.length}. That's your starting point. You'll see the answers as you go, and can try these again at the end.`}
+            {preLocked && mode === "post" && `You got ${preResult!.score} of ${questions.length}.`}
           </p>
         </div>
       )}

@@ -19,16 +19,16 @@ for (const route of ROUTES) {
   for (const width of [375, 1280]) {
     test(`axe: ${route.name} @ ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      await prepare(page, route);
-      await page.goto(route.path, { waitUntil: "networkidle" });
+      const path = await prepare(page, route);
+      await page.goto(path, { waitUntil: "networkidle" });
       await axe(page, `${route.name}@${width}`);
     });
   }
 
   test(`keyboard: ${route.name}`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await prepare(page, route);
-    await page.goto(route.path, { waitUntil: "networkidle" });
+    const path = await prepare(page, route);
+    await page.goto(path, { waitUntil: "networkidle" });
 
     // Everything a keyboard user should be able to reach: visible, not inert, tabIndex >= 0.
     const expected = await page.evaluate(() => {

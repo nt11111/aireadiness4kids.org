@@ -17,13 +17,13 @@ interface Props {
   module: { title: string; href: string; status: ReviewStatus };
   steps: StepRef[];
   index: number;
-  /** Where Next goes from the last step. Phase 5 points this at the completion page. */
+  /** Where Next goes from the last step: the module's completion page, unless a preview says otherwise. */
   finishHref?: string;
   /** Signed-out visitors can do step 1; pressing Next there opens the sign-up panel. */
   signedIn?: boolean;
 }
 
-const { track, module, steps, index, finishHref = `${Astro.props.module.href}#steps`, signedIn = true } = Astro.props;
+const { track, module, steps, index, finishHref = `${Astro.props.module.href}/complete`, signedIn = true } = Astro.props;
 const step = steps[index];
 const explorers = track.id === "explorers";
 const s = trackStyle(track.id);

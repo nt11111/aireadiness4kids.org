@@ -15,6 +15,7 @@ export const NAV: Group[] = [
     href: "/programs",
     items: [
       { label: "Programs & workshops", href: "/programs", desc: "Workshops, parent nights, teacher PD" },
+      { label: "For educators", href: "/educators", desc: "Facilitator guides to print and teach" },
       { label: "Student Ambassadors", href: "/get-involved#ambassadors", desc: "Teens leading at their schools" },
       { label: "Research & Reports", href: "/programs#research", desc: "What we learn along the way" },
     ],
@@ -78,7 +79,7 @@ export function Nav({ pathname }: { pathname: string }) {
     cn("rounded-full px-3.5 py-2 text-[0.9375rem] font-bold transition-colors duration-[var(--dur)]", active ? "text-brand" : "text-ink-soft hover:text-ink");
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/95 shadow-1 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/95 shadow-1 backdrop-blur-xl print:hidden">
       <div className="mx-auto flex h-[72px] max-w-[calc(var(--container)+3rem)] items-center justify-between gap-6 px-4 sm:px-6">
         <a href="/" aria-label="ARK AIReadiness4Kids, home" className="rounded-md">
           <Logo />
@@ -251,6 +252,7 @@ type Me = { displayName: string; accountType: string; role: string | null; learn
 
 function accountLinks(me: Me): [string, string][] {
   const links: [string, string][] = [["My learning", "/my-learning"], ["Account", "/account"]];
+  if (me.role === "facilitator" || me.role === "admin") links.push(["Presenter mode", "/present"]);
   if (me.role === "admin") links.push(["Admin", "/admin"]);
   return links;
 }
