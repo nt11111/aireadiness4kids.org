@@ -1,6 +1,6 @@
 /**
- * Which routes need what (brief section 8.1): lesson steps 2+, /my-learning, and /account need a
- * signed-in user; /present needs the facilitator (or admin) role; /admin needs admin.
+ * Which routes need what (brief section 8.1): lesson steps 2+, /my-learning, /account, and the
+ * progress API need a signed-in user; /present needs the facilitator (or admin) role; /admin needs admin.
  */
 import { getCourses } from "./courses";
 
@@ -39,7 +39,7 @@ export async function gateFor(pathname: string): Promise<Gate> {
   const under = (prefix: string) => path === prefix || path.startsWith(`${prefix}/`);
   if (under("/admin") || under("/api/admin")) return "admin";
   if (under("/present")) return "facilitator";
-  if (under("/account") || under("/my-learning") || under("/api/account")) return "user";
+  if (under("/account") || under("/my-learning") || under("/api/account") || under("/api/progress")) return "user";
   if (/^\/courses\/[^/]+\/[^/]+\/[^/]+$/.test(path)) return (await lockedStepPaths()).has(path) ? "user" : "open";
   return "open";
 }

@@ -17,6 +17,11 @@ const POST_ROUTES = [
   "/api/account/learners/update",
   "/api/account/learners/delete",
   "/api/account/delete",
+  "/api/account/learners/active",
+  "/api/progress/step",
+  "/api/progress/precheck",
+  "/api/progress/merge",
+  "/api/checks",
 ];
 
 test.describe("(a) user A can't read or write user B's data through any API route", () => {
@@ -124,7 +129,7 @@ test.describe("(c) signed-out requests to gated routes get a redirect, not conte
   });
 
   test("gated APIs answer 401", async () => {
-    for (const path of ["/api/account/export", "/api/admin/stats"]) expect((await call(path, { method: "GET" })).status, path).toBe(401);
+    for (const path of ["/api/account/export", "/api/admin/stats", "/api/progress"]) expect((await call(path, { method: "GET" })).status, path).toBe(401);
     expect((await call("/api/account/profile", { body: { displayName: "X" } })).status).toBe(401);
   });
 

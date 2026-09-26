@@ -6,8 +6,9 @@ import SyllabusItem from "../../../components/SyllabusItem.astro";
 import { buttonVariants } from "../../../app/components/ui/button";
 import { trackStyle } from "../../../app/lib/tracks";
 import { cn } from "../../../app/components/ui/utils";
-import { courseTime, getCourses, getModuleSteps, moduleHref, reviewCounts, type Course } from "../../../lib/courses";
-import { ArrowRight, BookOpen, Check, Clock, ExternalLink, FileText, HeartHandshake } from "lucide-react";
+import { CourseStart } from "../../../app/components/lesson/CourseProgress";
+import { courseTime, getCourses, getModuleSteps, moduleLite, reviewCounts, type Course } from "../../../lib/courses";
+import { BookOpen, Check, Clock, ExternalLink, FileText, HeartHandshake } from "lucide-react";
 export const prerender = true;
 
 export async function getStaticPaths() {
@@ -21,6 +22,7 @@ const { title, grades, tagline, summary, outcomes, slides_folder_url } = track.d
 const s = trackStyle(track.id);
 const time = courseTime(course);
 const counts = reviewCounts(modules);
+const lites = modules.map((m) => moduleLite(course, m));
 const reviewLine =
   counts.reviewed === modules.length ? "Every module in this course has been reviewed by an expert."
   : counts.reviewed === 0 && counts.inReview === 0 ? `All ${modules.length} modules are drafts under expert review.`
@@ -46,9 +48,8 @@ const reviewLine =
           <li class="inline-flex items-center gap-2"><Clock aria-hidden="true" className="size-5" />{time}</li>
           <li class="inline-flex items-center gap-2"><HeartHandshake aria-hidden="true" className="size-5" />Free</li>
         </ul>
-        <a href={moduleHref(modules[0])} class={cn(buttonVariants({ variant: s.button, size: "lg" }), "mt-8")}>
-          Start course <ArrowRight aria-hidden="true" />
-        </a>
+        <!-- "Start course" until progress loads (and without JavaScript); then "Resume" with a progress ring. -->
+        <CourseStart client:load modules={lites} trackId={track.id as "explorers" | "investigators" | "architects"} variant={s.button} />
       </div>
     </div>
   </section>

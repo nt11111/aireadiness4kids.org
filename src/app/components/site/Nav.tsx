@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, ArrowRight, ChevronDown } from "lucide-react";
+import { Menu, X, ArrowRight, ChevronDown, Check } from "lucide-react";
 import { Logo } from "./Logo";
 import { buttonVariants } from "../ui/button";
+import { switchLearner } from "../../lib/post";
 import { cn } from "../ui/utils";
 
 type Item = { label: string; href: string; desc?: string };
@@ -155,7 +156,21 @@ export function Nav({ pathname }: { pathname: string }) {
                 <ChevronDown aria-hidden="true" className={cn("size-4 transition-transform duration-[var(--dur)]", dd === "account" && "rotate-180")} />
               </button>
               <div id="nav-account" hidden={dd !== "account"} className="absolute right-0 top-full pt-2">
-                <ul className="w-56 rounded-lg border border-line bg-surface p-2 shadow-2">
+                <ul className="w-60 rounded-lg border border-line bg-surface p-2 shadow-2">
+                  {me.learners && me.learners.length > 1 && (
+                    <>
+                      <li aria-hidden="true" className="px-4 pb-1 pt-2 text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Learning as</li>
+                      {me.learners.map((l) => (
+                        <li key={l.id}>
+                          <button type="button" aria-pressed={l.id === me.learnerId} onClick={() => void switchLearner(l.id)} className="flex w-full items-center justify-between gap-2 rounded-md px-4 py-3 text-left text-ui font-bold text-ink transition-colors hover:bg-surface-2 hover:text-brand">
+                            <span><span className="sr-only">Learning as </span>{l.nickname}</span>
+                            {l.id === me.learnerId && <Check aria-hidden="true" className="size-4 text-brand" />}
+                          </button>
+                        </li>
+                      ))}
+                      <li aria-hidden="true" className="mx-2 my-1 border-t border-line" />
+                    </>
+                  )}
                   {accountLinks(me).map(([label, href]) => (
                     <li key={href}><a href={href} className="block rounded-md px-4 py-3 text-ui font-bold text-ink transition-colors hover:bg-surface-2 hover:text-brand">{label}</a></li>
                   ))}
@@ -205,6 +220,15 @@ export function Nav({ pathname }: { pathname: string }) {
           {me ? (
             <>
               <p className="text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Signed in as {me.displayName}</p>
+              {me.learners && me.learners.length > 1 && (
+                <div role="group" aria-label="Learning as" className="flex flex-wrap gap-2">
+                  {me.learners.map((l) => (
+                    <button key={l.id} type="button" aria-pressed={l.id === me.learnerId} onClick={() => void switchLearner(l.id)} className={buttonVariants({ variant: l.id === me.learnerId ? "secondary" : "outline" })}>
+                      {l.id === me.learnerId && <Check aria-hidden="true" />}<span className="sr-only">Learning as </span>{l.nickname}
+                    </button>
+                  ))}
+                </div>
+              )}
               {accountLinks(me).map(([label, href]) => (
                 <a key={href} href={href} className={buttonVariants({ variant: "outline", size: "lg" })}>{label}</a>
               ))}
@@ -223,7 +247,7 @@ export function Nav({ pathname }: { pathname: string }) {
   );
 }
 
-type Me = { displayName: string; accountType: string; role: string | null };
+type Me = { displayName: string; accountType: string; role: string | null; learnerId?: string | null; learners?: { id: string; nickname: string }[] };
 
 function accountLinks(me: Me): [string, string][] {
   const links: [string, string][] = [["My learning", "/my-learning"], ["Account", "/account"]];
@@ -244,7 +268,7 @@ function useSignedIn(): Me | null {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (!live) return;
-        if (data?.signedIn) setMe({ displayName: data.displayName, accountType: data.accountType, role: data.role ?? null });
+        if (data?.signedIn) setMe({ displayName: data.displayName, accountType: data.accountType, role: data.role ?? null, learnerId: data.learnerId ?? null, learners: data.learners ?? [] });
         else document.cookie = "ark_si=; Max-Age=0; Path=/; Secure; SameSite=Lax";
       })
       .catch(() => {});

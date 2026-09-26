@@ -19,7 +19,8 @@ type Props = {
    * stay fresh for the post-check at the end of the module.
    */
   mode?: "lesson" | "pre";
-  onScore?: (score: number, total: number) => void;
+  /** answers: question id -> chosen option id (the server re-scores these; see /api/progress/precheck). */
+  onScore?: (score: number, total: number, answers: Record<string, string>) => void;
 };
 
 /** <Check>: 1 to 5 multiple-choice or true/false questions (brief section 6). */
@@ -54,7 +55,7 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
       const score = questions.filter((x) => next[x.id].firstTry).length;
       track({ name: "check_submit", props: { phase: "lesson", score_bucket: scoreBucket(score, questions.length) } });
       if (stepId) progress.complete(stepId);
-      onScore?.(score, questions.length);
+      onScore?.(score, questions.length, Object.fromEntries(questions.map((x) => [x.id, next[x.id].selected ?? ""])));
     }
   };
 
@@ -64,7 +65,7 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
     const score = questions.filter((q) => qs[q.id].selected === q.answer).length;
     setPreResult({ score, nudge: false });
     track({ name: "check_submit", props: { phase: "pre", score_bucket: scoreBucket(score, questions.length) } });
-    onScore?.(score, questions.length);
+    onScore?.(score, questions.length, Object.fromEntries(questions.map((q) => [q.id, qs[q.id].selected ?? ""])));
   };
 
   const allChecked = questions.every((q) => qs[q.id].checked);

@@ -1,7 +1,9 @@
 ---
 // Shared <head> contents for every layout.
 import { ClientRouter } from "astro:transitions";
+import { PUBLIC_UMAMI_ID } from "astro:env/client";
 import { JS_FLAG_SCRIPT } from "../lib/security/inline-scripts.mjs";
+import { UMAMI } from "../lib/security/policy.mjs";
 
 interface Props {
   title: string;
@@ -39,3 +41,7 @@ const ogImage = new URL("/brand/ark-logo-full.png", Astro.site);
 <!-- Allowed by hash in the Content-Security-Policy (src/lib/security). -->
 <script is:inline set:html={JS_FLAG_SCRIPT} />
 {viewTransitions && <ClientRouter fallback="none" />}
+<!-- ?src= tags are kept for sign-up and workshop checks, then removed from the address bar (brief section 8.5). -->
+<script>import "../app/lib/src-capture";</script>
+<!-- Cookie-free analytics when configured (brief section 8.7): no query strings or #hashes, and Do Not Track is respected. -->
+{PUBLIC_UMAMI_ID && <script is:inline defer src={UMAMI.script} data-website-id={PUBLIC_UMAMI_ID} data-exclude-search="true" data-exclude-hash="true" data-do-not-track="true"></script>}

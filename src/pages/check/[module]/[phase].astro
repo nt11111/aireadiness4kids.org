@@ -1,0 +1,47 @@
+---
+// Open workshop knowledge check (brief sections 4 and 8.6): /check/<module>/<pre|post>?src=<workshop>.
+// No sign-in. Presenter mode's QR codes point here (Phase 5); the ?src= tag is kept by src-capture.
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { WorkshopCheck } from "../../../app/components/lesson/WorkshopCheck";
+import { Badge } from "../../../app/components/ui/badge";
+import type { TrackId } from "../../../app/lib/tracks";
+import { getCourses, moduleHref, moduleSlug } from "../../../lib/courses";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const courses = await getCourses();
+  const bySlug = new Map<string, string>();
+  const paths = [];
+  for (const course of courses) {
+    for (const mod of course.modules) {
+      const slug = moduleSlug(mod);
+      // The check URL uses the module's folder name alone, so it has to be unique across tracks.
+      if (bySlug.has(slug)) throw new Error(`Modules "${bySlug.get(slug)}" and "${mod.id}" share the folder name "${slug}"; /check/${slug}/... needs it to be unique.`);
+      bySlug.set(slug, mod.id);
+      for (const phase of ["pre", "post"] as const) {
+        const questions = phase === "pre" ? mod.data.pre_check : mod.data.post_check;
+        if (questions.length) paths.push({ params: { module: slug, phase }, props: { course, mod, phase, questions } });
+      }
+    }
+  }
+  return paths;
+}
+
+const { course, mod, phase, questions } = Astro.props;
+const heading = phase === "pre" ? "Before we start" : "After the lesson";
+---
+
+<BaseLayout title={`Quick check: ${mod.data.title} | ARK`} description={`A ${questions.length}-question check for the ${mod.data.title} workshop.`} noindex>
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto max-w-reading">
+      <Badge variant={course.track.id as TrackId}>{course.track.data.title} · {mod.data.title}</Badge>
+      <h1 class="mt-4 text-display-md text-ink sm:text-display-lg">{heading}: quick check</h1>
+      <p class="mt-4 text-lesson text-ink-soft">
+        {questions.length} quick questions. No account and no name needed. Your answers are counted anonymously to help ARK see what workshops teach.
+      </p>
+      <div class="mt-8">
+        <WorkshopCheck client:load moduleId={mod.id} moduleTitle={mod.data.title} moduleHref={moduleHref(mod)} phase={phase} questions={questions} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

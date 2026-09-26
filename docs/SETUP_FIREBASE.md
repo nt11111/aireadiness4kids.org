@@ -72,6 +72,12 @@ Or, from a terminal in the repo, after `firebase login`:
 firebase deploy --only firestore:rules --project YOUR_PROJECT_ID
 ```
 
+5. **Clean up old rate-limit records.** The open workshop checks count requests in a `rateLimits` collection (no IP addresses are stored, only scrambled keys). Each record has an `expiresAt` time. In Google Cloud (same project), open **Firestore > Time-to-live (TTL)**, click **Create policy**, and enter collection group `rateLimits` and timestamp field `expiresAt`. Firestore then deletes each record a little after it expires. Or, from a terminal with the Google Cloud CLI:
+
+```bash
+gcloud firestore fields ttls update expiresAt --collection-group=rateLimits --enable-ttl --project YOUR_PROJECT_ID
+```
+
 ## 6. Register the web app (public values)
 
 1. Gear icon > **Project settings > General > Your apps > Add app > Web** (the `</>` icon).
@@ -137,11 +143,14 @@ Netlify > your site > **Site configuration > Environment variables**. Everything
 | `FIREBASE_CLIENT_EMAIL` | step 7 | **SECRET** | Functions only |
 | `FIREBASE_PRIVATE_KEY` | step 7 | **SECRET** | Functions only |
 | `NODE_ENV` = `production` | (type it) | public | Functions only; **not yet**, see below |
+| `PUBLIC_UMAMI_ID` (optional) | Umami, see below | public | Builds, Functions |
 
 - `PUBLIC_` variables are built into the site's JavaScript, so anyone can see them. That's fine.
 - The two secrets are only read by ARK's server code at runtime. The build fails if a private key ever shows up in the browser's JavaScript.
 - `NODE_ENV=production` makes the server use React's fast production build. Without it pages still work, just slower. **Don't set it yet.** On the free plan it can't be limited to Functions, so it also reaches the build, where it makes Netlify skip dev dependencies. `astro.config.mjs` currently loads the test adapter (`@astrojs/node`, a dev dependency) on every build, so the build fails with "Cannot find module '@astrojs/node'". Once the config loads that adapter only for test builds, set it with **Different value for each deploy context**: `production` for Deploy Previews and Branch deploys, and for Production only after the Phase 6 cutover (until then Production builds the old site from `main`, which needs its dev dependencies).
 - **Never** set `ARK_EMULATORS`, `FIREBASE_AUTH_EMULATOR_HOST`, or `FIRESTORE_EMULATOR_HOST` in Netlify. They're for local tests only, and the site refuses to start if it sees them next to a real project.
+
+**Analytics (optional).** ARK counts a few anonymous events (a lesson started, a step finished, a check sent) with no cookies, and never sends names, emails, or ids (brief section 8.7). Whether to use Umami or Cloudflare is still a team decision. For Umami: create a free account at <https://cloud.umami.is>, add the website, and copy its **Website ID** into `PUBLIC_UMAMI_ID`. With it unset, the site loads no analytics script and sends nothing.
 
 After changing variables, trigger a new deploy.
 
@@ -170,6 +179,8 @@ On the deployed site:
 3. Sign out and try opening step 2 directly: you should land on the sign-in page.
 4. In the browser's developer tools (Network tab), click the page and check the response headers include `content-security-policy` and `strict-transport-security`.
 5. Try **Download my data** and **Delete my account** on a test account.
+6. Open step 1 of a module signed out, finish it, then sign up: **My learning** should show that step done.
+7. On a phone, open `/check/bias-in-ai/pre?src=test`, answer the questions, and check the thank-you page shows your score.
 
 ## Local development and tests
 

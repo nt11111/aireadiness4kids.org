@@ -81,7 +81,7 @@ export type SessionOutcome = "ok" | "verify-email" | "no-account" | "error";
  * httpOnly cookie. For "verify-email" the user stays signed in to the SDK (in memory only) so the
  * page can resend the verification email.
  */
-export async function startSession(user: User, extra: { signup?: unknown } = {}): Promise<{ outcome: SessionOutcome; accountType?: string; error?: string }> {
+export async function startSession(user: User, extra: { signup?: unknown; src?: string } = {}): Promise<{ outcome: SessionOutcome; accountType?: string; error?: string }> {
   const idToken = await user.getIdToken(true);
   const res = await postJSON<{ accountType?: string }>("/api/session", { idToken, ...extra });
   if (res.ok) {

@@ -37,6 +37,8 @@ for (const route of ROUTES) {
         .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0 && !el.closest("[inert],[hidden]") && getComputedStyle(el).visibility !== "hidden")
         // Content of a closed <details> is not focusable until the row is opened (its <summary> is).
         .filter((el) => !(el.closest("details:not([open])") && !el.closest("summary")))
+        // A group of native radio buttons is one Tab stop (arrow keys move within it), so expect its first radio only.
+        .filter((el, _i, all) => !(el instanceof HTMLInputElement && el.type === "radio" && all.find((o) => o instanceof HTMLInputElement && o.type === "radio" && o.name === el.name) !== el))
         .map((el, i) => { el.dataset.kbId = String(i); return String(i); });
     });
 
@@ -58,6 +60,11 @@ for (const route of ROUTES) {
         // Count focus landing inside an element as reaching it: Radix radio groups pass focus straight to a radio.
         const ids: string[] = [];
         for (let n: HTMLElement | null = el; n; n = n.parentElement) if (n.dataset.kbId) ids.push(n.dataset.kbId);
+        // Tab lands on the checked radio of a group (or its first): either way the group is reached.
+        if (el instanceof HTMLInputElement && el.type === "radio") {
+          const first = document.querySelector<HTMLElement>(`input[type="radio"][name="${CSS.escape(el.name)}"][data-kb-id]`);
+          if (first?.dataset.kbId) ids.push(first.dataset.kbId);
+        }
         return { ids, desc: `${el.tagName.toLowerCase()} "${(el.textContent || el.getAttribute("aria-label") || "").trim().slice(0, 40)}"`, ring, obscured };
       });
       if (!info) break; // wrapped past the end of the page

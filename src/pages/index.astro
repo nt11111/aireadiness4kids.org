@@ -5,13 +5,16 @@ import TrackCard from "../components/TrackCard.astro";
 import CredibilityStrip from "../components/CredibilityStrip.astro";
 import ImpactNumbers from "../components/ImpactNumbers.astro";
 import { buttonVariants } from "../app/components/ui/button";
-import { getCourses, getReviewers } from "../lib/courses";
+import { ContinueCard } from "../app/components/lesson/CourseProgress";
+import { getCourses, getReviewers, moduleLite } from "../lib/courses";
 import { ArrowRight } from "lucide-react";
 export const prerender = true;
 
 const courses = await getCourses();
 const reviewers = getReviewers(courses);
 const moduleCount = courses.reduce((n, c) => n + c.modules.length, 0);
+// Only modules with lesson steps can be "in progress".
+const started = courses.flatMap((c) => c.modules.map((m) => moduleLite(c, m))).filter((m) => m.steps.length > 0);
 
 const steps = [
   { title: "Join a workshop, or jump right in", body: "ARK founders and student ambassadors lead workshops for schools and community groups. You can also start on your own, any time." },
@@ -36,6 +39,9 @@ const steps = [
       <HeroArt class="mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[500px]" />
     </div>
   </section>
+
+  <!-- Signed-in learners with progress only (brief section 7); renders nothing for everyone else. -->
+  <ContinueCard client:idle modules={started} />
 
   <section aria-labelledby="levels-h" class="px-4 pb-16 sm:px-6 lg:pb-24">
     <div class="mx-auto max-w-site">

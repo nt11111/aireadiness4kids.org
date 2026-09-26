@@ -3,6 +3,7 @@
 import { ArrowRight, ChevronDown, Clock } from "lucide-react";
 import StepList from "./StepList.astro";
 import { ReviewBadge } from "../app/components/site/ReviewBadge";
+import { ModuleRowProgress } from "../app/components/lesson/CourseProgress";
 import { trackStyle } from "../app/lib/tracks";
 import { cn } from "../app/components/ui/utils";
 import { moduleHref, moduleTime, type Module, type Step } from "../lib/courses";
@@ -21,7 +22,7 @@ const s = trackStyle(track);
       <span class="block font-display text-title font-semibold text-ink">{title}</span>
       <span class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-small text-ink-soft">
         <span class="inline-flex items-center gap-1.5"><Clock aria-hidden="true" className="size-4" />{moduleTime(mod, steps)}</span>
-        {steps.length > 0 && <span>0/{steps.length} steps</span>}
+        {steps.length > 0 && <ModuleRowProgress client:idle steps={steps.map((s) => ({ id: s.id, href: s.href }))} />}
         <ReviewBadge status={status} reviewers={reviewers} />
       </span>
     </span>

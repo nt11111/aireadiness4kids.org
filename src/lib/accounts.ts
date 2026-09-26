@@ -8,6 +8,7 @@ import { z } from "astro/zod";
 import { adminAuth, db } from "./firebase-admin";
 import { HttpError, requireLearner } from "./authz";
 import { GRADE_BANDS, MAX_LEARNERS, NAME_PATTERN, PARENT_NOTICE_VERSION, type AccountType, type AgeBand } from "./account-rules";
+import { bumpStats } from "./stats";
 
 export const Name = z.string().trim().regex(NAME_PATTERN);
 export const Grade = z.enum(GRADE_BANDS.map((g) => g.id) as [string, ...string[]]);
@@ -30,7 +31,8 @@ export async function getProfile(uid: string): Promise<Profile | null> {
 
 /**
  * Creates the account profile once, at sign-up. 13+ learners get one learner profile for themselves;
- * parents add their children's profiles afterwards. Parents are always stored as 18plus.
+ * parents add their children's profiles afterwards. Parents are always stored as 18plus. The sign-up
+ * counters (brief section 8.2) are updated in the same transaction, attributed to the first src.
  */
 export async function createProfile(uid: string, signup: SignupInput, src?: string) {
   const ref = userRef(uid);
@@ -40,6 +42,7 @@ export async function createProfile(uid: string, signup: SignupInput, src?: stri
     if (signup.accountType === "learner") {
       tx.create(ref, { accountType: "learner", ageBand: signup.ageBand, displayName: signup.displayName, firstSrc: src ?? null, createdAt: now });
       tx.create(ref.collection("learners").doc(), { nickname: signup.displayName, gradeBand: signup.gradeBand ?? null, isSelf: true, createdAt: now });
+      bumpStats(tx, { [`accounts_${signup.ageBand}`]: 1, learners: 1 }, { src });
     } else {
       tx.create(ref, {
         accountType: "parent",
@@ -49,6 +52,7 @@ export async function createProfile(uid: string, signup: SignupInput, src?: stri
         parentConsent: { version: PARENT_NOTICE_VERSION, at: now },
         createdAt: now,
       });
+      bumpStats(tx, { accounts_18plus: 1 }, { src });
     }
   });
 }
@@ -80,7 +84,10 @@ export async function addLearner(uid: string, input: { nickname: string; gradeBa
   const count = (await learners.count().get()).data().count;
   if (count >= MAX_LEARNERS) throw new HttpError(409, "too-many-learners");
   const doc = learners.doc();
-  await doc.create({ nickname: input.nickname, gradeBand: input.gradeBand, isSelf: false, createdAt: FieldValue.serverTimestamp() });
+  const batch = db().batch();
+  batch.create(doc, { nickname: input.nickname, gradeBand: input.gradeBand, isSelf: false, createdAt: FieldValue.serverTimestamp() });
+  bumpStats(batch, { learners: 1 }, { src: profile.firstSrc });
+  await batch.commit();
   return { id: doc.id };
 }
 

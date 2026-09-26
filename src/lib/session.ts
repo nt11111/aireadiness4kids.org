@@ -8,6 +8,8 @@ import { adminAuth, NotConfiguredError } from "./firebase-admin";
 export const SESSION_COOKIE = "__session";
 /** Not a secret: a UI hint so static pages know whether to ask /api/me who's signed in. The server never trusts it. */
 export const SIGNED_IN_HINT = "ark_si";
+/** Which of the account's learner profiles this browser is using (parents switch it). Checked against the account on every use. */
+export const LEARNER_COOKIE = "ark_learner";
 export const SESSION_DAYS = 5;
 export const SESSION_MS = SESSION_DAYS * 24 * 60 * 60 * 1000;
 
@@ -42,6 +44,7 @@ export function setSessionCookies(cookies: AstroCookies, sessionCookie: string) 
 export function clearSessionCookies(cookies: AstroCookies) {
   cookies.delete(SESSION_COOKIE, { path: "/", httpOnly: true, secure: true, sameSite: "lax" });
   cookies.delete(SIGNED_IN_HINT, { path: "/", secure: true, sameSite: "lax" });
+  cookies.delete(LEARNER_COOKIE, { path: "/", httpOnly: true, secure: true, sameSite: "lax" });
 }
 
 /**

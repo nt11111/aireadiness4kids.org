@@ -4,7 +4,7 @@
  * headers (brief sections 8.1 and 8.4).
  */
 import { defineMiddleware } from "astro:middleware";
-import { PUBLIC_FIREBASE_AUTH_DOMAIN, PUBLIC_FIREBASE_AUTH_EMULATOR_URL } from "astro:env/client";
+import { PUBLIC_FIREBASE_AUTH_DOMAIN, PUBLIC_FIREBASE_AUTH_EMULATOR_URL, PUBLIC_UMAMI_ID } from "astro:env/client";
 import { securityHeaders } from "./lib/security/policy.mjs";
 import { readSession } from "./lib/session";
 import { gateFor } from "./lib/gate";
@@ -38,7 +38,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // Responses can't be modified after the fact on every runtime, so copy into a new one.
   const headers = new Headers(response.headers);
   const emulator = PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
-  for (const [name, value] of Object.entries(securityHeaders({ authDomain: PUBLIC_FIREBASE_AUTH_DOMAIN, emulatorOrigins: emulator ? [emulator] : [], https: url.protocol === "https:" }))) {
+  for (const [name, value] of Object.entries(securityHeaders({ authDomain: PUBLIC_FIREBASE_AUTH_DOMAIN, emulatorOrigins: emulator ? [emulator] : [], https: url.protocol === "https:", analytics: Boolean(PUBLIC_UMAMI_ID) }))) {
     headers.set(name, value);
   }
   // Nothing personal or gated is ever stored by a CDN or shared cache.

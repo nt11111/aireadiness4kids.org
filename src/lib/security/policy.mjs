@@ -30,26 +30,30 @@ const GOOGLE_CONNECT = [
 ];
 const GOOGLE_FRAMES = ["https://www.google.com/recaptcha/", "https://recaptcha.google.com/recaptcha/"];
 
+/** Umami Cloud (brief section 8.7): its tracker script, and the host it sends events to. Allowed only when PUBLIC_UMAMI_ID is set. */
+export const UMAMI = { script: "https://cloud.umami.is/script.js", scriptOrigin: "https://cloud.umami.is", eventOrigin: "https://gateway.umami.is" };
+
 /**
- * @param {{ authDomain?: string, emulatorOrigins?: string[], https?: boolean }} opts
+ * @param {{ authDomain?: string, emulatorOrigins?: string[], https?: boolean, analytics?: boolean }} opts
  *   authDomain: Firebase auth domain (its /__/auth/ iframe handles Google sign-in).
  *   emulatorOrigins: local Firebase emulators, only in test builds.
  *   https: false for http://localhost test servers (skips upgrade-insecure-requests).
+ *   analytics: true when Umami is configured (PUBLIC_UMAMI_ID), to allow its script and event host.
  */
-export function contentSecurityPolicy({ authDomain, emulatorOrigins = [], https = true } = {}) {
+export function contentSecurityPolicy({ authDomain, emulatorOrigins = [], https = true, analytics = false } = {}) {
   const hashes = inlineScriptHashes().map((h) => `'sha256-${h}'`);
   const frames = [authDomain ? `https://${authDomain}` : null, ...GOOGLE_FRAMES, ...emulatorOrigins].filter(Boolean);
   const directives = [
     "default-src 'self'",
     // Scripts: our own files, the inline scripts above (by hash), and Google's auth/reCAPTCHA hosts.
-    `script-src 'self' ${hashes.join(" ")} ${GOOGLE_SCRIPTS.join(" ")}`,
+    `script-src 'self' ${hashes.join(" ")} ${[...GOOGLE_SCRIPTS, ...(analytics ? [UMAMI.scriptOrigin] : [])].join(" ")}`,
     // Inline styles stay allowed: style attributes (progress bars, popover positions) and Astro's
     // page-transition styles use them. Script injection is the XSS risk, and scripts are locked down.
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https://www.gstatic.com/recaptcha/",
     "font-src 'self'",
     "media-src 'self'",
-    `connect-src 'self' ${[...GOOGLE_CONNECT, ...emulatorOrigins].join(" ")}`,
+    `connect-src 'self' ${[...GOOGLE_CONNECT, ...(analytics ? [UMAMI.scriptOrigin, UMAMI.eventOrigin] : []), ...emulatorOrigins].join(" ")}`,
     `frame-src ${frames.join(" ")}`,
     "worker-src 'none'",
     "object-src 'none'",

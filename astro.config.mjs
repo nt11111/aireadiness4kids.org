@@ -25,7 +25,7 @@ const staticSecurityHeaders = () => ({
       const emulator = env.PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
       writeFileSync(
         fileURLToPath(new URL("_headers", dir)),
-        netlifyHeadersFile({ authDomain: env.PUBLIC_FIREBASE_AUTH_DOMAIN, emulatorOrigins: emulator ? [emulator] : [], https: !testBuild }),
+        netlifyHeadersFile({ authDomain: env.PUBLIC_FIREBASE_AUTH_DOMAIN, emulatorOrigins: emulator ? [emulator] : [], https: !testBuild, analytics: Boolean(env.PUBLIC_UMAMI_ID) }),
       );
     },
   },
@@ -49,6 +49,8 @@ export default defineConfig({
       PUBLIC_FIREBASE_APP_ID: envField.string({ context: "client", access: "public", optional: true }),
       PUBLIC_FIREBASE_MESSAGING_SENDER_ID: envField.string({ context: "client", access: "public", optional: true }),
       PUBLIC_RECAPTCHA_SITE_KEY: envField.string({ context: "client", access: "public", optional: true }),
+      // Umami Cloud website id (brief section 8.7). Unset: no analytics script and no events.
+      PUBLIC_UMAMI_ID: envField.string({ context: "client", access: "public", optional: true }),
       // Test builds only: the local Auth emulator, e.g. http://127.0.0.1:9099.
       PUBLIC_FIREBASE_AUTH_EMULATOR_URL: envField.string({ context: "client", access: "public", optional: true }),
       FIREBASE_CLIENT_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),

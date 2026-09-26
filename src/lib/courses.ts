@@ -72,6 +72,16 @@ export async function getCourses(): Promise<Course[]> {
 /** A module's lesson steps, in order ([] until its steps are written). */
 export const getModuleSteps = (course: Course, m: Module): Step[] => course.steps.get(m.id) ?? [];
 
+/** Plain module data for progress islands (course page, home "continue" card): ids, titles, and step links only. */
+export const moduleLite = (course: Course, m: Module) => ({
+  id: m.id,
+  title: m.data.title,
+  href: moduleHref(m),
+  track: course.track.id,
+  trackTitle: course.track.data.title,
+  steps: getModuleSteps(course, m).map((s) => ({ id: s.id, href: s.href, title: s.title })),
+});
+
 /** Self-paced time: the step minutes once a module has steps, otherwise duration_minutes or the classroom range. */
 function minutesRange(m: Module, steps: StepRef[]) {
   if (steps.length) {

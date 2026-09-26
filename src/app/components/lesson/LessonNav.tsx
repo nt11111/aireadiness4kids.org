@@ -33,6 +33,11 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
   const [gateOpen, setGateOpen] = useState(false);
   const { completed } = useProgress();
 
+  // Opening a module's first step starts the lesson (brief section 8.7; the track only, no ids).
+  useEffect(() => {
+    if (isFirst) trackEvent({ name: "lesson_start", props: { track } });
+  }, [isFirst, track]);
+
   // "Next" becomes "Mark complete & continue" once the learner reaches the end of the step.
   useEffect(() => {
     setAtEnd(false);

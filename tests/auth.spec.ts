@@ -7,37 +7,14 @@ import AxeBuilder from "@axe-core/playwright";
 import { BIAS_MODULE, BIAS_STEPS } from "./routes";
 import { account, adminAuth, adminDb, BASE, oobCodeFor, signInBrowser, unique } from "./support/firebase";
 import { beforeHydration, hydrated } from "./support/hydration";
+import { chooseBirth, confirmEmail, PASSWORD, signInWithForm } from "./support/flows";
 
 const PHASE = process.env.PHASE ?? "phase-3";
 const shot = (page: Page, name: string) => page.screenshot({ path: `screenshots/${PHASE}/auth/${name}.png`, fullPage: true });
-const PASSWORD = "correct-horse-battery";
 
 async function axe(page: Page, label: string) {
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]).analyze();
   expect(violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => `${v.id}: ${v.help}`), label).toEqual([]);
-}
-
-async function chooseBirth(page: Page, yearsAgo: number, month = 1) {
-  await hydrated(page);
-  await page.getByLabel("Month").selectOption(String(month));
-  await page.getByLabel("Year").selectOption(String(new Date().getFullYear() - yearsAgo));
-  await page.getByRole("button", { name: "Continue" }).click();
-}
-
-async function confirmEmail(page: Page, email: string, next: string) {
-  const code = await oobCodeFor(email, "VERIFY_EMAIL");
-  const continueUrl = `${BASE}/signin?verified=1&next=${encodeURIComponent(next)}`;
-  await page.goto(`/auth/callback?mode=verifyEmail&oobCode=${code}&continueUrl=${encodeURIComponent(continueUrl)}`);
-  await expect(page.getByRole("heading", { name: "Your email is confirmed" })).toBeVisible();
-  await page.locator("#main").getByRole("link", { name: "Sign in" }).click();
-  await expect(page.getByText("Your email is confirmed. Sign in to continue.")).toBeVisible();
-}
-
-async function signInWithForm(page: Page, email: string, password = PASSWORD) {
-  await hydrated(page);
-  await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByLabel("Password", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
 
 test("13+ sign-up with email: age screen, confirm email, sign in, and land on the step you wanted", async ({ page }) => {
@@ -122,8 +99,9 @@ test("under 13: a grown-up makes a family account, then adds the child's profile
   expect(kids.size).toBe(1);
   expect(Object.keys(kids.docs[0].data()).sort()).toEqual(["createdAt", "gradeBand", "isSelf", "nickname"]);
 
+  // Phase 4: My learning shows the active learner's progress, with Sam picked.
   await page.goto("/my-learning");
-  await expect(page.getByText("Sam", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Sam's learning" })).toBeVisible();
 });
 
 test("sign-in errors never reveal whether an email has an account", async ({ page }) => {

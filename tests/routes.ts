@@ -24,8 +24,12 @@ export const MODULES = [
 export const BIAS_MODULE = "/courses/investigators/bias-in-ai";
 export const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiring-bot", "check", "reflect", "recap"];
 
-/** auth: sign in as this kind of account first (steps 2+ and account pages need a session). */
-export type Route = { name: string; path: string; lesson?: boolean; auth?: "learner" | "parent" | "facilitator" | "admin" };
+/**
+ * auth: sign in as this kind of account first (steps 2+ and account pages need a session).
+ * progress: give that account saved progress first (3 steps and the pre-check of Bias in AI; parents
+ * get two learner profiles, the first with that progress).
+ */
+export type Route = { name: string; path: string; lesson?: boolean; auth?: "learner" | "parent" | "facilitator" | "admin"; progress?: boolean };
 
 export const ROUTES: Route[] = [
   { name: "home", path: "/" },
@@ -45,6 +49,14 @@ export const ROUTES: Route[] = [
   { name: "account-learner", path: "/account", auth: "learner" },
   { name: "account-parent", path: "/account", auth: "parent" },
   { name: "my-learning", path: "/my-learning", auth: "parent" },
+  { name: "my-learning-empty", path: "/my-learning", auth: "learner" },
+  { name: "my-learning-progress", path: "/my-learning", auth: "learner", progress: true },
+  { name: "my-learning-parent-progress", path: "/my-learning", auth: "parent", progress: true },
+  { name: "home-continue", path: "/", auth: "learner", progress: true },
+  { name: "course-investigators-progress", path: "/courses/investigators", auth: "learner", progress: true },
+  { name: "module-bias-in-ai-progress", path: BIAS_MODULE, auth: "learner", progress: true },
+  { name: "check-bias-in-ai-pre", path: "/check/bias-in-ai/pre" },
+  { name: "check-bias-in-ai-post", path: "/check/bias-in-ai/post?src=test-workshop" },
   { name: "admin", path: "/admin", auth: "admin" },
   { name: "forbidden", path: "/admin", auth: "learner" },
   { name: "present", path: "/present/investigators/bias-in-ai", auth: "facilitator" },

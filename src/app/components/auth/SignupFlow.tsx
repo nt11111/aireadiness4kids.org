@@ -5,6 +5,8 @@ import { safeNext } from "../../../lib/safe-next";
 import { ageBandFrom, GRADE_BANDS, MIN_PASSWORD, NAME_HINT, NAME_PATTERN, type AgeBand } from "../../../lib/account-rules";
 import { authErrorMessage, resumeRedirect, sendVerification, signInWithGoogle, signUpWithEmail, startSession } from "../../auth/firebase-auth";
 import { apiErrorMessage } from "../../auth/api";
+import { firstSrc } from "../../lesson/guest";
+import { track } from "../../../lib/analytics";
 import { Button } from "../ui/button";
 import { Divider, Field, GoogleButton, Notice, SelectField, SubmitButton } from "./Field";
 
@@ -80,7 +82,15 @@ export function SignupFlow() {
   const destination = (signup: Signup) => (signup.accountType === "parent" ? PARENT_NEXT : next);
 
   async function afterSignIn(user: User, signup: Signup) {
-    const result = await startSession(user, { signup });
+    // The first ?src= this browser arrived with is saved on the new account (brief section 8.5).
+    const result = await startSession(user, { signup, src: firstSrc() });
+    if (result.outcome === "ok" || result.outcome === "verify-email") {
+      // The account exists now (an email account just still needs its address confirmed).
+      track({
+        name: "signup_complete",
+        props: { method: user.providerData.some((p) => p.providerId === "google.com") ? "google" : "email", age_band: signup.accountType === "learner" ? signup.ageBand : "18plus" },
+      });
+    }
     if (result.outcome === "ok") {
       location.assign(destination(signup));
     } else if (result.outcome === "verify-email") {

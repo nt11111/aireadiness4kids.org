@@ -23,7 +23,8 @@ export function StepDot({ n, done, current, track, className }: { n: number; don
 type Props = {
   steps: StepRef[];
   currentId: string;
-  completed: ReadonlySet<string>;
+  /** Completed steps; has() takes a step's id (see StepSet in lesson/progress.ts). */
+  completed: { has(stepId: string): boolean };
   track: string;
   /** Collapsed rail: numbers only, names stay available to screen readers. */
   compact?: boolean;

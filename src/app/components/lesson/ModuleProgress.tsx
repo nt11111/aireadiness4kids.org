@@ -57,7 +57,11 @@ export function ModuleSteps({ steps, track }: { steps: StepRef[]; track: string 
   );
 }
 
-/** Optional "See what you already know" pre-check (brief section 7). Skipping it is one click: just start the module. */
+/**
+ * Optional "See what you already know" pre-check (brief section 7). Skipping it is one click: just
+ * start the module. The first score is kept as the learner's starting point, so once there is one
+ * the check isn't offered again (the same questions come back after the module).
+ */
 export function PreCheck({ questions, moduleId, startHref }: { questions: Question[]; moduleId: string; startHref: string }) {
   const [open, setOpen] = useState(false);
   const { precheck } = useProgress();
@@ -72,14 +76,16 @@ export function PreCheck({ questions, moduleId, startHref }: { questions: Questi
             {result ? `Your starting score: ${result.score} of ${result.total}.` : `${questions.length} quick questions before you start. Optional.`}
           </p>
         </div>
-        <Button type="button" variant="outline" className="min-h-[var(--tap)]" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen(!open)}>
-          {open ? "Hide the pre-check" : result ? "Retake the pre-check" : "Try the pre-check"}
-        </Button>
+        {(open || !result) && (
+          <Button type="button" variant="outline" className="min-h-[var(--tap)]" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen(!open)}>
+            {open ? "Hide the pre-check" : "Try the pre-check"}
+          </Button>
+        )}
       </div>
       <div id={panelId} hidden={!open} className={cn(open && "mt-5")}>
         {open && (
           <>
-            <Check questions={questions} mode="pre" onScore={(score, total) => progress.savePrecheck(moduleId, { score, total })} />
+            <Check questions={questions} mode="pre" onScore={(score, total, answers) => progress.savePrecheck(moduleId, { score, total }, answers)} />
             <a href={startHref} className={cn(buttonVariants(), "mt-5")}>
               Start the module <ArrowRight aria-hidden="true" />
             </a>
