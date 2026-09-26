@@ -17,8 +17,17 @@ export function Reflect({ prompt, stepId = "sample", id = "main" }: Props) {
   const [text, setText] = useState("");
   const [status, setStatus] = useState<"idle" | "saved" | "cleared" | "unavailable">("idle");
   const timer = useRef<number>();
+  const firstLoad = useRef(true);
 
   useEffect(() => {
+    // Anything typed before this island hydrated is still in the box. Keep it (and save it) rather
+    // than loading the saved answer over it; the box wasn't showing that answer while they typed.
+    const early = firstLoad.current ? (document.getElementById(`${uid}-text`) as HTMLTextAreaElement | null)?.value : "";
+    firstLoad.current = false;
+    if (early) {
+      save(early);
+      return;
+    }
     try {
       setText(localStorage.getItem(key) ?? "");
     } catch {

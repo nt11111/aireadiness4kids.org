@@ -5,7 +5,7 @@ import { safeNext } from "../../../lib/safe-next";
 import { authErrorMessage, resumeRedirect, sendVerification, signInWithEmail, signInWithGoogle, startSession } from "../../auth/firebase-auth";
 import { apiErrorMessage } from "../../auth/api";
 import { Button } from "../ui/button";
-import { Divider, Field, GoogleButton, Notice } from "./Field";
+import { Divider, Field, GoogleButton, Notice, SubmitButton } from "./Field";
 
 type Message = { kind: "error" | "info" | "success"; text: string; action?: "resend" | "signup" } | null;
 
@@ -123,7 +123,7 @@ export function SigninForm() {
         <Field label="Email" type="email" name="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <Field label="Password" type="password" name="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <a href="/reset-password" className="justify-self-start rounded-sm text-small font-bold text-brand underline underline-offset-4">Forgot password?</a>
-        <Button type="submit" size="lg" loading={busy === "email"} disabled={busy !== null}>Sign in</Button>
+        <SubmitButton size="lg" loading={busy === "email"} disabled={busy !== null}>Sign in</SubmitButton>
       </form>
 
       <p className="text-ui text-ink-soft">

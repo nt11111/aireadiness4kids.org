@@ -1,5 +1,7 @@
-import { useId, useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { useId, useRef, useState, type ChangeEvent, type InputHTMLAttributes, type ReactNode } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { Button, type ButtonProps } from "../ui/button";
+import { useEarlyInput, useHydrated } from "../ui/use-hydration";
 import { cn } from "../ui/utils";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: ReactNode; error?: string | null };
@@ -8,6 +10,9 @@ type Props = InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: Rea
 export function Field({ label, hint, error, className, type = "text", ...input }: Props) {
   const id = useId();
   const [shown, setShown] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
+  // Every caller reads only e.target.value, so hand it the input itself.
+  useEarlyInput(ref, input.value, (el) => input.onChange?.({ target: el, currentTarget: el } as unknown as ChangeEvent<HTMLInputElement>));
   const isPassword = type === "password";
   const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(" ") || undefined;
   return (
@@ -16,6 +21,7 @@ export function Field({ label, hint, error, className, type = "text", ...input }
       {hint && <p id={`${id}-hint`} className="text-small text-ink-soft">{hint}</p>}
       <div className="relative">
         <input
+          ref={ref}
           id={id}
           type={isPassword && shown ? "text" : type}
           aria-invalid={error ? true : undefined}
@@ -48,11 +54,14 @@ type SelectProps = { label: string; hint?: string; value: string; onChange: (v: 
 
 export function SelectField({ label, hint, value, onChange, options, placeholder, name, required }: SelectProps) {
   const id = useId();
+  const ref = useRef<HTMLSelectElement>(null);
+  useEarlyInput(ref, value, (el) => onChange(el.value));
   return (
     <div className="grid gap-1.5">
       <label htmlFor={id} className="text-ui font-bold text-ink">{label}</label>
       {hint && <p id={`${id}-hint`} className="text-small text-ink-soft">{hint}</p>}
       <select
+        ref={ref}
         id={id}
         name={name}
         required={required}
@@ -66,6 +75,16 @@ export function SelectField({ label, hint, value, onChange, options, placeholder
       </select>
     </div>
   );
+}
+
+/**
+ * A form's submit button. It stays disabled until the island hydrates: before that, pressing it (or
+ * Enter) would make the browser send the form itself, as a GET with the fields, password included,
+ * in the URL.
+ */
+export function SubmitButton({ disabled, ...props }: Omit<ButtonProps, "type" | "asChild">) {
+  const hydrated = useHydrated();
+  return <Button type="submit" disabled={!hydrated || disabled} {...props} />;
 }
 
 /** Form-level message. Errors are announced right away; other notes politely. */

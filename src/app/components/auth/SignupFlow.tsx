@@ -6,7 +6,7 @@ import { ageBandFrom, GRADE_BANDS, MIN_PASSWORD, NAME_HINT, NAME_PATTERN, type A
 import { authErrorMessage, resumeRedirect, sendVerification, signInWithGoogle, signUpWithEmail, startSession } from "../../auth/firebase-auth";
 import { apiErrorMessage } from "../../auth/api";
 import { Button } from "../ui/button";
-import { Divider, Field, GoogleButton, Notice, SelectField } from "./Field";
+import { Divider, Field, GoogleButton, Notice, SelectField, SubmitButton } from "./Field";
 
 type Band = "under13" | AgeBand;
 type Step = "age" | "learner" | "under13" | "parent" | "verify";
@@ -167,7 +167,7 @@ function AgeStep({ onDone }: { onDone: (band: Band) => void }) {
         </div>
       </fieldset>
       {error && <Notice kind="error">{error}</Notice>}
-      <Button type="submit" size="lg">Continue</Button>
+      <SubmitButton size="lg">Continue</SubmitButton>
     </form>
   );
 }
@@ -253,7 +253,7 @@ function AccountForm({ kind, next, onError, buildSignup, afterSignIn, destinatio
       <form onSubmit={submit} noValidate className="grid gap-4">
         <Field label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} />
         <Field label="Password" type="password" autoComplete="new-password" hint={`At least ${MIN_PASSWORD} characters.`} value={password} onChange={(e) => setPassword(e.target.value)} error={errors.password} />
-        <Button type="submit" size="lg" loading={busy === "email"} disabled={busy !== null}>Create account</Button>
+        <SubmitButton size="lg" loading={busy === "email"} disabled={busy !== null}>Create account</SubmitButton>
       </form>
       <p className="text-ui text-ink-soft">Already have an account? <a href={signinHref} className="font-bold text-brand underline underline-offset-4">Sign in</a></p>
     </div>

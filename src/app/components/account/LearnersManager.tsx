@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { GRADE_BANDS, MAX_LEARNERS, NAME_HINT, NAME_PATTERN } from "../../../lib/account-rules";
 import { apiErrorMessage, postJSON } from "../../auth/api";
 import { Button } from "../ui/button";
-import { Field, Notice, SelectField } from "../auth/Field";
+import { Field, Notice, SelectField, SubmitButton } from "../auth/Field";
 
 type Learner = { id: string; nickname: string; gradeBand: string | null };
 const gradeLabel = (id: string | null) => GRADE_BANDS.find((g) => g.id === id)?.label ?? "No grade set";
@@ -139,7 +139,7 @@ function LearnerForm({ initial, submitLabel, onSubmit, onCancel }: {
       <SelectField label="Grade" value={grade} onChange={setGrade} placeholder="Choose a grade" options={GRADE_BANDS} required />
       {formError && <div id={`${uid}-err`}><Notice kind="error">{formError}</Notice></div>}
       <div className="flex flex-wrap gap-3">
-        <Button type="submit" loading={busy}>{submitLabel}</Button>
+        <SubmitButton loading={busy}>{submitLabel}</SubmitButton>
         {onCancel && <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>}
       </div>
     </form>

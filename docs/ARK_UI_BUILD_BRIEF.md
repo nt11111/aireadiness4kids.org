@@ -44,6 +44,11 @@ Teacher/classroom dashboards, forums, public profiles, search, mentorship matchi
 | Domain + DNS | **Cloudflare** (where `aireadiness4kids.org` is registered and its DNS lives). It stays there. At cutover, the DNS records are changed to point at Netlify | $0 |
 | Testing | Playwright (screenshots and smoke tests) + `@axe-core/playwright` | Lets Claude Code check its own visual and a11y work |
 
+**Islands and hydration:** a server-rendered island is plain HTML until its JavaScript loads, and on a slow school network people start typing before then. Every island with a form handles that:
+- **Keep early input.** Hydration leaves typed text (or a password manager's autofill) on screen but not in React state, so the next render wipes it. `Field` and `SelectField` (`src/app/components/auth/Field.tsx`) copy it into state as they hydrate. A hand-built input in an island calls `useEarlyInput` from `src/app/components/ui/use-hydration.ts`. An island that loads saved state on mount keeps what's already in the field instead of loading over it (see `<Reflect>`, section 6).
+- **No sending before hydration.** Submit buttons in server-rendered forms are `SubmitButton` (in `Field.tsx`), which stays disabled until the island hydrates. Otherwise pressing Enter makes the browser send the form itself (section 8.4).
+- **Hydrated means React has committed.** Astro removes an island's `ssr` attribute as soon as it hands the component to React, but `@astrojs/react` hydrates inside `startTransition`, so the attribute is gone before React is listening. Tests use `hydrated()` from `tests/support/hydration.ts` (section 9).
+
 **Current site and migration:** The live site is `ark-website/`. It's a React 18 + Vite + Tailwind v4 + shadcn/Radix single-page app (exported from Figma Make), using React Router, with all copy in `src/app/lib/content.ts` and pages in `src/app/pages/`. **It auto-deploys to GitHub Pages on every push to `main`** (`.github/workflows/deploy.yml`, custom domain via `public/CNAME`).
 - **Work only on a branch (`platform-v1`). Never push to `main` until the team approves the cutover.**
 - Convert the repo in place to Astro with the React + MDX + Tailwind integrations. Reuse the existing pages, `components/site/*`, and `components/ui/*` as React components or port them to `.astro` where they have no interactivity. Keep all copy from `content.ts`.
@@ -209,7 +214,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 | `<Scenario>` | "What would you do?" branching choice with feedback per option | No wrong-answer shaming. Feedback explains why |
 | `<Check>` | 1-5 multiple-choice or true/false questions with instant feedback | Emits an analytics event with the score bucket only |
 | `<Sort>` | Drag or tap items into buckets ("AI or not AI?") | Must work with keyboard and without drag |
-| `<Reflect prompt="">` | Free-text reflection | Saved **locally only**; never sent anywhere. The UI says so |
+| `<Reflect prompt="">` | Free-text reflection | Saved **locally only**; never sent anywhere. The UI says so. Text typed before the island loads is kept and saved, not replaced by an older saved answer the box wasn't showing |
 | `<Discuss>` | Discussion prompts for class or family | Shows only in the facilitator view + as a collapsible in the lesson |
 | `<Recap>` | Key takeaways | Used on the last step |
 | `<ReadAloud />` | Reads the step aloud via the Web Speech API | On by default for the Explorers track; hidden if unsupported |
@@ -364,6 +369,7 @@ Reflections (`<Reflect>`) **stay in the browser only**, even when signed in. We 
 ### 8.4 Security headers and hygiene
 - Headers on every response: a strict `Content-Security-Policy` (self + the Firebase/Google auth and reCAPTCHA hosts + analytics host only), `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera, mic, and geolocation off), and `frame-ancestors 'none'`.
 - Validate all API input with zod. Rate-limit `/api/checks` per IP and per `anon_sid`.
+- Forms never submit natively. They have no `action`, so a native submit is a GET to the same page with every named field in the URL. Before this was fixed, pressing Enter on `/signin` before the page hydrated sent `/signin?email=…&password=…`. Submit buttons are `SubmitButton` (disabled until hydrated, section 2), and `tests/auth.spec.ts` fails if any request carries the password.
 - Never log emails, tokens, or answers to the console in production.
 - Run `npm audit` in CI. Pin dependency versions.
 - Add `SECURITY.md` with a contact email for reporting issues.
@@ -392,8 +398,10 @@ After every phase:
 3. axe finds zero serious or critical violations on touched pages.
 4. Keyboard pass: every interactive element can be reached and has a visible focus ring.
 5. From Phase 3 on: the two-user access tests pass on the Firebase emulator, signed-out requests to gated routes return a redirect (not the content), and no secret appears in the client bundle.
-6. Commit with a clear message. One phase equals one or more commits; never mix phases.
-7. Report: what was built, screenshots path, known gaps, and what's needed from the team.
+6. Tests type only into hydrated islands: call `hydrated(page)` from `tests/support/hydration.ts` before filling a form (`networkidle` and the `ssr` attribute aren't enough, section 2). Every new form island also gets a `beforeHydration()` test that types while its JavaScript is held back and checks the input survives (see `tests/auth.spec.ts` and `tests/early-input.spec.ts`).
+7. Flake check: the suite runs fully parallel, so run the touched specs in parallel with `--repeat-each=3`. A test that only passes with `--workers=1` is a bug to fix, not a setting.
+8. Commit with a clear message. One phase equals one or more commits; never mix phases.
+9. Report: what was built, screenshots path, known gaps, and what's needed from the team.
 
 **Don'ts:** Don't add dependencies without saying why. Use Tailwind and the existing shadcn/Radix components instead of adding new UI libraries. No tracking pixels and no third-party embeds that set cookies. Never push to `main` before cutover.
 

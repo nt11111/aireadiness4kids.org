@@ -3,7 +3,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { clientAuth } from "../../../lib/firebase-client";
 import { apiErrorMessage, postJSON } from "../../auth/api";
 import { Button } from "../ui/button";
-import { Field, Notice } from "../auth/Field";
+import { Field, Notice, SubmitButton } from "../auth/Field";
 
 /** Sign out: clears the session cookie and revokes this account's sessions everywhere. */
 export function SignOutButton({ className }: { className?: string }) {
@@ -86,7 +86,7 @@ export function DeleteAccount() {
         </Notice>
       )}
       <div>
-        <Button type="submit" variant="destructive" loading={busy}>Delete my account</Button>
+        <SubmitButton variant="destructive" loading={busy}>Delete my account</SubmitButton>
       </div>
     </form>
   );

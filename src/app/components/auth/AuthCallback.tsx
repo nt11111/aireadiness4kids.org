@@ -4,8 +4,7 @@ import { clientAuth, firebaseConfigured } from "../../../lib/firebase-client";
 import { safeNext } from "../../../lib/safe-next";
 import { MIN_PASSWORD } from "../../../lib/account-rules";
 import { authErrorMessage } from "../../auth/firebase-auth";
-import { Button } from "../ui/button";
-import { Field } from "./Field";
+import { Field, SubmitButton } from "./Field";
 
 type State = { kind: "working" } | { kind: "verified"; next: string } | { kind: "reset-form"; code: string } | { kind: "reset-done" } | { kind: "invalid" };
 
@@ -110,7 +109,7 @@ function NewPassword({ code, onDone }: { code: string; onDone: () => void }) {
   return (
     <form onSubmit={submit} noValidate className="grid gap-4">
       <Field label="New password" type="password" autoComplete="new-password" hint={`At least ${MIN_PASSWORD} characters.`} value={password} onChange={(e) => setPassword(e.target.value)} error={error} />
-      <Button type="submit" size="lg" loading={busy}>Save new password</Button>
+      <SubmitButton size="lg" loading={busy}>Save new password</SubmitButton>
     </form>
   );
 }

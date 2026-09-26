@@ -1,8 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { GRADE_BANDS, NAME_HINT, NAME_PATTERN, type AccountType } from "../../../lib/account-rules";
 import { apiErrorMessage, postJSON } from "../../auth/api";
-import { Button } from "../ui/button";
-import { Field, Notice, SelectField } from "../auth/Field";
+import { Field, Notice, SelectField, SubmitButton } from "../auth/Field";
 
 /** Display name (and grade band for 13+ learners). */
 export function ProfileForm({ displayName, gradeBand, accountType }: { displayName: string; gradeBand: string | null; accountType: AccountType }) {
@@ -28,7 +27,7 @@ export function ProfileForm({ displayName, gradeBand, accountType }: { displayNa
       <Field label={accountType === "parent" ? "Your first name" : "Display name"} hint={accountType === "learner" ? "Shown on your certificates." : undefined} value={name} onChange={(e) => setName(e.target.value)} error={error} maxLength={30} autoComplete="nickname" />
       {accountType === "learner" && <SelectField label="Grade" value={grade} onChange={setGrade} placeholder="Not set" options={GRADE_BANDS} />}
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" loading={busy}>Save</Button>
+        <SubmitButton loading={busy}>Save</SubmitButton>
         {status && <div className="flex-1"><Notice kind={status.kind}>{status.text}</Notice></div>}
       </div>
     </form>

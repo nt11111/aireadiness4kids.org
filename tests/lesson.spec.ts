@@ -2,6 +2,7 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { BIAS_MODULE, BIAS_STEPS } from "./routes";
 import { account, signInBrowser } from "./support/firebase";
+import { hydrated } from "./support/hydration";
 
 const PHASE = process.env.PHASE ?? "phase-3";
 const SEQ = `screenshots/${PHASE}/walkthrough-375`;
@@ -16,9 +17,6 @@ async function axe(page: Page, label: string) {
   const blocking = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(blocking.map((v) => `${v.id}: ${v.help} (${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(", ")})`), `${label}: serious/critical axe violations`).toEqual([]);
 }
-
-/** Every island on the page is hydrated (client:load and client:idle). */
-const hydrated = (page: Page) => page.waitForFunction(() => !document.querySelector("astro-island[ssr]"));
 
 /** Press Tab (and only Tab) until `target` has focus. Fails if it can't be reached. */
 async function tabTo(page: Page, target: Locator, max = 80) {
@@ -156,9 +154,9 @@ test("keyboard only: the whole Bias in AI module at 375px", async ({ page }) => 
   const groups = page.getByRole("radiogroup");
   await tabTo(page, groups.nth(0).getByRole("radio").first());
   await page.keyboard.press("Space"); // wrong on purpose
-  await page.keyboard.press("ArrowRight");
+  await arrow(page, "ArrowRight");
   await expect(page).toHaveURL(new RegExp(`${BIAS_STEPS[3]}$`));
-  await page.keyboard.press("ArrowLeft");
+  await arrow(page, "ArrowLeft");
   await tabTo(page, page.getByRole("button", { name: "Check answer" }).first(), 3);
   await page.keyboard.press("Enter");
   await expect(page.locator(":focus")).toContainText("Not quite. Here's the idea:");

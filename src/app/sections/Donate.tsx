@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Heart, ShieldCheck } from "lucide-react";
 import { ORG } from "../lib/content";
 import { Card, Btn } from "../components/site/Primitives";
 import { buttonVariants } from "../components/ui/button";
+import { useEarlyInput } from "../components/ui/use-hydration";
 import { cn } from "../components/ui/utils";
 
 const amounts = [25, 50, 100, 250];
@@ -11,6 +12,8 @@ const amounts = [25, 50, 100, 250];
 export function DonatePanel() {
   const [amt, setAmt] = useState<number | null>(50);
   const [custom, setCustom] = useState("");
+  const customRef = useRef<HTMLInputElement>(null);
+  useEarlyInput(customRef, custom, (el) => setCustom(el.value.replace(/[^0-9]/g, "")));
   const value = custom ? Number(custom) : amt;
 
   return (
@@ -32,7 +35,7 @@ export function DonatePanel() {
           <span className="text-sm font-semibold text-ink">Or enter an amount</span>
           <div className="relative mt-2">
             <span aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-mono">$</span>
-            <input inputMode="numeric" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))} placeholder="Custom" className="w-full pl-9 pr-4 py-3.5 rounded-xl border-[1.5px] border-input bg-input-background placeholder:text-ink-faint" />
+            <input ref={customRef} inputMode="numeric" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))} placeholder="Custom" className="w-full pl-9 pr-4 py-3.5 rounded-xl border-[1.5px] border-input bg-input-background placeholder:text-ink-faint" />
           </div>
         </label>
         <a href={`mailto:${ORG.email}?subject=Donation${value ? " of $" + value : ""}`} className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full")}>

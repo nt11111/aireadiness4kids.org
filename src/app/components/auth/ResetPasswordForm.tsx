@@ -1,8 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { clientAuth, firebaseConfigured } from "../../../lib/firebase-client";
-import { Button } from "../ui/button";
-import { Field, Notice } from "./Field";
+import { Field, Notice, SubmitButton } from "./Field";
 
 /**
  * /reset-password, step 1: request a link. The answer is the same whether or not the email has an
@@ -50,7 +49,7 @@ export function ResetPasswordForm() {
     <form onSubmit={submit} noValidate className="grid gap-4">
       <p className="text-ui text-ink-soft">Enter the email you signed up with and we'll send you a link to set a new password. (Signed up with Google? Just sign in with Google.)</p>
       <Field label="Email" type="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} error={error} />
-      <Button type="submit" size="lg" loading={busy}>Send the link</Button>
+      <SubmitButton size="lg" loading={busy}>Send the link</SubmitButton>
       <a href="/signin" className="justify-self-start rounded-sm text-ui font-bold text-brand underline underline-offset-4">Back to sign in</a>
     </form>
   );

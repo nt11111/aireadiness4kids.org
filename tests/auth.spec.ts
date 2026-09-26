@@ -6,6 +6,7 @@ import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { BIAS_MODULE, BIAS_STEPS } from "./routes";
 import { account, adminAuth, adminDb, BASE, oobCodeFor, signInBrowser, unique } from "./support/firebase";
+import { beforeHydration, hydrated } from "./support/hydration";
 
 const PHASE = process.env.PHASE ?? "phase-3";
 const shot = (page: Page, name: string) => page.screenshot({ path: `screenshots/${PHASE}/auth/${name}.png`, fullPage: true });
@@ -17,6 +18,7 @@ async function axe(page: Page, label: string) {
 }
 
 async function chooseBirth(page: Page, yearsAgo: number, month = 1) {
+  await hydrated(page);
   await page.getByLabel("Month").selectOption(String(month));
   await page.getByLabel("Year").selectOption(String(new Date().getFullYear() - yearsAgo));
   await page.getByRole("button", { name: "Continue" }).click();
@@ -32,6 +34,7 @@ async function confirmEmail(page: Page, email: string, next: string) {
 }
 
 async function signInWithForm(page: Page, email: string, password = PASSWORD) {
+  await hydrated(page);
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
@@ -154,6 +157,7 @@ test("header shows sign-in when signed out and an account menu when signed in; s
 
   await signInBrowser(page.context(), await account("learner", { name: "Alex" }));
   await page.goto("/", { waitUntil: "networkidle" });
+  await hydrated(page);
   const menu = page.getByRole("button", { name: "Account menu for Alex" });
   await expect(menu).toBeVisible();
   await menu.click();
@@ -169,6 +173,7 @@ test("account page: rename, download my data, and delete the account", async ({ 
   const acct = await account("learner", { name: "Alex" });
   await signInBrowser(page.context(), acct);
   await page.goto("/account", { waitUntil: "networkidle" });
+  await hydrated(page);
   await page.getByLabel("Display name").fill("Alexa");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByText("Saved.")).toBeVisible();
@@ -194,11 +199,13 @@ test("account page: rename, download my data, and delete the account", async ({ 
 test("reset password: the same answer for any email, and the link sets a new password", async ({ page }) => {
   const acct = await account("learner");
   await page.goto("/reset-password");
+  await hydrated(page);
   await page.getByLabel("Email", { exact: true }).fill(`nobody-${unique()}@example.test`);
   await page.getByRole("button", { name: "Send the link" }).click();
   await expect(page.getByText(/If there's an ARK account for/)).toBeVisible();
 
   await page.goto("/reset-password");
+  await hydrated(page);
   await page.getByLabel("Email", { exact: true }).fill(acct.email);
   await page.getByRole("button", { name: "Send the link" }).click();
   await expect(page.getByText(/If there's an ARK account for/)).toBeVisible();
@@ -217,4 +224,35 @@ test("reset password: the same answer for any email, and the link sets a new pas
 test("a bad or used email link shows a clear message", async ({ page }) => {
   await page.goto("/auth/callback?mode=verifyEmail&oobCode=not-a-real-code");
   await expect(page.getByRole("heading", { name: "This link didn't work" })).toBeVisible();
+});
+
+test("what someone types before the page finishes loading isn't lost", async ({ page }) => {
+  const email = `nobody-${unique()}@example.test`;
+  await beforeHydration(page, "/reset-password", () => page.getByLabel("Email", { exact: true }).fill(email));
+  await page.getByRole("button", { name: "Send the link" }).click();
+  await expect(page.getByText(`If there's an ARK account for ${email},`)).toBeVisible();
+
+  // Choosing the year re-renders the age form; the month chosen early has to survive that.
+  await beforeHydration(page, "/signup", () => page.getByLabel("Month").selectOption("3"));
+  await page.getByLabel("Year").selectOption(String(new Date().getFullYear() - 15));
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page.getByRole("heading", { name: "Create your free account" })).toBeVisible();
+
+  // Sign-in: pressing Enter early does nothing, rather than the browser sending the form itself
+  // with the password in the URL. The typing is kept for when the page is ready.
+  const acct = await account("learner");
+  const leaks: string[] = [];
+  page.on("request", (r) => {
+    if (r.url().includes(acct.password)) leaks.push(r.url());
+  });
+  await beforeHydration(page, "/signin", async () => {
+    await page.getByLabel("Email", { exact: true }).fill(acct.email);
+    await page.getByLabel("Password", { exact: true }).fill(acct.password);
+    await expect(page.getByRole("button", { name: "Sign in", exact: true })).toBeDisabled();
+    await page.getByLabel("Password", { exact: true }).press("Enter");
+  });
+  await expect(page.getByLabel("Password", { exact: true })).toHaveValue(acct.password);
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(`${BASE}/my-learning`);
+  expect(leaks).toEqual([]);
 });
