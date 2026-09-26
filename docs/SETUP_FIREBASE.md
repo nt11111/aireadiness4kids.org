@@ -72,7 +72,7 @@ Or, from a terminal in the repo, after `firebase login`:
 firebase deploy --only firestore:rules --project YOUR_PROJECT_ID
 ```
 
-5. **Clean up old rate-limit records.** The open workshop checks count requests in a `rateLimits` collection (no IP addresses are stored, only scrambled keys). Each record has an `expiresAt` time. In Google Cloud (same project), open **Firestore > Time-to-live (TTL)**, click **Create policy**, and enter collection group `rateLimits` and timestamp field `expiresAt`. Firestore then deletes each record a little after it expires. Or, from a terminal with the Google Cloud CLI:
+5. **Clean up old rate-limit records** (needs billing turned on). The open workshop checks count requests in a `rateLimits` collection (no IP addresses are stored, only scrambled keys). Each record has an `expiresAt` time. Firestore's time-to-live cleanup only works on the pay-as-you-go **Blaze** plan; on the free Spark plan it's refused with "billing disabled". The records are tiny (about two per workshop check), so this can wait until the project moves to Blaze. The console also only lists collections that already have documents, so the command below is the easiest way to set it. In Google Cloud (same project), open **Firestore > Time-to-live (TTL)**, click **Create policy**, and enter collection group `rateLimits` and timestamp field `expiresAt`. Firestore then deletes each record a little after it expires. Or, from a terminal with the Google Cloud CLI:
 
 ```bash
 gcloud firestore fields ttls update expiresAt --collection-group=rateLimits --enable-ttl --project YOUR_PROJECT_ID
