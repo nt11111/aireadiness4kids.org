@@ -290,7 +290,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 For ARK-led workshops. The facilitator projects this view. It requires an account with the `facilitator` or `admin` role; founders grant the role with `scripts/set-role.ts` (section 8.1).
 - Full-screen, large type, one step per screen, arrow-key navigation.
 - On `check` steps, show a **QR code** linking learners to that check on their own phones, with `?src=` taken from the presenter URL.
-- A "Show results" toggle is out of scope for V1. Results go to the Google Sheet.
+- A "Show results" toggle is out of scope for V1. Results are stored in Firestore and show up on /admin.
 
 ---
 
