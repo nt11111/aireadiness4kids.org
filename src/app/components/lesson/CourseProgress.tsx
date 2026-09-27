@@ -37,7 +37,9 @@ export function CourseStart({ modules, trackId, variant }: { modules: ModuleLite
   const finished = withSteps.filter((m) => m.steps.length && countDone(m.steps, state.completed) === m.steps.length).length;
   const resume = resumeTarget(modules, state);
   const next = resume ?? withSteps.map((mod) => ({ mod, step: nextStep(mod.steps, state.completed) })).find((x) => x.step && done > 0);
-  const href = next?.step?.href ?? modules[0].href;
+  // Nothing started yet: step 1 of the first module that has lessons (earlier modules may still be
+  // "coming soon" stubs), or the first module's overview when none has lessons yet.
+  const href = next?.step?.href ?? withSteps[0]?.steps[0]?.href ?? modules[0].href;
   return (
     <div className="mt-8 flex flex-wrap items-center gap-4">
       <a href={href} className={buttonVariants({ variant, size: "lg" })}>

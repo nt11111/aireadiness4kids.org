@@ -312,3 +312,17 @@ test.describe("signed out", () => {
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   });
 });
+
+test("Start course opens the first module with lessons, not a coming-soon stub", async ({ page }) => {
+  // Investigators: module 1 is still a stub, so Start goes to step 1 of Bias in AI (module 2).
+  await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+  await hydrated(page);
+  const start = page.getByRole("link", { name: "Start course" });
+  await expect(start).toHaveAttribute("href", `${BIAS_MODULE}/${BIAS_STEPS[0]}`);
+  await start.click();
+  await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}/${BIAS_STEPS[0]}$`));
+  // A course with no lessons yet still opens its first module's overview.
+  await page.goto("/courses/explorers", { waitUntil: "networkidle" });
+  await hydrated(page);
+  await expect(page.getByRole("link", { name: "Start course" })).toHaveAttribute("href", "/courses/explorers/what-is-ai");
+});
