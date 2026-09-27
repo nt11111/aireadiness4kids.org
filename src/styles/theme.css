@@ -252,39 +252,6 @@
   }
 }
 
-/* ---------- motion (existing site effects; all disabled under reduced motion) ---------- */
-@keyframes ark-float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
-@keyframes ark-spin { to { transform: rotate(360deg) } }
-@keyframes ark-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--glow) 70%, transparent) } 70% { box-shadow: 0 0 0 12px transparent } 100% { box-shadow: 0 0 0 0 transparent } }
-@keyframes ark-rise { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: none } }
-
-.ark-float { animation: ark-float 6s ease-in-out infinite; }
-.ark-spin-slow { animation: ark-spin 40s linear infinite; }
-.ark-spin-slower { animation: ark-spin 70s linear infinite reverse; }
-.ark-ping { animation: ark-ping 2.4s cubic-bezier(.22, .61, .36, 1) infinite; }
-.ark-rise { animation: ark-rise .8s var(--ease-out) both; }
-
-/* Reveal on scroll. Progressive enhancement: content is only hidden once JS has
-   marked <html class="js">, so nothing disappears if scripts fail to load. */
-@media (prefers-reduced-motion: no-preference) {
-  .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
-  .js .reveal.in { opacity: 1; transform: none; }
-  .js .reveal.d1 { transition-delay: .08s } .js .reveal.d2 { transition-delay: .16s } .js .reveal.d3 { transition-delay: .24s } .js .reveal.d4 { transition-delay: .32s } .js .reveal.d5 { transition-delay: .4s }
-}
-
-/* Subtle grid texture for dark sections (was cyan; now neutral). */
-.circuit-grid {
-  background-image: linear-gradient(rgba(255, 255, 255, .9) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .9) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
-
-.sheen { position: relative; overflow: hidden; }
-.sheen::after { content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .3), transparent); transform: skewX(-18deg); pointer-events: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .sheen:hover::after { animation: sheen .8s cubic-bezier(.22, .61, .36, 1); }
-}
-@keyframes sheen { to { left: 130% } }
-
 @media (prefers-reduced-motion: reduce) {
   /* Page transitions (Astro View Transitions). Astro only ships its own reduced-motion rule on pages
      that use transition: directives, so turn them off here for every page, and hide the old snapshot

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Heart, ShieldCheck } from "lucide-react";
 import { ORG } from "../lib/content";
-import { Card, Btn } from "../components/site/Primitives";
+import { Card, CardTitle, Btn } from "../components/site/Primitives";
 import { buttonVariants } from "../components/ui/button";
 import { useEarlyInput } from "../components/ui/use-hydration";
 import { cn } from "../components/ui/utils";
@@ -17,38 +17,48 @@ export function DonatePanel() {
   const value = custom ? Number(custom) : amt;
 
   return (
-    <div className="grid lg:grid-cols-[1.1fr_.9fr] gap-10 items-start">
-      <Card hover={false} className="!p-10 reveal">
-        <div className="flex items-center gap-3 mb-6"><Heart aria-hidden="true" className="text-brand" /><h2 className="font-display text-3xl font-black text-ink">Make a gift</h2></div>
-        <div role="group" aria-label="Choose an amount" className="grid grid-cols-4 gap-3">
+    <div className="grid items-start gap-8 lg:grid-cols-[1.1fr_.9fr] lg:gap-10">
+      <Card>
+        <div className="mb-6 flex items-center gap-3"><Heart aria-hidden="true" className="size-6 text-brand" /><h2 className="text-display-sm text-ink">Make a gift</h2></div>
+        <div role="group" aria-label="Choose an amount" className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {amounts.map((a) => {
             const selected = amt === a && !custom;
             return (
               <button key={a} type="button" aria-pressed={selected} onClick={() => { setAmt(a); setCustom(""); }}
-                className={cn("py-4 rounded-xl font-display font-black text-xl border-[1.5px] transition-colors duration-[var(--dur)]", selected ? "bg-ink text-white border-ink shadow-1" : "bg-card text-ink border-input hover:border-brand")}>
+                className={cn("min-h-12 rounded-lg border-[1.5px] py-3 font-display text-title font-semibold transition-colors duration-[var(--dur)]", selected ? "border-brand bg-brand text-brand-ink" : "border-input bg-surface text-ink hover:border-brand hover:bg-brand-soft")}>
                 ${a}
               </button>
             );
           })}
         </div>
-        <label className="block mt-4">
-          <span className="text-sm font-semibold text-ink">Or enter an amount</span>
-          <div className="relative mt-2">
-            <span aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-mono">$</span>
-            <input ref={customRef} inputMode="numeric" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))} placeholder="Custom" className="w-full pl-9 pr-4 py-3.5 rounded-xl border-[1.5px] border-input bg-input-background placeholder:text-ink-faint" />
-          </div>
+        <label className="mt-5 block">
+          <span className="text-ui font-bold text-ink">Or enter an amount</span>
+          <span className="relative mt-2 block">
+            <span aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-soft">$</span>
+            <input ref={customRef} inputMode="numeric" value={custom} onChange={(e) => setCustom(e.target.value.replace(/[^0-9]/g, ""))} placeholder="Custom" className="h-12 w-full rounded-lg border-[1.5px] border-input bg-input-background pl-9 pr-4 text-ink placeholder:text-ink-faint" />
+          </span>
         </label>
         <a href={`mailto:${ORG.email}?subject=Donation${value ? " of $" + value : ""}`} className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full")}>
           Donate {value ? `$${value}` : ""}
         </a>
-        <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground mt-4"><ShieldCheck size={14} aria-hidden="true" className="text-brand" /> 501(c)(3) nonprofit. Gifts are tax-deductible to the extent allowed by law.</p>
+        <p className="mt-3 text-center text-small text-ink-soft">This opens an email to our team. We will reply with how to give.</p>
+        <p className="mt-4 flex items-start justify-center gap-2 text-small text-ink-soft"><ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" /> 501(c)(3) nonprofit. Gifts are tax-deductible to the extent allowed by law.</p>
       </Card>
 
-      <div className="grid gap-4">
-        <Card className="reveal d1"><h3 className="font-display text-xl font-black text-ink mb-3">Where the money goes</h3>
-          <ul className="grid gap-2">{[["50%", "Programs: curriculum, workshops, facilitator training"], ["25%", "Operations: staffing, technology, compliance"], ["15%", "Marketing: content, social, event outreach"], ["10%", "Reserve: emergency and growth fund"]].map(([p, d]) => (
-            <li key={p} className="flex gap-3 items-center text-[15px] text-foreground/80"><span className="font-mono font-bold text-brand w-12">{p}</span>{d}</li>))}</ul></Card>
-        <Card className="reveal d2"><h3 className="font-display text-xl font-black text-ink mb-2">Corporate or foundation?</h3><p className="text-muted-foreground text-[15px]">Explore our partnership tiers, from Community Supporter to Founding Partner with a board advisory seat.</p><Btn to="/get-involved#partners" variant="ghost" className="mt-4" arrow>See partnership tiers</Btn></Card>
+      <div className="grid gap-5">
+        <Card>
+          <CardTitle>Where the money goes</CardTitle>
+          <dl className="mt-4 grid gap-3">
+            {[["50%", "Programs: curriculum, workshops, facilitator training"], ["25%", "Operations: staffing, technology, compliance"], ["15%", "Marketing: content, social, event outreach"], ["10%", "Reserve: emergency and growth fund"]].map(([p, d]) => (
+              <div key={p} className="flex items-baseline gap-4"><dt className="w-12 shrink-0 font-display text-title font-semibold text-brand">{p}</dt><dd className="text-ui text-ink-soft">{d}</dd></div>
+            ))}
+          </dl>
+        </Card>
+        <Card>
+          <CardTitle>Corporate or foundation?</CardTitle>
+          <p className="mt-2 text-ui text-ink-soft">Explore our partnership tiers, from Community Supporter to Founding Partner with a board advisory seat.</p>
+          <Btn to="/get-involved#partners" variant="outline" className="mt-5" arrow>See partnership tiers</Btn>
+        </Card>
       </div>
     </div>
   );

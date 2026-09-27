@@ -8,6 +8,7 @@ import { apiErrorMessage } from "../../auth/api";
 import { claimGuest, firstSrc } from "../../lesson/guest";
 import { track } from "../../../lib/analytics";
 import { Button } from "../ui/button";
+import { LEGAL_DRAFT, PARENT_NOTICE } from "../../lib/legal";
 import { Divider, Field, GoogleButton, Notice, SelectField, SubmitButton } from "./Field";
 
 type Band = "under13" | AgeBand;
@@ -277,14 +278,14 @@ function ParentNotice({ consent, setConsent, error }: { consent: boolean; setCon
     <div className="grid gap-4">
       <p className="text-lesson text-ink">Your child gets a profile inside your account. You'll add their nickname and grade next. They never need an email.</p>
       <section aria-labelledby="parent-notice-h" className="rounded-xl border border-line bg-surface-2 p-4 sm:p-5">
-        <p className="text-small font-bold uppercase tracking-[0.1em] text-warning">Draft: needs legal review before launch</p>
+        <p className="text-small font-bold uppercase tracking-[0.1em] text-warning">{LEGAL_DRAFT}</p>
         <h2 id="parent-notice-h" className="mt-1 font-sans text-ui font-bold text-ink">Notice for parents and guardians</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5 text-small text-ink">
-          <li>We keep your email address so you can sign in and recover your account. We don't use it for marketing unless you ask us to.</li>
-          <li>Your child's profile holds only a nickname and a grade band. We never ask children for an email, photo, full name, or birthday.</li>
-          <li>We save your child's lesson progress and quiz scores so they can pick up where they left off. Their written reflections stay on your device.</li>
-          <li>You can download everything we hold, or delete your account and your child's profiles, at any time from your account page.</li>
+          {PARENT_NOTICE.map((item) => <li key={item}>{item}</li>)}
         </ul>
+        <p className="mt-3 text-small text-ink">
+          More detail is in our <a href="/privacy#parents" target="_blank" className="rounded-sm font-bold text-brand underline underline-offset-4">privacy policy<span className="sr-only"> (opens in a new tab)</span></a>.
+        </p>
       </section>
       <div className="grid gap-1.5">
         <label className="flex items-start gap-3 text-ui text-ink">

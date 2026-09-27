@@ -1,0 +1,45 @@
+---
+layout: ../layouts/DocLayout.astro
+title: Accessibility
+description: "ARK's accessibility statement: the standard we aim for, how we test, what we know still needs work, and how to tell us about a problem."
+eyebrow: Accessibility
+lead: "Every learner should be able to use ARK, including people who use a keyboard, a screen reader, captions, or zoom. Here is where we stand."
+updated: "September 27, 2026"
+toc: true
+---
+export const prerender = true;
+
+## Our goal
+
+We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA across the whole site, including sign-up, sign-in, and every lesson.
+
+## What we build in
+
+- **Readable type.** Body text uses Atkinson Hyperlegible, a typeface designed for low-vision readers. Lessons use 18px text, and the K-5 (Explorers) lessons use 20px text with bigger buttons.
+- **Keyboard access.** Everything works with a keyboard, with a visible focus outline. In lessons, the left and right arrow keys move between steps.
+- **Screen readers.** Pages use headings, landmarks, and labels, and interactive lessons announce their feedback.
+- **Read aloud.** Lessons have a "Read aloud" button (on by default for K-5) in browsers that support it.
+- **Color and contrast.** Every text and background color pair is checked for AA contrast, and nothing relies on color alone.
+- **Less motion.** If your device is set to reduce motion, page transitions, animations, and the completion confetti are turned off.
+- **Phones and zoom.** Pages work down to 360 pixels wide, and when zoomed to 200% or more, without scrolling sideways.
+- **Media.** Lesson videos must have captions, and nothing plays by itself.
+- **Drag or tap.** Sorting activities can be done by tapping or with a keyboard, not only by dragging.
+
+## How we test
+
+- Every page type is checked with the axe accessibility checker at phone and desktop widths. A change can't ship with a serious or critical problem.
+- Automated tests press Tab through every page to check that everything can be reached and that the focus outline is visible and not hidden behind the header.
+- We check the site at 360 pixels wide, and our color contrast in every build.
+
+Automated tests catch many problems, but not all of them. We have not yet had an outside accessibility review, or tested ARK with a group of screen reader users. We plan to.
+
+## Known limits
+
+- **Slide decks** are Google Slides files on Google Drive. We haven't checked them all for accessibility yet. The same content is in the lessons and facilitator guides on this site.
+- **Google sign-in** opens Google's own window, which we don't control. Signing up with an email address works too.
+- **Read aloud** depends on the voices your browser and device provide.
+- **Draft lessons.** Most modules are still being written. We check each one for accessibility as it is added.
+
+## Tell us about a problem
+
+If something on ARK is hard to use, please email [contact@aireadiness4kids.org](mailto:contact@aireadiness4kids.org) with "Accessibility" in the subject. Tell us the page, what you were trying to do, and, if you like, the device and assistive technology you use. We aim to reply within a week, and we can send lesson content in another format while we fix the problem.

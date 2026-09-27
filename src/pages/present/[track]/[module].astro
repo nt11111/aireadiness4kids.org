@@ -54,7 +54,7 @@ const here = Astro.url.pathname;
 ---
 
 <PresentLayout title={`Presenting: ${mod.data.title} | ARK`}>
-  <div data-present data-track={course.track.id} data-total={total} class={cn(course.track.id === "explorers" && "lesson-explorers")}>
+  <main data-present data-track={course.track.id} data-total={total} class={cn(course.track.id === "explorers" && "lesson-explorers")}>
     <p class="sr-only" aria-live="polite" data-present-status></p>
     <!-- Each slide's title is its h1: with JavaScript only the current slide is shown, so there's one at a time. -->
 
@@ -142,7 +142,7 @@ const here = Astro.url.pathname;
         <button type="button" data-present-fullscreen aria-pressed="false" class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft hover:bg-surface-2 hover:text-ink"><Expand aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Full screen</span></button>
       </div>
     </nav>
-  </div>
+  </main>
 </PresentLayout>
 
 <script>import "../../../app/present/presenter";</script>

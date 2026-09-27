@@ -12,12 +12,12 @@ export const NAV: Group[] = [
   { label: "Courses", href: "/courses" },
   {
     label: "Our Work",
-    href: "/programs",
+    href: "/workshops",
     items: [
-      { label: "Programs & workshops", href: "/programs", desc: "Workshops, parent nights, teacher PD" },
+      { label: "Workshops & programs", href: "/workshops", desc: "Workshops, parent nights, teacher PD" },
       { label: "For educators", href: "/educators", desc: "Facilitator guides to print and teach" },
       { label: "Student Ambassadors", href: "/get-involved#ambassadors", desc: "Teens leading at their schools" },
-      { label: "Research & Reports", href: "/programs#research", desc: "What we learn along the way" },
+      { label: "Research & Reports", href: "/workshops#research", desc: "What we learn along the way" },
     ],
   },
   {

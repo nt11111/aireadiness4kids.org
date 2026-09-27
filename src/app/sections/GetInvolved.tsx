@@ -1,8 +1,8 @@
 import { useState, type HTMLAttributes } from "react";
-import { Star, HeartHandshake, Building2, Heart, GraduationCap, Users, Award, Check, School, Briefcase, Landmark, Library, Plus, type LucideIcon } from "lucide-react";
+import { Star, HeartHandshake, Building2, Heart, GraduationCap, Users, Award, Check, School, Briefcase, Landmark, Library, Plus, ArrowRight, type LucideIcon } from "lucide-react";
 import { TIERS, FAQ } from "../lib/content";
 import { PageHero } from "../components/site/PageHero";
-import { Section, SectionHead, Btn, Card, IconBox, CTABand, Eyebrow, H2, Lead } from "../components/site/Primitives";
+import { Section, SectionHead, Btn, Card, CardTitle, IconBox, CTABand, Eyebrow, H2, Lead, Ticks } from "../components/site/Primitives";
 import { cn } from "../components/ui/utils";
 
 const inertWhen = (on: boolean) => (on ? { inert: "" } : {}) as HTMLAttributes<HTMLDivElement>;
@@ -30,81 +30,81 @@ export function GetInvolvedTop() {
     <>
       <PageHero crumb="Get Involved" eyebrow="Join us" title="There is a place for you in this work."
         lead="Student, educator, volunteer, company, or donor. Your time and support keep responsible AI literacy free for every child."
-        actions={<><Btn to="#ambassadors" arrow>Become an ambassador</Btn><Btn to="/donate" variant="ghost">Donate</Btn></>} />
+        actions={<><Btn to="#ambassadors" size="lg" arrow>Become an ambassador</Btn><Btn to="/donate" size="lg" variant="outline">Donate</Btn></>} />
 
       {/* Quick paths */}
-      <Section className="!py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {paths.map(([to, Icon, t, d], i) => (
-            <a key={t} href={to} className={`bg-card border border-border rounded-2xl p-7 text-center shadow-1 hover:-translate-y-1 hover:shadow-2 hover:border-brand/30 transition-[transform,box-shadow,border-color] duration-[var(--dur-slow)] reveal d${i + 1}`}>
-              <IconBox className="mx-auto"><Icon size={22} aria-hidden="true" /></IconBox><h2 className="font-display text-xl font-black text-ink">{t}</h2><p className="text-muted-foreground text-sm mt-1">{d}</p>
-            </a>
+      <Section className="!pb-0" labelledBy="paths-h">
+        <h2 id="paths-h" className="sr-only">Ways to help</h2>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {paths.map(([to, Icon, t, d]) => (
+            <li key={t}>
+              <a href={to} className="group flex h-full items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 transition-[border-color,box-shadow] duration-[var(--dur)] hover:border-brand hover:shadow-2">
+                <IconBox className="mb-0 shrink-0"><Icon aria-hidden="true" /></IconBox>
+                <span className="min-w-0 flex-1"><span className="block font-display text-title font-semibold text-ink group-hover:text-brand">{t}</span><span className="block text-small text-ink-soft">{d}</span></span>
+                <ArrowRight aria-hidden="true" className="size-5 shrink-0 text-brand transition-transform duration-[var(--dur)] group-hover:translate-x-0.5" />
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </Section>
 
       {/* Ambassadors */}
-      <Section id="ambassadors" className="bg-surface border-y border-border">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
-          <div className="reveal">
+      <Section id="ambassadors" labelledBy="ambassadors-h">
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14">
+          <div>
             <Eyebrow>Student Ambassador Program</Eyebrow>
-            <H2>High schoolers leading the way.</H2>
+            <H2 id="ambassadors-h">High schoolers leading the way.</H2>
             <Lead>Students in grades 9 to 12 serve as peer advocates for responsible AI at their own schools. Peer-to-peer delivery is more credible for K-12 audiences, and one trained teen can reach hundreds of classmates.</Lead>
-            <ul className="grid gap-5 mt-8">
+            <ul className="mt-8 grid gap-5">
               {perks.map(([Icon, t, d]) => (
-                <li key={t} className="flex gap-4"><IconBox className="mb-0 shrink-0 w-11 h-11"><Icon size={20} aria-hidden="true" /></IconBox><div><div className="font-bold text-ink">{t}</div><div className="text-muted-foreground text-sm mt-0.5">{d}</div></div></li>
+                <li key={t} className="flex gap-4"><IconBox className="mb-0 shrink-0"><Icon aria-hidden="true" /></IconBox><div><p className="font-bold text-ink">{t}</p><p className="mt-0.5 text-small text-ink-soft">{d}</p></div></li>
               ))}
             </ul>
             <Btn to="/contact" className="mt-9" arrow>Apply now</Btn>
           </div>
-          <div className="on-dark relative rounded-3xl bg-ink p-10 overflow-hidden reveal d2">
-            <div className="absolute inset-0 circuit-grid opacity-[0.05]" />
-            <img src="/brand/ark-mark-web.png" alt="" aria-hidden="true" className="absolute -right-8 -bottom-8 w-56 opacity-[0.12] pointer-events-none" />
-            <div className="relative">
-              <h3 className="font-display text-2xl font-black text-white">Why student ambassadors?</h3>
-              <p className="text-white/75 leading-relaxed mt-4">Ambassadors create an organic reach multiplier. One trained teen can run workshops for hundreds of classmates without a staff facilitator present. This mirrors the model used successfully by Cyber For Youth.</p>
-              <div className="grid grid-cols-2 gap-4 mt-8">
-                {[["9-12", "Grades eligible"], ["1 day", "Certification training"]].map(([n, l]) => (
-                  <div key={l} className="bg-white/[0.08] border border-white/15 rounded-xl p-5"><div className="font-display text-3xl font-black text-glow">{n}</div><div className="text-white/75 text-xs font-mono uppercase tracking-wider mt-1">{l}</div></div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Card className="bg-surface-2 shadow-none">
+            <CardTitle>Why student ambassadors?</CardTitle>
+            <p className="mt-3 text-ui text-ink-soft">Ambassadors create an organic reach multiplier. One trained teen can run workshops for hundreds of classmates without a staff facilitator present. This mirrors the model used successfully by Cyber For Youth.</p>
+            <dl className="mt-6 grid grid-cols-2 gap-4">
+              {[["9-12", "Grades eligible"], ["1 day", "Certification training"]].map(([n, l]) => (
+                <div key={l} className="rounded-lg bg-surface p-5"><dt className="text-small text-ink-soft">{l}</dt><dd className="mt-1 font-display text-display-sm font-semibold text-ink">{n}</dd></div>
+              ))}
+            </dl>
+          </Card>
         </div>
       </Section>
 
       {/* Volunteer */}
-      <Section id="volunteer">
-        <SectionHead center eyebrow="Volunteers and national team" title="Many ways to give your time." />
-        <div className="grid md:grid-cols-2 gap-5">
-          <Card className="reveal d1"><IconBox><Star size={22} aria-hidden="true" /></IconBox><h3 className="font-display text-2xl font-black text-ink mb-2">National team</h3><p className="text-muted-foreground leading-relaxed">Core paid or stipended positions for college students and recent graduates, aligned with our five teams. A competitive, cohort-based application process, annual or semester.</p></Card>
-          <Card className="reveal d2"><IconBox><HeartHandshake size={22} aria-hidden="true" /></IconBox><h3 className="font-display text-2xl font-black text-ink mb-3">General volunteers</h3>
-            <ul className="grid gap-2.5">{["Workshop volunteers support facilitators and manage materials", "Event volunteers help at conferences and community events", "Curriculum reviewers (parents and teachers) test draft modules"].map((x) => <li key={x} className="flex gap-2.5 text-foreground/80 text-[15px]"><Check size={17} aria-hidden="true" className="text-brand shrink-0 mt-0.5" />{x}</li>)}</ul></Card>
+      <Section id="volunteer" tint labelledBy="volunteer-h">
+        <SectionHead id="volunteer-h" eyebrow="Volunteers and national team" title="Many ways to give your time." />
+        <div className="grid gap-5 md:grid-cols-2">
+          <Card><IconBox><Star aria-hidden="true" /></IconBox><CardTitle>National team</CardTitle><p className="mt-2 text-ui text-ink-soft">Core paid or stipended positions for college students and recent graduates, aligned with our five teams. A competitive, cohort-based application process, annual or semester.</p></Card>
+          <Card><IconBox><HeartHandshake aria-hidden="true" /></IconBox><CardTitle>General volunteers</CardTitle>
+            <Ticks className="mt-3" icon={<Check />} items={["Workshop volunteers support facilitators and manage materials", "Event volunteers help at conferences and community events", "Curriculum reviewers (parents and teachers) test draft modules"]} /></Card>
         </div>
-        <div className="text-center mt-10 reveal"><Btn to="/contact" arrow>Volunteer with us</Btn></div>
+        <Btn to="/contact" className="mt-10" arrow>Volunteer with us</Btn>
       </Section>
 
       {/* Partners */}
-      <Section id="partners" className="bg-surface border-y border-border">
-        <SectionHead center eyebrow="Partnership strategy" title="Partner with us." lead="We build anchor relationships with schools, companies, universities, and community organizations to extend reach and deepen impact." />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {partnerTypes.map(([Icon, t, d], i) => (
-            <Card key={t} className={`reveal d${i + 1}`}><IconBox><Icon size={22} aria-hidden="true" /></IconBox><h3 className="font-display text-xl font-black text-ink mb-2">{t}</h3><p className="text-muted-foreground text-sm leading-relaxed">{d}</p></Card>
+      <Section id="partners" labelledBy="partners-h">
+        <SectionHead id="partners-h" eyebrow="Partnership strategy" title="Partner with us." lead="We build anchor relationships with schools, companies, universities, and community organizations to extend reach and deepen impact." />
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {partnerTypes.map(([Icon, t, d]) => (
+            <li key={t}><Card className="h-full !p-6"><IconBox><Icon aria-hidden="true" /></IconBox><CardTitle>{t}</CardTitle><p className="mt-2 text-small text-ink-soft">{d}</p></Card></li>
           ))}
-        </div>
-        <h3 className="font-display text-3xl font-black text-ink text-center mb-8 reveal">Corporate partnership tiers</h3>
-        <div className="grid md:grid-cols-3 gap-5">
+        </ul>
+        <h3 className="mt-16 text-display-sm text-ink">Corporate partnership tiers</h3>
+        <ul className="mt-6 grid gap-5 md:grid-cols-3">
           {TIERS.map((t, i) => (
-            <div key={t.name} className={cn("relative bg-card rounded-2xl p-8 border shadow-1 transition-[transform,box-shadow] duration-[var(--dur-slow)] hover:-translate-y-1 hover:shadow-2", `reveal d${i + 1}`, t.featured ? "border-brand shadow-[0_0_0_1px_var(--brand)]" : "border-border")}>
-              {t.featured && <span className="absolute -top-3 left-8 bg-brand text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">Most popular</span>}
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-brand font-bold">Tier {3 - i}</div>
-              <h4 className="font-display text-xl font-black text-ink mt-1">{t.name}</h4>
-              <div className="font-display text-3xl font-black text-ink mt-2 mb-5">{t.amount}</div>
-              <ul className="grid gap-2.5">{t.perks.map((p) => <li key={p} className="flex gap-2.5 text-foreground/80 text-[15px]"><Check size={17} aria-hidden="true" className="text-brand shrink-0 mt-0.5" />{p}</li>)}</ul>
-            </div>
+            <li key={t.name} className={cn("rounded-xl border bg-surface p-6 shadow-1 sm:p-8", t.featured ? "border-brand border-2" : "border-line")}>
+              <p className="text-small font-bold uppercase tracking-[0.14em] text-brand">Tier {3 - i}</p>
+              <h4 className="mt-1 font-display text-title font-semibold text-ink">{t.name}</h4>
+              <p className="mt-2 mb-5 font-display text-display-sm font-semibold text-ink">{t.amount}</p>
+              <Ticks icon={<Check />} items={t.perks} />
+            </li>
           ))}
-        </div>
-        <div className="text-center mt-10 reveal"><Btn to="/contact" arrow>Start a partnership conversation</Btn></div>
+        </ul>
+        <Btn to="/contact" className="mt-10" arrow>Start a partnership conversation</Btn>
       </Section>
     </>
   );
@@ -114,21 +114,21 @@ export function GetInvolvedTop() {
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <Section>
-      <SectionHead center eyebrow="Questions" title="Frequently asked." />
-      <div className="max-w-3xl mx-auto divide-y divide-border border-y border-border">
+    <Section tint labelledBy="faq-h">
+      <SectionHead id="faq-h" eyebrow="Questions" title="Frequently asked." />
+      <div className="max-w-3xl divide-y divide-line border-y border-line">
         {FAQ.map((f, i) => {
           const isOpen = open === i;
           return (
             <div key={f.q}>
               <h3>
-                <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} aria-controls={`faq-${i}`} className="w-full flex items-center justify-between gap-6 py-6 text-left rounded-md">
-                  <span className="font-display text-lg font-bold text-ink">{f.q}</span>
-                  <Plus size={22} aria-hidden="true" className={cn("text-brand shrink-0 transition-transform duration-[var(--dur)]", isOpen && "rotate-45")} />
+                <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} aria-controls={`faq-${i}`} className="flex w-full items-center justify-between gap-6 rounded-md py-5 text-left">
+                  <span className="font-display text-title font-semibold text-ink">{f.q}</span>
+                  <Plus aria-hidden="true" className={cn("size-5 shrink-0 text-brand transition-transform duration-[var(--dur)]", isOpen && "rotate-45")} />
                 </button>
               </h3>
               <div id={`faq-${i}`} className="grid transition-[grid-template-rows] duration-[var(--dur-slow)]" style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }} {...inertWhen(!isOpen)}>
-                <div className="overflow-hidden"><p className="text-muted-foreground leading-relaxed pb-6">{f.a}</p></div>
+                <div className="overflow-hidden"><p className="max-w-reading pb-6 text-ui text-ink-soft">{f.a}</p></div>
               </div>
             </div>
           );
@@ -139,5 +139,5 @@ export function Faq() {
 }
 
 export function GetInvolvedCta() {
-  return <CTABand title="Keep responsible AI literacy free." lead="All curriculum and core programs are free to students and schools, and they always will be. Your gift keeps it that way." primary={{ label: "Donate", to: "/donate" }} />;
+  return <CTABand title="Keep responsible AI literacy free." lead="All curriculum and core programs are free to students and schools, and they always will be. Your gift keeps it that way." primary={{ label: "Donate", to: "/donate" }} secondary={{ label: "Contact us", to: "/contact" }} />;
 }

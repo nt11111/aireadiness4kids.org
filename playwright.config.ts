@@ -15,7 +15,7 @@ export default defineConfig({
   globalSetup: "./tests/global-setup.ts",
   use: {
     baseURL: TEST_ORIGIN,
-    // Deterministic screenshots and axe runs: reveal animations are off under reduced motion.
+    // Deterministic screenshots and axe runs: transitions and animations are off under reduced motion.
     reducedMotion: "reduce",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],

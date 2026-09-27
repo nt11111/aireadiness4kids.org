@@ -1,0 +1,145 @@
+---
+layout: ../layouts/DocLayout.astro
+title: Privacy policy
+description: "How ARK handles personal information, in plain language: what we collect, why, what we never collect, and a section for parents and guardians. Draft for legal review."
+eyebrow: Privacy
+lead: "We collect as little as we can, we never sell it, and kids under 13 never give us an email. Here is exactly what we keep and why."
+updated: "September 27, 2026 (draft)"
+draft: true
+toc: true
+---
+import ReviewNote from "../components/ReviewNote.astro";
+import { PARENT_NOTICE } from "../app/lib/legal";
+export const prerender = true;
+
+## The short version
+
+- ARK (AI Readiness for Kids) is a nonprofit. Our lessons are free, and you can browse every course without an account.
+- An account saves your progress and earns certificates. For that we keep an email address, a display name or nickname, an age band, and your lesson progress.
+- Children under 13 never give us an email. A parent or guardian sets up the account and adds the child as a nickname-only profile.
+- We store an age band (under 13, 13 to 17, or 18 and over), never a birth date.
+- What you write in reflection boxes stays on your own device. It is never sent to us.
+- We never sell personal information, we show no ads, and we use no tracking pixels. If we turn on analytics, it will use no cookies.
+- You can download your data or delete your account at any time from your account page.
+
+## Who we are
+
+This policy covers the website at aireadiness4kids.org, run by ARK (AI Readiness for Kids), a 501(c)(3) nonprofit. You can reach us at [contact@aireadiness4kids.org](mailto:contact@aireadiness4kids.org). <ReviewNote>add ARK's legal name and mailing address once confirmed.</ReviewNote>
+
+## What we collect and why
+
+| What | Whose | Why we need it |
+|---|---|---|
+| Email address | Learners 13 and older, and parents or guardians | Signing in and account recovery. We don't use it for marketing unless you separately ask us to. |
+| Display name or nickname | Everyone with an account | Greeting you, and the name on your certificates. A first name or a nickname is enough. |
+| Age band | Everyone with an account | Deciding the sign-up path and whether a certificate can have a public check page. |
+| Grade band (optional) | Learners | Suggesting a course, and counting how many learners each grade band reaches. |
+| Lesson progress and quiz scores | Learners | So you can pick up where you left off, and so we can count lessons completed. |
+| Workshop tag (for example "uys-fall26") | Anyone who arrives from a workshop link | Knowing which workshop or partner brought a learner to ARK. |
+
+If you create an account with Google, Google shares your name, email address, and a link to your profile picture with our sign-in service, which stores them with your sign-in record. We only use the email address. <ReviewNote>confirm whether to disclose further, or to clear the name and photo link after sign-up.</ReviewNote>
+
+## What we never collect
+
+- A child's email address, photo, full name, or birthday.
+- Your birth date. The sign-up page asks for your birth month and year only to work out the age band; they never leave your device.
+- Reflections. The reflection boxes in lessons save to your own browser only, even when you are signed in.
+- Anything for advertising. We have no ads, no ad networks, and no tracking pixels.
+
+## For parents and guardians
+
+<span id="parents"></span>
+
+Children under 13 learn on ARK with a profile inside a parent's or guardian's account, a bit like profiles on a streaming service.
+
+- **You create the account.** You sign up with your own email (or Google account) and confirm that you are the child's parent or legal guardian.
+- **Your child's profile is a nickname and a grade band.** Nothing else. There is no email, photo, or free-text field that anyone else can see.
+- **We save your child's progress** (which lesson steps they finished and their quiz scores) so they can continue on any device you sign in on.
+- **Certificates for children under 13 are private.** You can print them, but they never get a public check page.
+- **You are in control.** From your account page you can rename or remove a child's profile, download everything we hold as a file, or delete the whole account.
+
+<span id="parent-notice"></span>
+
+### The notice you confirm at sign-up
+
+<ul>
+  {PARENT_NOTICE.map((item) => <li>{item}</li>)}
+</ul>
+
+<ReviewNote>confirm how the Children's Online Privacy Protection Act (COPPA) applies, and whether the parent confirmation checkbox is an adequate way to get consent. Also confirm what changes when a school, rather than a parent, sets up learners (FERPA and state student-privacy laws such as California's SOPIPA).</ReviewNote>
+
+## Workshop knowledge checks
+
+At ARK workshops, learners can answer a few quiz questions on their own phone without an account. We store the answers, the score, which module, the workshop tag, a grade band if one was given, and a random ID kept in that browser. We don't ask for a name or email. If that person later creates an account on the same browser, those answers are linked to their profile.
+
+## Certificates
+
+When you finish a module you can get a certificate showing your display name, the module, and the date. For learners 13 and older, the certificate has a hard-to-guess ID and a public page at aireadiness4kids.org/verify/… so a school or employer can confirm it. That page shows only the name, module, and date. Certificates for children under 13 never have a public page.
+
+## Cookies and browser storage
+
+We use a few small cookies to keep you signed in. We don't use cookies for analytics or advertising.
+
+| Name | What it does | How long |
+|---|---|---|
+| `__session` | Keeps you signed in. Scripts on the page can't read it. | 5 days, or until you sign out |
+| `ark_learner` | Remembers which learner profile is active on a family account. | 5 days |
+| `ark_si` | Tells the page you might be signed in, so it only asks the server when it needs to. Holds no personal information. | 5 days |
+
+Your browser also keeps some things on your own device, which we can't see unless you sign in:
+
+| Name | What it does |
+|---|---|
+| `ark.guest.v1` | Progress on the free first step of each module, the workshop tag, and the random ID for workshop checks. It is added to your account when you sign up, then cleared. |
+| `ark.reflect.v1…` | Your reflection answers. They are never sent to us. |
+| `ark.signup.age.v1` | The age band during sign-up, for that browser tab only. |
+
+## Who helps us run ARK
+
+We use a few service providers. They handle data for us, under their own privacy and security terms.
+
+- **Google Firebase** (Authentication and Cloud Firestore) holds sign-in records and account data. Our database is stored in the United States.
+- **Google reCAPTCHA Enterprise**, through Firebase App Check, checks that requests to save data come from a real browser and not a script. It looks at signals from your browser and device when a page saves something.
+- **Netlify** hosts the website. Like most web hosts, its servers record technical details of each request, such as the IP address and browser type. <ReviewNote>confirm Netlify's log retention.</ReviewNote>
+- **Google Drive** hosts some slide decks. If you open one, Google's privacy policy applies.
+- **Analytics:** none are switched on today. If we add them, we will use a tool that sets no cookies and never receives names, emails, IDs, or anything you write. <ReviewNote>update when the team picks a provider (Umami or Cloudflare Web Analytics).</ReviewNote>
+
+To stop people from flooding the workshop checks, we briefly count requests by a scrambled (one-way hashed) form of the IP address and browser ID. We never store the IP address itself. <ReviewNote>these counters are meant to delete themselves after a few minutes; automatic deletion needs a database setting that is not switched on yet.</ReviewNote>
+
+## Who can see your data
+
+- **You**, on your account page and My learning.
+- **The ARK founders** see only totals on our impact page (for example, how many modules were completed). It never shows individual learners.
+- **A small number of ARK team members** can open the database directly to run and fix the service. <ReviewNote>list those roles, and describe the team's access rules.</ReviewNote>
+
+We never sell or rent personal information, and we don't share it with anyone except the service providers above, or when the law requires it.
+
+## How long we keep data
+
+- **Account data** stays until you delete your account.
+- **When you delete your account**, we delete your profile, all learner profiles, all progress, your certificates, and your sign-in record. Workshop check answers are kept for our impact numbers, but with any link to you removed.
+- **Totals** (such as "lessons completed this month") contain no personal information and are kept.
+- **Things stored in your browser** stay until you clear them or, for guest progress, until you sign up.
+
+<ReviewNote>confirm whether any backups or provider logs keep deleted data for longer, and say so here.</ReviewNote>
+
+## Your choices
+
+- **See and download your data:** Account, then "Download my data".
+- **Correct it:** edit your display name and learner profiles on the Account page.
+- **Delete it:** Account, then "Delete my account". Type DELETE to confirm.
+- **Ask us anything:** email [contact@aireadiness4kids.org](mailto:contact@aireadiness4kids.org). A parent or guardian can ask us about their child's profile the same way.
+
+<ReviewNote>add any state-specific rights that apply (for example California), and the response time we commit to.</ReviewNote>
+
+## How we protect data
+
+Passwords are handled by Firebase Authentication; ARK never sees or stores them. The browser never talks to our database directly, every request is checked to make sure it belongs to the signed-in account, and sign-in cookies can't be read by scripts. If you find a security problem, please email [contact@aireadiness4kids.org](mailto:contact@aireadiness4kids.org) with "Security" in the subject.
+
+## Changes to this policy
+
+If we change this policy, we will update the date at the top. If a change affects how we use information we already hold, we will tell account holders by email before it takes effect.
+
+## Contact us
+
+Questions about privacy: [contact@aireadiness4kids.org](mailto:contact@aireadiness4kids.org).

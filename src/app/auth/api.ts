@@ -1,12 +1,18 @@
-/** Calls to our own /api routes from the browser: JSON, same-origin, with the App Check header. */
-import { appCheckHeaders } from "../../lib/firebase-client";
+/**
+ * Calls to our own /api routes from the browser: JSON, same-origin, with the App Check header.
+ * The Firebase SDK (for App Check) loads with import() on the first call, so pages that only POST
+ * on submit, like the workshop check that a whole room opens on phones, don't download it up front.
+ */
 
 export type ApiResult<T = Record<string, unknown>> = { ok: boolean; status: number; data: T & { error?: string } };
 
 export async function postJSON<T = Record<string, unknown>>(path: string, body: unknown, { appCheck = true } = {}): Promise<ApiResult<T>> {
   let headers: Record<string, string> = { "Content-Type": "application/json" };
   try {
-    if (appCheck) headers = { ...headers, ...(await appCheckHeaders()) };
+    if (appCheck) {
+      const { appCheckHeaders } = await import("../../lib/firebase-client");
+      headers = { ...headers, ...(await appCheckHeaders()) };
+    }
   } catch {
     return { ok: false, status: 0, data: { error: "app-check" } as T & { error: string } };
   }

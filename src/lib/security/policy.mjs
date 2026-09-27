@@ -8,13 +8,13 @@ import visibleDirective from "astro/client/visible.prebuilt.js";
 import mediaDirective from "astro/client/media.prebuilt.js";
 import onlyDirective from "astro/client/only.prebuilt.js";
 import islandScript from "astro/runtime/server/astro-island.prebuilt.js";
-import { JS_FLAG_SCRIPT, REVEAL_SCRIPT } from "./inline-scripts.mjs";
+import { JS_FLAG_SCRIPT } from "./inline-scripts.mjs";
 
 /**
  * Every inline script a page may contain: Astro's island loaders (fixed per Astro version) and
- * our two in inline-scripts.mjs. Everything else must be a file served from this site.
+ * the one in inline-scripts.mjs. Everything else must be a file served from this site.
  */
-export const INLINE_SCRIPTS = [loadDirective, idleDirective, visibleDirective, mediaDirective, onlyDirective, islandScript, JS_FLAG_SCRIPT, REVEAL_SCRIPT];
+export const INLINE_SCRIPTS = [loadDirective, idleDirective, visibleDirective, mediaDirective, onlyDirective, islandScript, JS_FLAG_SCRIPT];
 
 export const sha256 = (text) => createHash("sha256").update(text).digest("base64");
 export const inlineScriptHashes = () => INLINE_SCRIPTS.map(sha256);

@@ -5,7 +5,7 @@ import { cn } from "../ui/utils";
 export function ARKMark({ size = 28, decorative = false, className, style }: { size?: number; decorative?: boolean; className?: string; style?: CSSProperties }) {
   return (
     <img
-      src="/brand/ark-mark-web.png"
+      src="/brand/ark-mark-128.png"
       alt={decorative ? "" : "ARK"}
       width={size}
       height={Math.round(size * 0.77)}

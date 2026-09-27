@@ -4,10 +4,12 @@ import { ORG } from "../../lib/content";
 
 const cols = [
   { heading: "Learn", links: [["All courses", "/courses"], ["AI Explorers (K-5)", "/courses/explorers"], ["AI Investigators (6-8)", "/courses/investigators"], ["AI Architects (9-12)", "/courses/architects"]] },
-  { heading: "Our Work", links: [["Programs & workshops", "/programs"], ["For educators", "/educators"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/programs#research"], ["How we review modules", "/about#reviewers"]] },
+  { heading: "Our Work", links: [["Workshops & programs", "/workshops"], ["For educators", "/educators"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/workshops#research"], ["How we review modules", "/about#reviewers"]] },
   { heading: "Join Us", links: [["Become an Ambassador", "/get-involved#ambassadors"], ["Volunteer", "/get-involved#volunteer"], ["Partner With Us", "/get-involved#partners"], ["Mailing List", "/contact#newsletter"]] },
   { heading: "Organization", links: [["About", "/about"], ["Leadership", "/about#team"], ["Donate", "/donate"], ["Contact", "/contact"]] },
 ];
+
+const legal = [["Privacy", "/privacy"], ["Terms", "/terms"], ["Accessibility", "/accessibility"]];
 
 export function Footer() {
   return (
@@ -42,11 +44,18 @@ export function Footer() {
 
         <p className="mt-8 flex max-w-3xl gap-3 text-sm leading-relaxed text-white/85">
           <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-glow" />
-          <span><strong className="text-white">Our privacy promise:</strong> we collect as little as we can. Kids under 13 never give us an email, reflections stay on your own device, and our analytics use no cookies.</span>
+          <span><strong className="text-white">Our privacy promise:</strong> we collect as little as we can. Kids under 13 never give us an email, reflections stay on your own device, and our analytics use no cookies. <a href="/privacy" className="text-white underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">Read the privacy policy</a>.</span>
         </p>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/15 pt-7 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-4 border-t border-white/15 pt-7 md:flex-row md:items-center md:justify-between">
           <p className="text-xs text-white/75">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
+          <nav aria-label="Legal">
+            <ul className="flex flex-wrap gap-x-5 gap-y-1">
+              {legal.map(([label, href]) => (
+                <li key={href}><a href={href} className="inline-block py-1.5 text-sm text-white/85 underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">{label}</a></li>
+              ))}
+            </ul>
+          </nav>
           <p className="text-xs font-bold tracking-wider text-glow">Think. Prompt. Responsibly.</p>
         </div>
       </div>

@@ -130,7 +130,7 @@ The public `apiKey` should only work from ARK's sites.
 
 Netlify > your site > **Site configuration > Environment variables**. Everything here totals well under Netlify's 4 KB limit for functions.
 
-**On Netlify's free plan** you can't pick scopes ("Specific scopes" says "Upgrade to unlock"). That's OK: leave the defaults. Secret variables then get Builds, Functions, and Runtime, and the build check still fails if a private key ever reaches the browser's JavaScript. Don't set `NODE_ENV` for now (see below the table).
+**On Netlify's free plan** you can't pick scopes ("Specific scopes" says "Upgrade to unlock"). That's OK: leave the defaults. Secret variables then get Builds, Functions, and Runtime, and the build check still fails if a private key ever reaches the browser's JavaScript. Set `NODE_ENV` per deploy context (see below the table).
 
 | Variable | Value from | Public or secret | Scopes |
 |---|---|---|---|
@@ -142,12 +142,12 @@ Netlify > your site > **Site configuration > Environment variables**. Everything
 | `PUBLIC_RECAPTCHA_SITE_KEY` | step 8 | public | Builds, Functions |
 | `FIREBASE_CLIENT_EMAIL` | step 7 | **SECRET** | Functions only |
 | `FIREBASE_PRIVATE_KEY` | step 7 | **SECRET** | Functions only |
-| `NODE_ENV` = `production` | (type it) | public | Functions only; **not yet**, see below |
+| `NODE_ENV` = `production` | (type it) | public | Branch deploys and Deploy Previews now; Production at the cutover (see below) |
 | `PUBLIC_UMAMI_ID` (optional) | Umami, see below | public | Builds, Functions |
 
 - `PUBLIC_` variables are built into the site's JavaScript, so anyone can see them. That's fine.
 - The two secrets are only read by ARK's server code at runtime. The build fails if a private key ever shows up in the browser's JavaScript.
-- `NODE_ENV=production` makes the server use React's fast production build. Without it pages still work, just slower. **Don't set it yet.** On the free plan it can't be limited to Functions, so it also reaches the build, where it makes Netlify skip dev dependencies. `astro.config.mjs` currently loads the test adapter (`@astrojs/node`, a dev dependency) on every build, so the build fails with "Cannot find module '@astrojs/node'". Once the config loads that adapter only for test builds, set it with **Different value for each deploy context**: `production` for Deploy Previews and Branch deploys, and for Production only after the Phase 6 cutover (until then Production builds the old site from `main`, which needs its dev dependencies).
+- `NODE_ENV=production` makes the server use React's fast production build. Without it pages still work, just slower. On the free plan it can't be limited to Functions, so it also reaches the build, where it makes Netlify skip dev dependencies. That used to fail the build ("Cannot find module '@astrojs/node'"); since Phase 6, `astro.config.mjs` loads that test-only adapter only for test builds (`ARK_ADAPTER=node`), so the build doesn't need any dev dependency. Set it with **Different value for each deploy context**: `production` for Deploy Previews and Branch deploys now, and for Production at the cutover (`DEPLOY.md`). Until then Production builds the old site from `main`, which needs its dev dependencies.
 - **Never** set `ARK_EMULATORS`, `FIREBASE_AUTH_EMULATOR_HOST`, or `FIRESTORE_EMULATOR_HOST` in Netlify. They're for local tests only, and the site refuses to start if it sees them next to a real project.
 
 **Analytics (optional).** ARK counts a few anonymous events (a lesson started, a step finished, a check sent) with no cookies, and never sends names, emails, or ids (brief section 8.7). Whether to use Umami or Cloudflare is still a team decision. For Umami: create a free account at <https://cloud.umami.is>, add the website, and copy its **Website ID** into `PUBLIC_UMAMI_ID`. With it unset, the site loads no analytics script and sends nothing.

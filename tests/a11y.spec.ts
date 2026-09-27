@@ -97,7 +97,7 @@ test("keyboard: nav dropdown opens, is reachable, closes on Escape", async ({ pa
   await page.keyboard.press("Enter");
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Tab");
-  await expect(page.locator("#nav-our-work").getByRole("link", { name: /^Programs & workshops/ })).toBeFocused();
+  await expect(page.locator("#nav-our-work").getByRole("link", { name: /^Workshops & programs/ })).toBeFocused();
   await axe(page, "nav-dropdown-open");
   await page.keyboard.press("Escape");
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
@@ -121,10 +121,45 @@ test("keyboard: syllabus rows open and close with Enter", async ({ page }) => {
   await expect(row).not.toHaveAttribute("open", "");
 });
 
-test("/curriculum redirects to /courses", async ({ page }) => {
-  const res = await page.goto("/curriculum", { waitUntil: "domcontentloaded" });
-  expect(new URL(page.url()).pathname).toBe("/courses");
-  expect(res?.status()).toBe(200);
+for (const [from, to] of [["/curriculum", "/courses"], ["/programs", "/workshops"]]) {
+  test(`${from} redirects to ${to}`, async ({ page, request }) => {
+    const direct = await request.get(from, { maxRedirects: 0 });
+    expect(direct.status()).toBe(301);
+    const res = await page.goto(from, { waitUntil: "domcontentloaded" });
+    expect(new URL(page.url()).pathname).toBe(to);
+    expect(res?.status()).toBe(200);
+  });
+}
+
+test("old /programs anchors land on the same section of /workshops", async ({ page }) => {
+  await page.goto("/programs#research", { waitUntil: "domcontentloaded" });
+  expect(new URL(page.url()).pathname).toBe("/workshops");
+  await expect(page.locator("#research")).toBeInViewport();
+});
+
+test("privacy, terms, and the parent notice are marked as drafts for legal review", async ({ page }) => {
+  for (const path of ["/privacy", "/terms"]) {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("note").getByText("Draft: needs legal review before launch")).toBeVisible();
+  }
+  // The parent notice from sign-up is also on /privacy, where the sign-up form links to it.
+  await page.goto("/privacy#parents", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("heading", { name: "The notice you confirm at sign-up" })).toBeVisible();
+  await expect(page.getByText("Your child's profile holds only a nickname and a grade band.", { exact: false }).first()).toBeVisible();
+});
+
+test("the footer links to privacy, terms, and accessibility on every page type", async ({ page }) => {
+  for (const path of ["/", "/courses/investigators/bias-in-ai", "/signin", "/this-page-does-not-exist"]) {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    const legal = page.getByRole("navigation", { name: "Legal" });
+    for (const name of ["Privacy", "Terms", "Accessibility"]) await expect(legal.getByRole("link", { name })).toBeVisible();
+  }
+});
+
+test("the 404 page answers 404", async ({ request }) => {
+  const res = await request.get("/this-page-does-not-exist");
+  expect(res.status()).toBe(404);
+  expect(await res.text()).toContain("We couldn't find that page.");
 });
 
 test("home hides the credibility strip and impact numbers when there is no data", async ({ page }) => {

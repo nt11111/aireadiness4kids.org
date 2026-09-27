@@ -7,7 +7,6 @@ import react from "@astrojs/react";
 import mdx from "@astrojs/mdx";
 import { satteri } from "@astrojs/markdown-satteri";
 import netlify from "@astrojs/netlify";
-import node from "@astrojs/node";
 import tailwindcss from "@tailwindcss/vite";
 import { netlifyHeadersFile } from "./src/lib/security/policy.mjs";
 
@@ -37,7 +36,9 @@ export default defineConfig({
   site: "https://aireadiness4kids.org",
   output: "server",
   outDir: process.env.ARK_OUT_DIR ?? "./dist",
-  adapter: testBuild ? node({ mode: "standalone" }) : netlify(),
+  // @astrojs/node is a dev dependency, loaded only for test builds, so Netlify can build with
+  // NODE_ENV=production (which skips dev dependencies). docs/SETUP_FIREBASE.md.
+  adapter: testBuild ? (await import("@astrojs/node")).default({ mode: "standalone" }) : netlify(),
   integrations: [react(), mdx(), staticSecurityHeaders()],
   // Environment variables (docs/SETUP_FIREBASE.md). Server secrets are read at runtime on the server
   // and Astro refuses to build if client code imports them.
@@ -66,9 +67,10 @@ export default defineConfig({
       features: { gfm: { footnotes: { label: "Sources", backLabel: "Back to the text for source {reference}" } } },
     }),
   },
-  // Old routes that moved (brief section 2). /programs -> /workshops lands in Phase 6.
+  // Old routes that moved (brief section 2). Permanent (301) redirects; #anchors carry over.
   redirects: {
     "/curriculum": "/courses",
+    "/programs": "/workshops",
   },
   vite: {
     plugins: [tailwindcss()],

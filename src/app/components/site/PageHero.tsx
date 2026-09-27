@@ -2,20 +2,21 @@ import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { Eyebrow } from "./Primitives";
 
+/** Page header for the organization pages: the same warm band as /educators and the course pages. */
 export function PageHero({ crumb, eyebrow, title, lead, actions }: { crumb: string; eyebrow: string; title: ReactNode; lead: ReactNode; actions?: ReactNode }) {
   return (
-    <header className="relative bg-gradient-to-b from-secondary to-background border-b border-border overflow-hidden pt-36 pb-16 px-6">
-      <img src="/brand/ark-mark-web.png" alt="" aria-hidden="true" className="absolute right-[4%] top-1/2 -translate-y-1/2 w-[300px] opacity-90 drop-shadow-[0_20px_40px_rgba(28,36,48,.18)] hidden xl:block pointer-events-none select-none ark-float" />
-      <div className="relative max-w-site mx-auto">
-        <nav className="flex items-center gap-2 text-xs font-mono text-muted-foreground mb-6" aria-label="Breadcrumb">
-          <a href="/" className="underline decoration-1 underline-offset-2 hover:text-brand">Home</a>
-          <ChevronRight size={12} aria-hidden="true" />
-          <span className="text-ink" aria-current="page">{crumb}</span>
+    <header className="border-b border-line bg-surface-2 px-4 pb-12 pt-28 sm:px-6 lg:pb-16 lg:pt-36">
+      <div className="mx-auto max-w-site">
+        <nav aria-label="Breadcrumb" className="mb-6 text-small text-ink-soft">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li className="flex items-center gap-1.5"><a href="/" className="rounded-sm underline decoration-1 underline-offset-4 hover:decoration-2">Home</a><ChevronRight aria-hidden="true" className="size-3.5 shrink-0" /></li>
+            <li><span aria-current="page" className="font-bold text-ink">{crumb}</span></li>
+          </ol>
         </nav>
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-ink leading-[1.04] mt-4 max-w-3xl">{title}</h1>
-        <p className="text-muted-foreground text-lg leading-relaxed mt-6 max-w-2xl">{lead}</p>
-        {actions && <div className="flex flex-wrap gap-4 mt-9">{actions}</div>}
+        <h1 className="mt-2 max-w-4xl text-display-md text-ink sm:text-display-lg">{title}</h1>
+        <p className="mt-4 max-w-reading text-lesson text-ink-soft">{lead}</p>
+        {actions && <div className="mt-8 flex flex-col gap-3 sm:flex-row">{actions}</div>}
       </div>
     </header>
   );

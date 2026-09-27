@@ -84,7 +84,10 @@ export const ROUTES: Route[] = [
   { name: "get-involved", path: "/get-involved" },
   { name: "donate", path: "/donate" },
   { name: "contact", path: "/contact" },
-  { name: "programs", path: "/programs" },
+  { name: "workshops", path: "/workshops" },
+  { name: "privacy", path: "/privacy" },
+  { name: "terms", path: "/terms" },
+  { name: "accessibility", path: "/accessibility" },
   { name: "dev-components", path: "/dev/components" },
   { name: "404", path: "/this-page-does-not-exist" },
 ];
