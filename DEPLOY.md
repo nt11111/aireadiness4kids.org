@@ -26,6 +26,7 @@ Plan about an hour, at a quiet time. The old site keeps serving until the DNS ch
 
 ## Before the cutover (can be done any time, nothing visible changes)
 
+0. **Netlify visitor protection: production must be public.** As of 2026-09-27 the whole project is behind Netlify team login (production answers `401` to the public). Netlify > project > **Project configuration > Access & security > Visitor access**: protect **non-production deploys only**. Check in a private window that `https://aireadiness4kids.netlify.app/` loads. Without this, aireadiness4kids.org shows every visitor a Netlify login page after step 4. Also work through `docs/LAUNCH_CHECKLIST.md`.
 1. **Firebase: authorized domains.** Firebase console > project `ark-learning-58324` > Authentication > Settings > Authorized domains. Make sure `aireadiness4kids.org` and `www.aireadiness4kids.org` are both listed (keep `localhost` and `platform-v1--aireadiness4kids.netlify.app`).
 2. **Google Cloud: API key referrers.** Google Cloud console > APIs & Services > Credentials > the Browser key. Under Website restrictions, make sure `https://aireadiness4kids.org/*` and `https://www.aireadiness4kids.org/*` are there.
 3. **reCAPTCHA Enterprise key domains.** Google Cloud console > Security > reCAPTCHA > key "ARK website" > Domains: add `aireadiness4kids.org` and `www.aireadiness4kids.org` if missing.
