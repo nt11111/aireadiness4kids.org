@@ -14,7 +14,7 @@ Last reviewed: 2026-09-27 (Phase 6). State of the branch site: `platform-v1--air
 
 | # | Item | Status |
 |---|---|---|
-| 1 | Netlify project visibility: production public | **Open (blocker)** |
+| 1 | Netlify project visibility: production public | **Done** (2026-09-27) |
 | 2 | Legal review of privacy policy, terms, parent notice signed off | **Open** |
 | 3 | Legal name and mailing address on the legal pages | **Open** |
 | 4 | License for reusing ARK lessons and slides | **Decision** |
@@ -35,10 +35,15 @@ Last reviewed: 2026-09-27 (Phase 6). State of the branch site: `platform-v1--air
 | 19 | Developer preview pages in production | **Decision** |
 | 20 | Final look at the Cloudflare DNS dashboard | **Open** (day of cutover) |
 | 21 | CI green and the pull request reviewed | **Open** (day of cutover) |
+| 22 | Branch deploys public or private | **Decision** |
 
 ---
 
-## 1. Netlify project visibility: production public: Open (blocker)
+## 1. Netlify project visibility: production public: Done
+
+Done 2026-09-27: `https://aireadiness4kids.netlify.app/` answers 200 to the public. **Branch deploys are now public too** (`platform-v1--aireadiness4kids.netlify.app` answers 200 without a Netlify login), so anyone with the link can use the pre-launch site, including sign-up against the real Firebase project. Its `robots.txt` keeps search engines out. Item 22 covers whether to keep it that way.
+
+The notes below are how it was fixed.
 
 Right now **every** deploy of the Netlify project needs a Netlify team login, production included. `https://aireadiness4kids.netlify.app/` and `https://main--aireadiness4kids.netlify.app/` both answer `401` to the public (checked 2026-09-27). If DNS moved now, every visitor to aireadiness4kids.org would get a Netlify login page.
 
@@ -172,3 +177,11 @@ Before step 4 of `DEPLOY.md`, open Cloudflare > `aireadiness4kids.org` > **DNS >
 ## 21. CI green and pull request reviewed: Open (day of cutover)
 
 Open the pull request `platform-v1` > `main`. The **CI** check (audit, build, type check, all emulator tests) must pass, and a second founder should review it. Then follow `DEPLOY.md`.
+
+## 22. Branch deploys public or private: Decision
+
+Since the visibility change, `platform-v1--aireadiness4kids.netlify.app` is public. That's handy for sharing with the team (on the free plan a private preview can only be opened by the team owner), but it means strangers can create real accounts in the Firebase project before the legal review is done, and those accounts count in `/admin`.
+- Keep it public until the cutover and wipe the data (item 9) right before, or
+- set previews back to **Private**: Project configuration > General > Visitor access > Project visibility > previews **Private**.
+
+Search engines are kept out either way: `robots.txt` answers `Disallow: /` on every host except aireadiness4kids.org.
