@@ -18,6 +18,10 @@ We'll reply within a week. Please give us a reasonable chance to fix the issue b
 
 More detail: `docs/ARK_UI_BUILD_BRIEF.md` (section 8) and `docs/SETUP_FIREBASE.md`.
 
+## Rate-limit records
+
+The workshop checks count requests per scrambled IP and browser id in Firestore `rateLimits`. A Netlify scheduled function (`netlify/functions/cleanup-rate-limits.mts`) deletes expired counters once a day on the production deploy, instead of Firestore's TTL policy (which needs the paid Blaze plan). It logs only a count. Tested on the emulator in `tests/rate-limit-cleanup.spec.ts`.
+
 ## Dependency advisories we know about
 
 `npm audit` runs in CI on every push (`.github/workflows/ci.yml`): the report is always printed, and a critical advisory fails the build. Reviewed 2026-09-27:

@@ -104,7 +104,7 @@ We use a few service providers. They handle data for us, under their own privacy
 - **Google Drive** hosts some slide decks. If you open one, Google's privacy policy applies.
 - **Analytics:** none are switched on today. If we add them, we will use a tool that sets no cookies and never receives names, emails, IDs, or anything you write. <ReviewNote>update when the team picks a provider (Umami or Cloudflare Web Analytics).</ReviewNote>
 
-To stop people from flooding the workshop checks, we briefly count requests by a scrambled (one-way hashed) form of the IP address and browser ID. We never store the IP address itself. <ReviewNote>these counters are meant to delete themselves after a few minutes; automatic deletion needs a database setting that is not switched on yet.</ReviewNote>
+To stop people from flooding the workshop checks, we briefly count requests by a scrambled (one-way hashed) form of the IP address and browser ID. We never store the IP address itself. These counters are deleted automatically once a day after they expire. <ReviewNote>the daily cleanup starts when the site goes live.</ReviewNote>
 
 ## Who can see your data
 

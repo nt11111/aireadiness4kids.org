@@ -72,11 +72,10 @@ Or, from a terminal in the repo, after `firebase login`:
 firebase deploy --only firestore:rules --project YOUR_PROJECT_ID
 ```
 
-5. **Clean up old rate-limit records** (needs billing turned on). The open workshop checks count requests in a `rateLimits` collection (no IP addresses are stored, only scrambled keys). Each record has an `expiresAt` time. Firestore's time-to-live cleanup only works on the pay-as-you-go **Blaze** plan; on the free Spark plan it's refused with "billing disabled". The records are tiny (about two per workshop check), so this can wait until the project moves to Blaze. The console also only lists collections that already have documents, so the command below is the easiest way to set it. In Google Cloud (same project), open **Firestore > Time-to-live (TTL)**, click **Create policy**, and enter collection group `rateLimits` and timestamp field `expiresAt`. Firestore then deletes each record a little after it expires. Or, from a terminal with the Google Cloud CLI:
-
-```bash
-gcloud firestore fields ttls update expiresAt --collection-group=rateLimits --enable-ttl --project YOUR_PROJECT_ID
-```
+5. **Old rate-limit records clean themselves up. Nothing to set here.** The open workshop checks count requests in a `rateLimits` collection (no IP addresses are stored, only scrambled keys). Each record has an `expiresAt` time. Firestore's own time-to-live cleanup only works on the paid **Blaze** plan (on the free Spark plan it's refused with "billing disabled"), so the site does it instead: the Netlify scheduled function `netlify/functions/cleanup-rate-limits.mts` runs once a day (midnight UTC), deletes every record whose `expiresAt` has passed, in batches of 400, and logs one line: `[cleanup-rate-limits] deleted N`. It uses the same `PUBLIC_FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY` variables as the site (section 8), so they must be available to Functions.
+   - **It only runs on the production deploy.** Netlify doesn't run scheduled functions on branch deploys or previews, so it starts after the cutover (`DEPLOY.md`). Until then the records just sit there; they're tiny (about two per workshop check).
+   - **To check it:** Netlify > project > **Logs > Functions** > `cleanup-rate-limits`. You'll see the daily count, and Netlify shows the next scheduled run. You can also run it once from there with **Run now**.
+   - If ARK moves to Blaze later, you can switch on the TTL policy instead (Google Cloud > **Firestore > Time-to-live** > **Create policy**, collection group `rateLimits`, field `expiresAt`) and delete the function. Running both is harmless.
 
 ## 6. Register the web app (public values)
 
