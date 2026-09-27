@@ -40,6 +40,18 @@ export function CourseStart({ modules, trackId, variant }: { modules: ModuleLite
   // Nothing started yet: step 1 of the first module that has lessons (earlier modules may still be
   // "coming soon" stubs), or the first module's overview when none has lessons yet.
   const href = next?.step?.href ?? withSteps[0]?.steps[0]?.href ?? modules[0].href;
+  // No module in this course has lessons yet: don't promise a course; point to the syllabus, where
+  // every module links its slide deck.
+  if (!withSteps.length) {
+    return (
+      <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <a href="#syllabus" className={buttonVariants({ variant, size: "lg" })}>
+          See the modules <ArrowRight aria-hidden="true" />
+        </a>
+        <p className="max-w-md text-ui font-bold">Lessons for this course are being written. Every module has a slide deck you can use now.</p>
+      </div>
+    );
+  }
   return (
     <div className="mt-8 flex flex-wrap items-center gap-4">
       <a href={href} className={buttonVariants({ variant, size: "lg" })}>

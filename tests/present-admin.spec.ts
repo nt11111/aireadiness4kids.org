@@ -60,6 +60,30 @@ test.describe("presenter mode", () => {
     await expect(page.locator("[data-slide]:visible h1")).toHaveText("Quick check");
   });
 
+  test("Exit leaves presenter mode for the page the presenter came from, or the module page", async ({ page }) => {
+    await signInBrowser(page.context(), await account("learner", { role: "facilitator" }));
+    await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+    await page.evaluate((href) => { location.href = href; }, PRESENT);
+    await page.waitForURL(`**${PRESENT}`);
+    await page.keyboard.press("ArrowRight");
+    await page.getByRole("link", { name: /^Exit/ }).click();
+    await expect(page).toHaveURL(/\/courses\/investigators\/?$/);
+    await expect(page.locator("header").first()).toBeVisible();
+    // Opened directly (a bookmark, or from the presenter list): Exit goes to the module's page.
+    for (const viaList of [false, true]) {
+      if (viaList) {
+        await page.goto("/present", { waitUntil: "networkidle" });
+        await page.getByRole("link", { name: /^Present/ }).click();
+        await page.waitForURL(`**${PRESENT}`);
+      } else {
+        await page.goto(PRESENT, { waitUntil: "networkidle" });
+      }
+      await page.getByRole("link", { name: /^Exit/ }).click();
+      await expect(page).toHaveURL(/\/courses\/investigators\/bias-in-ai\/?$/);
+      expect(await page.evaluate(() => document.documentElement.classList.contains("present"))).toBe(false);
+    }
+  });
+
   test("the workshop tag can be set on the first slide; a bad one is ignored", async ({ page }) => {
     await signInBrowser(page.context(), await account("learner", { role: "admin" }));
     await page.goto(`${PRESENT}?src=Not%20OK!`, { waitUntil: "networkidle" });

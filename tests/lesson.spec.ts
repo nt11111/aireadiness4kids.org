@@ -321,8 +321,15 @@ test("Start course opens the first module with lessons, not a coming-soon stub",
   await expect(start).toHaveAttribute("href", `${BIAS_MODULE}/${BIAS_STEPS[0]}`);
   await start.click();
   await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}/${BIAS_STEPS[0]}$`));
-  // A course with no lessons yet still opens its first module's overview.
-  await page.goto("/courses/explorers", { waitUntil: "networkidle" });
-  await hydrated(page);
-  await expect(page.getByRole("link", { name: "Start course" })).toHaveAttribute("href", "/courses/explorers/what-is-ai");
+  // Courses with no lessons yet don't promise one: the button shows the modules (each has slides).
+  for (const trackId of ["explorers", "architects"]) {
+    await page.goto(`/courses/${trackId}`, { waitUntil: "networkidle" });
+    await hydrated(page);
+    await expect(page.getByRole("link", { name: "Start course" })).toHaveCount(0);
+    const see = page.getByRole("link", { name: "See the modules" });
+    await expect(see).toHaveAttribute("href", "#syllabus");
+    await expect(page.getByText("Lessons for this course are being written.")).toBeVisible();
+    await see.click();
+    await expect(page.getByRole("heading", { name: "Syllabus" })).toBeInViewport();
+  }
 });

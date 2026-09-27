@@ -14,6 +14,15 @@ if (root) {
   const counter = root.querySelector<HTMLElement>("[data-present-counter]")!;
   const status = root.querySelector<HTMLElement>("[data-present-status]")!;
   const full = root.querySelector<HTMLButtonElement>("[data-present-fullscreen]")!;
+  const exit = root.querySelector<HTMLAnchorElement>("[data-present-exit]");
+  // Exit goes back to the page the presenter came from on this site (a lesson, the course page),
+  // or to the module's page (the link's own href) when they came from elsewhere or presenter mode.
+  try {
+    const from = document.referrer ? new URL(document.referrer) : null;
+    if (exit && from && from.origin === location.origin && !from.pathname.startsWith("/present")) exit.href = `${from.pathname}${from.search}`;
+  } catch {
+    // keep the module page
+  }
   let current = 0;
 
   const fromHash = () => {

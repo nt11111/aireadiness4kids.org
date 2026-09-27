@@ -133,7 +133,7 @@ const here = Astro.url.pathname;
 
     <nav aria-label="Presenter controls" data-present-controls class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
-        <a href="/present" class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft hover:bg-surface-2 hover:text-ink"><X aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Exit</span></a>
+        <a href={moduleHref(mod)} data-present-exit class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft hover:bg-surface-2 hover:text-ink"><X aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Exit</span><span class="sr-only"> presenter mode</span></a>
         <div class="flex items-center gap-2">
           <button type="button" data-present-prev class="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-ui font-bold text-ink hover:bg-surface-2 disabled:opacity-40"><ArrowLeft aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Back</span></button>
           <p class="min-w-[4.5rem] text-center text-ui font-bold tabular-nums text-ink" data-present-counter>1 / {total}</p>
