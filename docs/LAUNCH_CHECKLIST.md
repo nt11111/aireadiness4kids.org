@@ -90,7 +90,7 @@ Presenter mode (`/present`) needs the `facilitator` (or `admin`) role. List the 
 
 ## 9. Wipe test data in Firestore: Open (do this last, right before the cutover)
 
-The live project has test data from building and testing Phases 3 to 6: Neil's account with Bias in AI progress and certificates, test sign-ups, workshop check answers, and the running totals in `stats/*`, which include all of them. `/admin` would show these as real impact numbers.
+The live project has test data from building and testing Phases 3 to 6: Neil's account with Bias in AI progress and certificates, test sign-ups, workshop check answers, and the running totals in `stats/*`, which include all of them. `/admin` would show these as real impact numbers. The live test pass on 2026-09-27 added a workshop check tagged `live-test-0927` (it shows up in the `/admin` tag filter until the stats are wiped).
 
 In the Firebase console (project `ark-learning-58324`):
 
