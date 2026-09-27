@@ -14,7 +14,7 @@ Last reviewed: 2026-09-27 (Phase 6). State of the branch site: `platform-v1--air
 
 | # | Item | Status |
 |---|---|---|
-| 1 | Netlify visitor protection off for production | **Open (blocker)** |
+| 1 | Netlify project visibility: production public | **Open (blocker)** |
 | 2 | Legal review of privacy policy, terms, parent notice signed off | **Open** |
 | 3 | Legal name and mailing address on the legal pages | **Open** |
 | 4 | License for reusing ARK lessons and slides | **Decision** |
@@ -38,11 +38,12 @@ Last reviewed: 2026-09-27 (Phase 6). State of the branch site: `platform-v1--air
 
 ---
 
-## 1. Netlify visitor protection off for production: Open (blocker)
+## 1. Netlify project visibility: production public: Open (blocker)
 
 Right now **every** deploy of the Netlify project needs a Netlify team login, production included. `https://aireadiness4kids.netlify.app/` and `https://main--aireadiness4kids.netlify.app/` both answer `401` to the public (checked 2026-09-27). If DNS moved now, every visitor to aireadiness4kids.org would get a Netlify login page.
 
-- Netlify > project `aireadiness4kids` > **Project configuration > Access & security > Visitor access** (team login / password protection). Change it to protect **non-production deploys only**, so branch deploys like `platform-v1--…` stay private and production is public.
+- The cause is the project's visibility, which is **Private** (the "Private · Make public" toolbar on the branch site). Netlify > project `aireadiness4kids` > **Project configuration > General > Visitor access > Project visibility**: set production deploys to **Public** and leave previews **Private**, then **Save**. The **Make public** button does the same. Branch deploys like `platform-v1--…` stay private (on the free plan, only the team owner can open them).
+- Safe to do before the cutover: production on Netlify is still the old site from `main`, and this doesn't touch the domain.
 - Check afterwards, from a browser that isn't signed in to Netlify (a private window): `https://aireadiness4kids.netlify.app/` loads. Today that's still the old site from `main`; that's fine.
 
 ## 2. Legal review signed off: Open
