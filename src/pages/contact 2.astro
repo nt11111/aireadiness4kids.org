@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { PageHero } from "../app/components/site/PageHero";
+import { ContactPanel } from "../app/sections/Contact";
+export const prerender = true;
+---
+
+<BaseLayout title="Contact | ARK · AI Readiness for Kids" description="Questions about the curriculum, booking a workshop, partnering, or joining the ARK team? Get in touch.">
+  <PageHero
+    crumb="Contact"
+    eyebrow="Get in touch"
+    title="Let's talk."
+    lead="Questions about the curriculum, booking a workshop, partnering, or joining the team? Send us a note and we will get back to you."
+  />
+  <section class="px-4 py-12 sm:px-6 lg:py-16">
+    <div class="max-w-site mx-auto">
+      <ContactPanel client:visible />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,12 @@
+# Netlify build settings (DEPLOY.md). The Astro Netlify adapter adds the server function,
+# the redirects from astro.config.mjs (/curriculum, /programs), and dist/_headers holds the
+# security headers for static pages. Environment variables are set in the Netlify UI, not here:
+# see docs/SETUP_FIREBASE.md (values in this file don't reach the server function at runtime).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # firebase-admin needs Node 22 or newer; the server functions use the same version.
+  NODE_VERSION = "24"
+  ASTRO_TELEMETRY_DISABLED = "1"

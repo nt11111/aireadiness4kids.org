@@ -1,0 +1,24 @@
+---
+// Hand-updated impact numbers from src/data/impact.json. Hidden entirely until the team adds real ones.
+import { impact } from "../lib/site-data";
+const fmt = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+const stats = impact.stats;
+const asOf = stats.length ? fmt.format(new Date(stats.map((s) => s.as_of).sort().at(-1)!)) : "";
+---
+
+{stats.length > 0 && (
+  <section aria-labelledby="impact-h" data-impact class="px-4 py-16 sm:px-6">
+    <div class="mx-auto max-w-site">
+      <h2 id="impact-h" class="text-display-sm text-ink">Our reach so far</h2>
+      <dl class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.map((s) => (
+          <div class="flex flex-col rounded-xl border border-line bg-surface p-6 shadow-1">
+            <dt class="text-ui text-ink-soft">{s.label}</dt>
+            <dd class="order-first font-display text-display-md font-semibold text-ink">{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-small text-ink-soft">As of {asOf}. Updated by hand by the ARK team.</p>
+    </div>
+  </section>
+)}

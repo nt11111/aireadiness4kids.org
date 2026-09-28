@@ -1,0 +1,29 @@
+---
+// Presenter mode (brief section 7): full screen, no site header or footer, larger type everywhere.
+// It doesn't capture ?src=: the presenter's tag goes into the QR codes, not into their own browser.
+import "../styles/index.css";
+import SiteHead from "../components/SiteHead.astro";
+
+interface Props { title: string }
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="present">
+  <head>
+    <SiteHead title={title} noindex captureSrc={false} />
+  </head>
+  <body class="bg-bg">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Everything is sized in rem, so scaling the root makes the whole slide readable from the back of a room. */
+  html.present {
+    font-size: clamp(16px, 0.9vw + 8px, 26px);
+  }
+  html.js.present [data-slide]:not([data-current]) {
+    display: none;
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+// A module's lesson steps with type icons. Steps arrive in Phase 2, so the empty state matters now.
+import { BookOpen, PlayCircle, Split, CircleCheck, PenLine, ListChecks, Hammer, Clock } from "lucide-react";
+import { STEP_LABEL, type StepRef, type StepType } from "../lib/lesson-types";
+import { cn } from "../app/components/ui/utils";
+
+interface Props {
+  steps: StepRef[];
+  /** "plain" for inside a syllabus row, "panel" on the module page. */
+  tone?: "plain" | "panel";
+  class?: string;
+}
+const { steps, tone = "panel", class: className = "" } = Astro.props;
+
+const ICON: Record<StepType, typeof BookOpen> = { explainer: BookOpen, video: PlayCircle, scenario: Split, check: CircleCheck, reflect: PenLine, recap: ListChecks, activity: Hammer };
+---
+
+{steps.length === 0 ? (
+  <p class={cn("text-ui text-ink-soft", tone === "panel" && "rounded-lg border border-dashed border-line-strong bg-surface-2 p-5", className)}>
+    <span class="font-bold text-ink">Lesson steps are being written.</span> Each module will have 5 to 8 short steps of 3 to 10 minutes.
+  </p>
+) : (
+  <ol class={cn("divide-y divide-line", tone === "panel" && "rounded-lg border border-line bg-surface", className)}>
+    {steps.map((step, i) => {
+      const Icon = ICON[step.type];
+      return (
+        <li>
+          <a href={step.href} class="flex items-center gap-4 px-4 py-3 hover:bg-surface-2">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-soft"><Icon aria-hidden="true" className="size-4" /></span>
+            <span class="min-w-0 flex-1">
+              <span class="block text-ui font-bold text-ink">{i + 1}. {step.title}</span>
+              <span class="flex items-center gap-1.5 text-small text-ink-soft">{STEP_LABEL[step.type]} · <Clock aria-hidden="true" className="size-3.5" /> {step.minutes} min</span>
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+)}

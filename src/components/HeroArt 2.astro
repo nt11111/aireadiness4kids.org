@@ -1,0 +1,36 @@
+---
+// Decorative home illustration (brief section 11: simple geometric shapes in the track
+// colors until the team picks photos or illustrations; never images of children).
+// Three shapes for the three courses, joined by a dotted learning path.
+interface Props { class?: string }
+const { class: className = "" } = Astro.props;
+---
+
+<svg viewBox="0 0 520 460" aria-hidden="true" focusable="false" class={className}>
+  <circle cx="178" cy="312" r="140" fill="var(--track-explorers-soft)" />
+  <circle cx="404" cy="132" r="108" fill="var(--track-architects-soft)" />
+  <circle cx="330" cy="330" r="64" fill="var(--track-investigators-soft)" />
+
+  <!-- K-5: a sun -->
+  <circle cx="150" cy="336" r="92" fill="var(--track-explorers)" />
+  <!-- 6-8: a tilted tile -->
+  <rect x="232" y="186" width="144" height="144" rx="32" fill="var(--track-investigators)" transform="rotate(-9 304 258)" />
+  <!-- 9-12: an arch -->
+  <path d="M344 222 V 132 a 66 66 0 0 1 132 0 V 222 Z" fill="var(--track-architects)" />
+
+  <!-- the learning path, over the shapes -->
+  <path d="M34 432 C 96 420 118 372 150 336 S 238 262 300 258 S 388 214 410 150 S 452 52 494 40" fill="none" stroke="var(--ink)" stroke-opacity=".55" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 12" />
+
+  <!-- milestones on the path -->
+  <g fill="var(--surface)" stroke="var(--brand)" stroke-width="4">
+    <circle cx="150" cy="336" r="13" />
+    <circle cx="300" cy="258" r="13" />
+    <circle cx="410" cy="150" r="13" />
+  </g>
+
+  <!-- marigold sparks -->
+  <circle cx="494" cy="40" r="14" fill="var(--accent)" />
+  <circle cx="70" cy="150" r="9" fill="var(--accent)" />
+  <circle cx="470" cy="300" r="6" fill="var(--accent)" />
+  <rect x="244" y="92" width="16" height="16" rx="3" fill="var(--accent)" transform="rotate(20 252 100)" />
+</svg>
