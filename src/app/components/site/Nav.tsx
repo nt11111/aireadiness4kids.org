@@ -44,13 +44,15 @@ export const NAV: Group[] = [
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-export function Nav({ pathname }: { pathname: string }) {
+export function Nav({ pathname, initialMe }: { pathname: string; initialMe?: Me | null }) {
   const path = pathname.replace(/\/$/, "") || "/";
   const [open, setOpen] = useState(false);
   const [dd, setDd] = useState<string | null>(null);
   const toggles = useRef<Record<string, HTMLButtonElement | null>>({});
   const menuBtn = useRef<HTMLButtonElement>(null);
-  const me = useSignedIn();
+  const me = useSignedIn(initialMe);
+  // Static pages: while the "si" hint says we may be signed in, keep the sign-in links' space but hide them (no flash).
+  const pending = initialMe === undefined && !me ? "in-[.si]:invisible" : undefined;
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -181,8 +183,8 @@ export function Nav({ pathname }: { pathname: string }) {
             </div>
           ) : (
             <>
-              <a href="/signin" aria-current={path === "/signin" ? "page" : undefined} className={link(path === "/signin")}>Sign in</a>
-              <a href="/signup" className={buttonVariants()}>Create free account</a>
+              <a href="/signin" aria-current={path === "/signin" ? "page" : undefined} className={cn(link(path === "/signin"), pending)}>Sign in</a>
+              <a href="/signup" className={cn(buttonVariants(), pending)}>Create free account</a>
             </>
           )}
         </div>
@@ -237,8 +239,8 @@ export function Nav({ pathname }: { pathname: string }) {
             </>
           ) : (
             <>
-              <a href="/signup" className={buttonVariants({ size: "lg" })}>Create free account <ArrowRight aria-hidden="true" /></a>
-              <a href="/signin" className={buttonVariants({ variant: "outline", size: "lg" })}>Sign in</a>
+              <a href="/signup" className={cn(buttonVariants({ size: "lg" }), pending)}>Create free account <ArrowRight aria-hidden="true" /></a>
+              <a href="/signin" className={cn(buttonVariants({ variant: "outline", size: "lg" }), pending)}>Sign in</a>
             </>
           )}
           <a href="/donate" className={buttonVariants({ variant: "ghost", size: "lg" })}>Donate</a>
@@ -258,13 +260,17 @@ function accountLinks(me: Me): [string, string][] {
 }
 
 /**
- * Who's signed in, for the header. The session cookie is httpOnly, so pages ask /api/me, but only
- * when the non-secret "ark_si" hint cookie says there may be a session. Signed-out visitors cost nothing.
+ * Who's signed in, for the header. Server-rendered pages pass it in (`initial`: the account, or null
+ * for signed out), so the header is right on first paint. Static pages can't know (`undefined`): the
+ * session cookie is httpOnly, so they ask /api/me, but only when the non-secret "ark_si" hint cookie
+ * says there may be a session. Signed-out visitors cost nothing. Until the answer comes, the pre-paint
+ * script (JS_FLAG_SCRIPT) has marked <html> with "si" and the sign-in links stay hidden.
  */
-function useSignedIn(): Me | null {
-  const [me, setMe] = useState<Me | null>(null);
+function useSignedIn(initial: Me | null | undefined): Me | null {
+  const [me, setMe] = useState<Me | null>(initial ?? null);
   useEffect(() => {
-    if (!/(?:^|;\s*)ark_si=1/.test(document.cookie)) return;
+    const done = () => document.documentElement.classList.remove("si");
+    if (initial !== undefined || !/(?:^|;\s*)ark_si=1/.test(document.cookie)) return done();
     let live = true;
     fetch("/api/me", { credentials: "same-origin" })
       .then((r) => (r.ok ? r.json() : null))
@@ -273,9 +279,10 @@ function useSignedIn(): Me | null {
         if (data?.signedIn) setMe({ displayName: data.displayName, accountType: data.accountType, role: data.role ?? null, learnerId: data.learnerId ?? null, learners: data.learners ?? [] });
         else document.cookie = "ark_si=; Max-Age=0; Path=/; Secure; SameSite=Lax";
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => { if (live) done(); });
     return () => { live = false; };
-  }, []);
+  }, [initial]);
   return me;
 }
 
