@@ -1,0 +1,17 @@
+---
+// Shown (with status 403) when a signed-in person opens a page their role doesn't allow.
+import BaseLayout from "../layouts/BaseLayout.astro";
+export const prerender = false;
+Astro.response.status = 403;
+---
+
+<BaseLayout title="No access | ARK · AI Readiness for Kids" noindex>
+  <section class="px-4 pb-24 pt-32 sm:px-6 lg:pt-40">
+    <div class="mx-auto max-w-reading">
+      <p class="text-small font-bold uppercase tracking-[0.14em] text-ink-soft">Error 403</p>
+      <h1 class="mt-2 text-display-lg text-ink">You don't have access to this page</h1>
+      <p class="mt-4 text-lesson text-ink-soft">This page is for ARK facilitators or admins. If you think you should have access, ask an ARK founder.</p>
+      <a href="/my-learning" class="mt-8 inline-flex h-12 items-center rounded-full bg-primary px-8 font-bold text-primary-foreground">Go to My learning</a>
+    </div>
+  </section>
+</BaseLayout>

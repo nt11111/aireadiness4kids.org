@@ -1,0 +1,6 @@
+# How to report a security problem with aireadiness4kids.org (RFC 9116).
+# More detail: https://github.com/nt11111/aireadiness4kids.org/blob/main/SECURITY.md
+Contact: mailto:contact@aireadiness4kids.org
+Expires: 2027-09-27T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://aireadiness4kids.org/.well-known/security.txt

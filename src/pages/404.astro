@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buttonVariants } from "../app/components/ui/button";
+import { ArrowRight, BookOpen, GraduationCap, Mail } from "lucide-react";
+export const prerender = true;
+
+const links = [
+  { href: "/courses", icon: BookOpen, title: "Browse the courses", body: "Free lessons for grades K-5, 6-8, and 9-12." },
+  { href: "/educators", icon: GraduationCap, title: "For educators", body: "Facilitator guides and slide decks." },
+  { href: "/contact", icon: Mail, title: "Contact us", body: "Tell us which link brought you here." },
+];
+---
+
+<BaseLayout title="Page not found | ARK · AI Readiness for Kids" noindex>
+  <section aria-labelledby="nf-h" class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <img src="/brand/ark-mark-180.png" alt="" width="72" height="72" class="size-[72px]" />
+      <p class="mt-6 text-small font-bold uppercase tracking-[0.14em] text-brand">Error 404</p>
+      <h1 id="nf-h" class="mt-2 max-w-3xl text-display-md text-ink sm:text-display-lg">We couldn't find that page.</h1>
+      <p class="mt-4 max-w-reading text-lesson text-ink-soft">The link may be old, or the page may have moved. Try one of the links below, or start from the home page.</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href="/" class={buttonVariants({ size: "lg" })}>Go to the home page</a>
+        <a href="/courses" class={buttonVariants({ variant: "outline", size: "lg" })}>Start learning</a>
+      </div>
+
+      <h2 class="mt-16 text-display-sm text-ink">Or try one of these</h2>
+      <ul class="mt-6 grid gap-4 md:grid-cols-3">
+        {links.map((l) => (
+          <li>
+            <a href={l.href} class="group flex h-full items-start gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 transition-[border-color,box-shadow] duration-[var(--dur)] hover:border-brand hover:shadow-2">
+              <span aria-hidden="true" class="grid size-11 shrink-0 place-items-center rounded-full bg-brand-soft text-brand"><l.icon className="size-5" /></span>
+              <span class="min-w-0 flex-1">
+                <span class="flex items-center gap-1.5 font-display text-title font-semibold text-ink group-hover:text-brand">{l.title}<ArrowRight aria-hidden="true" className="size-4 shrink-0" /></span>
+                <span class="mt-1 block text-small text-ink-soft">{l.body}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

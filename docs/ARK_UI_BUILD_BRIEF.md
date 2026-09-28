@@ -40,15 +40,21 @@ Teacher/classroom dashboards, forums, public profiles, search, mentorship matchi
 | Analytics | **Umami Cloud** (free tier) or Cloudflare Web Analytics. Pluggable through one `analytics.ts` module | Cookie-free, supports custom events (Umami) |
 | Knowledge-check submissions | Stored in Firestore `checkResults`. Anonymous workshop submissions go through a server endpoint (`/api/checks`) that validates input and rate-limits; they never use a client-side insert | One place for all impact data |
 | QR codes | `qrcode` npm package, rendered at build or client-side | Used for workshop presenter mode |
-| Hosting | **Netlify** (free tier) with `@astrojs/netlify`. GitHub Pages can't run server code. Firebase Hosting would need the paid Blaze plan for server code. Cloudflare's runtime doesn't support `firebase-admin` well | $0 |
+| Hosting | **Netlify** (free tier) with `@astrojs/netlify`. GitHub Pages can't run server code. Firebase Hosting would need the paid Blaze plan for server code. Cloudflare Workers/Pages can't run `firebase-admin`'s Firestore client, which would mean hand-written token checks | $0 |
+| Domain + DNS | **Cloudflare** (where `aireadiness4kids.org` is registered and its DNS lives). It stays there. At cutover, the DNS records are changed to point at Netlify | $0 |
 | Testing | Playwright (screenshots and smoke tests) + `@axe-core/playwright` | Lets Claude Code check its own visual and a11y work |
+
+**Islands and hydration:** a server-rendered island is plain HTML until its JavaScript loads, and on a slow school network people start typing before then. Every island with a form handles that:
+- **Keep early input.** Hydration leaves typed text (or a password manager's autofill) on screen but not in React state, so the next render wipes it. `Field` and `SelectField` (`src/app/components/auth/Field.tsx`) copy it into state as they hydrate. A hand-built input in an island calls `useEarlyInput` from `src/app/components/ui/use-hydration.ts`. An island that loads saved state on mount keeps what's already in the field instead of loading over it (see `<Reflect>`, section 6).
+- **No sending before hydration.** Submit buttons in server-rendered forms are `SubmitButton` (in `Field.tsx`), which stays disabled until the island hydrates. Otherwise pressing Enter makes the browser send the form itself (section 8.4).
+- **Hydrated means React has committed.** Astro removes an island's `ssr` attribute as soon as it hands the component to React, but `@astrojs/react` hydrates inside `startTransition`, so the attribute is gone before React is listening. Tests use `hydrated()` from `tests/support/hydration.ts` (section 9).
 
 **Current site and migration:** The live site is `ark-website/`. It's a React 18 + Vite + Tailwind v4 + shadcn/Radix single-page app (exported from Figma Make), using React Router, with all copy in `src/app/lib/content.ts` and pages in `src/app/pages/`. **It auto-deploys to GitHub Pages on every push to `main`** (`.github/workflows/deploy.yml`, custom domain via `public/CNAME`).
 - **Work only on a branch (`platform-v1`). Never push to `main` until the team approves the cutover.**
 - Convert the repo in place to Astro with the React + MDX + Tailwind integrations. Reuse the existing pages, `components/site/*`, and `components/ui/*` as React components or port them to `.astro` where they have no interactivity. Keep all copy from `content.ts`.
 - Keep the existing routes working: `/`, `/about`, `/get-involved`, `/donate`, `/contact`. Redirect `/curriculum` → `/courses` and `/programs` → `/workshops`.
 - Remove dependencies the new site doesn't use (MUI/Emotion, react-slick, react-dnd, recharts, and so on, if unused). List what was removed and why.
-- Cutover (Phase 6) moves hosting from GitHub Pages to Netlify, keeping `aireadiness4kids.org`. Replace the GitHub Pages workflow with a CI workflow that only runs build + tests.
+- Cutover (Phase 6) moves hosting from GitHub Pages to Netlify, keeping `aireadiness4kids.org`. **The domain and DNS stay in Cloudflare.** Only the DNS records change, so they point at Netlify instead of GitHub Pages. Set those records to **DNS only (grey cloud)**, so Netlify can issue the SSL certificate. Replace the GitHub Pages workflow with a CI workflow that only runs build + tests.
 - The old hand-written static site is in `../_archive/old-static-site/` for reference only.
 
 ---
@@ -208,7 +214,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 | `<Scenario>` | "What would you do?" branching choice with feedback per option | No wrong-answer shaming. Feedback explains why |
 | `<Check>` | 1-5 multiple-choice or true/false questions with instant feedback | Emits an analytics event with the score bucket only |
 | `<Sort>` | Drag or tap items into buckets ("AI or not AI?") | Must work with keyboard and without drag |
-| `<Reflect prompt="">` | Free-text reflection | Saved **locally only**; never sent anywhere. The UI says so |
+| `<Reflect prompt="">` | Free-text reflection | Saved **locally only**; never sent anywhere. The UI says so. Text typed before the island loads is kept and saved, not replaced by an older saved answer the box wasn't showing |
 | `<Discuss>` | Discussion prompts for class or family | Shows only in the facilitator view + as a collapsible in the lesson |
 | `<Recap>` | Key takeaways | Used on the last step |
 | `<ReadAloud />` | Reads the step aloud via the Web Speech API | On by default for the Explorers track; hidden if unsupported |
@@ -289,7 +295,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 For ARK-led workshops. The facilitator projects this view. It requires an account with the `facilitator` or `admin` role; founders grant the role with `scripts/set-role.ts` (section 8.1).
 - Full-screen, large type, one step per screen, arrow-key navigation.
 - On `check` steps, show a **QR code** linking learners to that check on their own phones, with `?src=` taken from the presenter URL.
-- A "Show results" toggle is out of scope for V1. Results go to the Google Sheet.
+- A "Show results" toggle is out of scope for V1. Results are stored in Firestore and show up on /admin.
 
 ---
 
@@ -299,7 +305,7 @@ For ARK-led workshops. The facilitator projects this view. It requires an accoun
 - **Use a new Firebase project just for ARK**, owned by an ARK organization Google account. Never share a project with another app.
 - Sign-in providers: **Google** and **Email/Password**. Turn off all others. Require email verification for email accounts; the server treats an unverified email account as signed out for gated routes.
 - **Authorized domains:** the production domain, the Netlify preview domain, and `localhost` only. In Google Cloud, restrict the Firebase web API key to those HTTP referrers.
-- The Firebase web config (`apiKey`, `authDomain`, etc.) is public by design and can go in `PUBLIC_` env vars. The **service account key is secret**: it lives only in a server env var (`FIREBASE_SERVICE_ACCOUNT`, base64 JSON). It is never in the repo and never in client code. Add a build check that fails if `private_key` appears in any client bundle.
+- The Firebase web config (`apiKey`, `authDomain`, etc.) is public by design and can go in `PUBLIC_` env vars. The **service account key is secret**: it lives only in a server env vars (`FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`). It is never in the repo and never in client code. Add a build check that fails if `private_key` appears in any client bundle.
 - **Session flow (httpOnly cookies, no tokens in the browser):**
   1. The client signs in with the Firebase JS SDK, with persistence set to `inMemoryPersistence`. Google uses `signInWithPopup`, falling back to redirect when the popup is blocked.
   2. The client POSTs the ID token to `/api/session`. The server verifies it with `firebase-admin` (`verifyIdToken(token, true)`), requires a sign-in within the last 5 minutes, and creates a **session cookie** (`createSessionCookie`, 5-day expiry). It is set as `__session`, `HttpOnly; Secure; SameSite=Lax; Path=/`.
@@ -363,6 +369,7 @@ Reflections (`<Reflect>`) **stay in the browser only**, even when signed in. We 
 ### 8.4 Security headers and hygiene
 - Headers on every response: a strict `Content-Security-Policy` (self + the Firebase/Google auth and reCAPTCHA hosts + analytics host only), `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (camera, mic, and geolocation off), and `frame-ancestors 'none'`.
 - Validate all API input with zod. Rate-limit `/api/checks` per IP and per `anon_sid`.
+- Forms never submit natively. They have no `action`, so a native submit is a GET to the same page with every named field in the URL. Before this was fixed, pressing Enter on `/signin` before the page hydrated sent `/signin?email=…&password=…`. Submit buttons are `SubmitButton` (disabled until hydrated, section 2), and `tests/auth.spec.ts` fails if any request carries the password.
 - Never log emails, tokens, or answers to the console in production.
 - Run `npm audit` in CI. Pin dependency versions.
 - Add `SECURITY.md` with a contact email for reporting issues.
@@ -391,8 +398,10 @@ After every phase:
 3. axe finds zero serious or critical violations on touched pages.
 4. Keyboard pass: every interactive element can be reached and has a visible focus ring.
 5. From Phase 3 on: the two-user access tests pass on the Firebase emulator, signed-out requests to gated routes return a redirect (not the content), and no secret appears in the client bundle.
-6. Commit with a clear message. One phase equals one or more commits; never mix phases.
-7. Report: what was built, screenshots path, known gaps, and what's needed from the team.
+6. Tests type only into hydrated islands: call `hydrated(page)` from `tests/support/hydration.ts` before filling a form (`networkidle` and the `ssr` attribute aren't enough, section 2). Every new form island also gets a `beforeHydration()` test that types while its JavaScript is held back and checks the input survives (see `tests/auth.spec.ts` and `tests/early-input.spec.ts`).
+7. Flake check: the suite runs fully parallel, so run the touched specs in parallel with `--repeat-each=3`. A test that only passes with `--workers=1` is a bug to fix, not a setting.
+8. Commit with a clear message. One phase equals one or more commits; never mix phases.
+9. Report: what was built, screenshots path, known gaps, and what's needed from the team.
 
 **Don'ts:** Don't add dependencies without saying why. Use Tailwind and the existing shadcn/Radix components instead of adding new UI libraries. No tracking pixels and no third-party embeds that set cookies. Never push to `main` before cutover.
 
@@ -414,8 +423,8 @@ After every phase:
 
 ## 11. Open questions for the team (Claude Code: flag them, don't guess)
 - Final brand colors and logo. The tokens above are a starting point.
-- The analytics provider choice (Umami vs. Cloudflare).
-- Who owns the Firebase/Google Cloud project and the Netlify account. Use an ARK organization email, not a personal one, with two founders as admins.
+- **Pick analytics provider** (Umami vs. Cloudflare Web Analytics). Analytics stay off until then: `PUBLIC_UMAMI_ID` is unset, so no script loads and no events are sent (section 8.7).
+- Who owns the Firebase/Google Cloud project and the Netlify account. The Cloudflare account (domain + DNS) should also be under ARK ownership. Use an ARK organization email, not a personal one, with two founders as admins.
 - Legal review of the privacy policy, terms, and parent notice before launch (a pro bono lawyer or a law school clinic).
 - Reviewer names and credentials for badges.
 - UYS Academy learners' age range, which decides which track leads the pilot.

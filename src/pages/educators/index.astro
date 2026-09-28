@@ -1,0 +1,103 @@
+---
+// /educators (brief section 7): how a teacher, parent, or ambassador can use ARK, and every
+// facilitator guide. Open to everyone, like the guides themselves.
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ReviewBadge } from "../../app/components/site/ReviewBadge";
+import { Badge } from "../../app/components/ui/badge";
+import { trackStyle, type TrackId } from "../../app/lib/tracks";
+import { cn } from "../../app/components/ui/utils";
+import { getCourses, moduleHref, moduleSlug } from "../../lib/courses";
+import { ArrowRight, ExternalLink, FileText, Link2, Presentation, Printer } from "lucide-react";
+export const prerender = true;
+
+const [courses, guides] = await Promise.all([getCourses(), getCollection("guides")]);
+const guideIds = new Set(guides.map((g) => g.id));
+const ways = [
+  { icon: Presentation, title: "Teach it live", body: "Project a lesson and work through the steps together. Each module also has a slide deck. ARK ambassadors who lead workshops use presenter mode, which adds QR codes so the room can answer a quick check on their phones." },
+  { icon: Link2, title: "Share a link", body: "Send learners the link to a module. Anyone can try the first step without an account; a free account saves their progress and earns a certificate. Kids under 13 need a parent to set up their profile." },
+  { icon: Printer, title: "Print a guide", body: "Each facilitator guide has the objectives, timing, materials, discussion prompts, and answer notes. It prints cleanly on letter paper." },
+];
+---
+
+<BaseLayout title="For educators | ARK · AI Readiness for Kids" description="Free facilitator guides and slide decks for teaching ARK's AI literacy lessons in a classroom, club, or at home.">
+  <section class="border-b border-line bg-surface-2 px-4 pb-12 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">For educators</p>
+      <h1 class="mt-2 max-w-4xl text-display-lg text-ink">Teach AI literacy with ARK</h1>
+      <p class="mt-4 max-w-reading text-lesson text-ink-soft">Teachers, parents, club leaders, and ARK ambassadors can use every lesson for free. The guides are open to everyone, with no account needed.</p>
+    </div>
+  </section>
+
+  <div class="px-4 py-12 sm:px-6 lg:py-16">
+    <div class="mx-auto max-w-site">
+      <section aria-labelledby="ways-h">
+        <h2 id="ways-h" class="text-display-sm text-ink">Three ways to use it</h2>
+        <ul class="mt-6 grid gap-5 md:grid-cols-3">
+          {ways.map((w) => (
+            <li class="rounded-xl border border-line bg-surface p-6 shadow-1">
+              <w.icon aria-hidden="true" className="size-7 text-brand" />
+              <h3 class="mt-3 font-display text-title font-semibold text-ink">{w.title}</h3>
+              <p class="mt-2 text-ui text-ink-soft">{w.body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="guides-h" class="mt-14">
+        <h2 id="guides-h" class="text-display-sm text-ink">Facilitator guides</h2>
+        <p class="mt-2 max-w-reading text-ui text-ink-soft">Guides are written alongside each module's lessons. Modules still being written have their slide deck for now.</p>
+        <div class="mt-6 grid gap-8">
+          {courses.map((course) => {
+            const s = trackStyle(course.track.id);
+            return (
+              <section aria-labelledby={`track-${course.track.id}`} class="overflow-hidden rounded-xl border border-line bg-surface shadow-1">
+                <div class={cn("h-2", s.bar)}></div>
+                <div class="p-5 sm:p-6">
+                  <div class="flex flex-wrap items-center gap-3">
+                    <h3 id={`track-${course.track.id}`} class="font-display text-title font-semibold text-ink">{course.track.data.title}</h3>
+                    <Badge variant={course.track.id as TrackId}>Grades {course.track.data.grades}</Badge>
+                  </div>
+                  <ul class="mt-4 divide-y divide-line">
+                    {course.modules.map((m) => {
+                      const hasGuide = guideIds.has(m.id);
+                      return (
+                        <li class="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:gap-4">
+                          <span class="min-w-0 flex-1">
+                            <span class="text-small font-bold text-ink-soft">Module {m.data.order}</span>
+                            <a href={moduleHref(m)} class="block rounded-sm font-bold text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{m.data.title}</a>
+                          </span>
+                          <span class="flex flex-wrap items-center gap-x-5 gap-y-2 text-ui">
+                            {hasGuide ? (
+                              <a href={`/educators/${course.track.id}/${moduleSlug(m)}`} class="inline-flex min-h-11 items-center gap-2 rounded-sm font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">
+                                <FileText aria-hidden="true" className="size-4 shrink-0" /><span>Facilitator guide<span class="sr-only"> for {m.data.title}</span></span>
+                              </a>
+                            ) : (
+                              <span class="inline-flex items-center gap-2 text-ink-soft"><FileText aria-hidden="true" className="size-4 shrink-0" />Guide coming soon</span>
+                            )}
+                            {m.data.slides_url && (
+                              <a href={m.data.slides_url} class="inline-flex min-h-11 items-center gap-2 rounded-sm font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">
+                                <ExternalLink aria-hidden="true" className="size-4 shrink-0" />Slides<span class="sr-only"> for {m.data.title} (Google Drive)</span>
+                              </a>
+                            )}
+                            {hasGuide && <ReviewBadge status={m.data.status} />}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </section>
+
+      <section aria-labelledby="workshop-h" class="mt-14 max-w-reading rounded-xl border border-line bg-surface p-6 shadow-1 sm:p-8">
+        <h2 id="workshop-h" class="text-display-sm text-ink">Want ARK to lead it?</h2>
+        <p class="mt-3 text-ui text-ink-soft">ARK founders and student ambassadors lead in-school workshops, and ARK's core programs stay free to students and schools.</p>
+        <a href="/workshops" class="mt-5 inline-flex items-center gap-2 rounded-sm font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">Bring ARK to your school <ArrowRight aria-hidden="true" className="size-4" /></a>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

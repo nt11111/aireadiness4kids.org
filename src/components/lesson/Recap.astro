@@ -1,0 +1,14 @@
+---
+// <Recap>: key takeaways, used on a module's last step.
+import { ListChecks } from "lucide-react";
+interface Props { title?: string }
+const { title = "Key takeaways" } = Astro.props;
+const id = `recap-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+---
+
+<section aria-labelledby={id} class="lesson-block rounded-xl border border-brand/25 bg-brand-soft p-5 sm:p-6">
+  <h2 id={id} class="flex items-center gap-2 font-display text-display-sm text-ink"><ListChecks aria-hidden="true" className="size-6 shrink-0 text-brand" />{title}</h2>
+  <div class="recap-body mt-3 text-ink [&_li+li]:mt-2 [&_li]:pl-1 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6 [&_li::marker]:text-brand">
+    <slot />
+  </div>
+</section>

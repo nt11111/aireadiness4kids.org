@@ -4,3 +4,28 @@ dist
 *.log
 .vite
 graphify-out/
+
+# Astro / Netlify build output
+.astro
+.netlify
+
+# Playwright
+screenshots/
+test-results/
+playwright-report/
+blob-report/
+
+# iCloud-safe git dir (local only)
+.git.nosync
+
+# Secrets and local env (see .env.example)
+.env
+.env.*
+!.env.example
+*service-account*.json
+*firebase-adminsdk*.json
+
+# Test build and Firebase emulator logs
+dist-test/
+firebase-debug.log
+firestore-debug.log

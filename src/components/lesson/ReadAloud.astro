@@ -1,0 +1,7 @@
+---
+// <ReadAloud />: a "Read aloud" button for this step. Every Explorers step gets one automatically.
+import { ReadAloud as ReadAloudIsland } from "../../app/components/lesson/ReadAloud";
+interface Props { class?: string }
+---
+
+<div class:list={["lesson-block", Astro.props.class]} data-read-skip><ReadAloudIsland client:idle /></div>

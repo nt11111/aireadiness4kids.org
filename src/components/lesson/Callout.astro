@@ -1,0 +1,24 @@
+---
+// <Callout kind="think|tip|warning|fact">: a highlighted aside. The label and icon carry the meaning, not just the color.
+import { Lightbulb, MessageCircleQuestion, TriangleAlert, BookOpenCheck } from "lucide-react";
+import { cn } from "../../app/components/ui/utils";
+
+interface Props { kind?: "think" | "tip" | "warning" | "fact"; title?: string }
+const { kind = "tip", title } = Astro.props;
+const KINDS = {
+  think: { label: "Think about it", Icon: MessageCircleQuestion, box: "border-line bg-surface-2", icon: "text-brand" },
+  tip: { label: "Tip", Icon: Lightbulb, box: "border-brand/25 bg-brand-soft", icon: "text-brand" },
+  warning: { label: "Heads up", Icon: TriangleAlert, box: "border-warning/35 bg-warning-soft", icon: "text-warning" },
+  fact: { label: "Fact", Icon: BookOpenCheck, box: "border-track-architects/25 bg-track-architects-soft", icon: "text-track-architects-ink" },
+} as const;
+if (!(kind in KINDS)) throw new Error(`<Callout kind="${kind}">: use think, tip, warning, or fact.`);
+const k = KINDS[kind];
+---
+
+<div role="note" aria-label={title ?? k.label} class={cn("lesson-block flex gap-3 rounded-xl border p-4 sm:gap-4 sm:p-5", k.box)}>
+  <k.Icon aria-hidden="true" className={cn("mt-1 size-5 shrink-0", k.icon)} />
+  <div class="min-w-0 [&>*+*]:mt-2">
+    <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{title ?? k.label}</p>
+    <slot />
+  </div>
+</div>

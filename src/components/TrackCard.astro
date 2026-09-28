@@ -1,0 +1,73 @@
+---
+// A course card. "home": compact card, the whole card is one link (via the Start button).
+// "catalog": wide row with the module list; each module title is its own link.
+import { ArrowRight, BookOpen, Clock } from "lucide-react";
+import { buttonVariants } from "../app/components/ui/button";
+import { trackStyle } from "../app/lib/tracks";
+import { cn } from "../app/components/ui/utils";
+import { courseTime, moduleHref, trackHref, type Course } from "../lib/courses";
+
+interface Props { course: Course; layout?: "home" | "catalog"; headingLevel?: 2 | 3 }
+const { course, layout = "home", headingLevel = 3 } = Astro.props;
+const { track, modules } = course;
+const { title, grades, tagline, summary } = track.data;
+const s = trackStyle(track.id);
+const H = `h${headingLevel}` as "h2" | "h3";
+const count = `${modules.length} modules`;
+const time = courseTime(course);
+---
+
+{layout === "home" ? (
+  <article class="group relative flex h-full flex-col overflow-hidden rounded-xl md:grid md:grid-cols-[220px_minmax(0,1fr)] lg:flex border border-line bg-surface shadow-1 transition-[transform,box-shadow] duration-[var(--dur-slow)] ease-out hover:-translate-y-1 hover:shadow-2 focus-within:shadow-2">
+    <div class={cn("flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 px-6 pb-4 pt-5 md:flex-col md:items-start md:justify-center md:gap-1 md:py-6 lg:flex-row lg:items-baseline lg:justify-between lg:gap-y-1 lg:pb-4 lg:pt-5", s.fill)}>
+      <span class="font-display text-display-sm font-semibold">Grades {grades}</span>
+      <span class="text-small font-bold">{tagline}</span>
+    </div>
+    <div class="flex flex-1 flex-col p-6">
+      <H class="font-display text-display-sm font-semibold text-ink">{title}</H>
+      <p class="mt-2 text-ui text-ink-soft">{summary}</p>
+      <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-1.5 text-small font-bold text-ink-soft">
+        <li class="inline-flex items-center gap-1.5"><BookOpen aria-hidden="true" className="size-4" />{count}</li>
+        <li class="inline-flex items-center gap-1.5"><Clock aria-hidden="true" className="size-4" />{time}</li>
+      </ul>
+      <div class="mt-auto pt-6">
+        <a href={trackHref(track)} aria-label={`Start ${title}, grades ${grades}`} class={cn(buttonVariants(), "w-full md:w-auto lg:w-full after:absolute after:inset-0 after:content-['']")}>
+          Start
+          <ArrowRight aria-hidden="true" className="transition-transform duration-[var(--dur)] group-hover:translate-x-0.5" />
+        </a>
+      </div>
+    </div>
+  </article>
+) : (
+  <article class="grid overflow-hidden rounded-xl border border-line bg-surface shadow-1 md:grid-cols-[260px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)]">
+    <div class={cn("flex flex-col justify-between gap-6 p-6 sm:p-8", s.fill)}>
+      <div>
+        <p class="text-small font-bold uppercase tracking-[0.12em]">Grades {grades}</p>
+        <H class="mt-2 font-display text-display-sm font-semibold">{title}</H>
+        <p class="mt-1 text-ui font-bold">{tagline}</p>
+      </div>
+      <ul class="flex flex-wrap gap-x-5 gap-y-1.5 text-small font-bold md:flex-col">
+        <li class="inline-flex items-center gap-1.5"><BookOpen aria-hidden="true" className="size-4" />{count}</li>
+        <li class="inline-flex items-center gap-1.5"><Clock aria-hidden="true" className="size-4" />{time}</li>
+      </ul>
+    </div>
+    <div class="flex flex-col p-6 sm:p-8">
+      <p class="text-lesson text-ink">{summary}</p>
+      <p id={`${track.id}-mods`} class="mt-6 text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Modules</p>
+      <ol aria-labelledby={`${track.id}-mods`} class="mt-3 gap-x-8 lg:columns-2">
+        {modules.map((m) => (
+          <li class="mb-2 flex break-inside-avoid gap-3 text-ui">
+            <span class={cn("w-5 shrink-0 text-right font-bold tabular-nums", s.ink)} aria-hidden="true">{m.data.order}</span>
+            <a href={moduleHref(m)} class="rounded-sm text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{m.data.title}</a>
+          </li>
+        ))}
+      </ol>
+      <div class="mt-8">
+        <a href={trackHref(track)} aria-label={`View course: ${title}`} class={buttonVariants()}>
+          View course
+          <ArrowRight aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </article>
+)}

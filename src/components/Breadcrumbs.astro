@@ -1,0 +1,22 @@
+---
+// Breadcrumb trail. Text color is inherited, so it works on light pages and track fills.
+import { ChevronRight } from "lucide-react";
+interface Props {
+  items: { label: string; href?: string }[];
+  class?: string;
+}
+const { items, class: className = "" } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class={className}>
+  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-small">
+    {items.map((item, i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <ChevronRight aria-hidden="true" className="size-3.5 shrink-0" />}
+        {item.href
+          ? <a href={item.href} class="rounded-sm underline decoration-1 underline-offset-4 hover:decoration-2">{item.label}</a>
+          : <span aria-current="page" class="font-bold">{item.label}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

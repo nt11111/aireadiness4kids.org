@@ -1,0 +1,143 @@
+---
+// Printable facilitator guide (brief section 7): renders the module's guide.mdx (objectives, timing,
+// materials, discussion prompts, answer notes) with the module's words to know and workshop check
+// links. Open to everyone. Prints on portrait letter pages (the @page rule below).
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import { lessonComponents } from "../../../components/lesson";
+import { ReviewBadge } from "../../../app/components/site/ReviewBadge";
+import { PrintButton } from "../../../app/components/site/PrintButton";
+import { Badge } from "../../../app/components/ui/badge";
+import { buttonVariants } from "../../../app/components/ui/button";
+import type { TrackId } from "../../../app/lib/tracks";
+import { getCourses, getModuleSteps, moduleHref, moduleSlug } from "../../../lib/courses";
+import { STEP_LABEL } from "../../../lib/lesson-types";
+import { Clock, ExternalLink } from "lucide-react";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const [courses, guides] = await Promise.all([getCourses(), getCollection("guides")]);
+  return guides.map((guide) => {
+    const course = courses.find((c) => c.modules.some((m) => m.id === guide.id));
+    const mod = course?.modules.find((m) => m.id === guide.id);
+    if (!course || !mod) throw new Error(`guide.mdx in "${guide.id}" has no module index.mdx beside it.`);
+    return { params: { track: course.track.id, module: moduleSlug(mod) }, props: { guide, course, mod } };
+  });
+}
+
+const { guide, course, mod } = Astro.props;
+const steps = getModuleSteps(course, mod);
+Astro.locals.lesson = { stepId: `${mod.id}/guide`, moduleId: mod.id, track: course.track.id, vocabulary: mod.data.vocabulary, questions: [] };
+const { Content } = await render(guide);
+const checks = (["pre", "post"] as const).filter((p) => (p === "pre" ? mod.data.pre_check : mod.data.post_check).length > 0);
+const checkUrl = (phase: string) => new URL(`/check/${moduleSlug(mod)}/${phase}`, Astro.site);
+---
+
+<BaseLayout title={`${guide.data.title} | ARK for educators`} description={`Facilitator guide for ${mod.data.title}: objectives, timing, materials, discussion prompts, and answer notes.`}>
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36 print:p-0">
+    <article class="guide mx-auto max-w-reading print:max-w-none" data-guide>
+      <div data-no-print>
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "For educators", href: "/educators" }, { label: mod.data.title }]} class="text-ink-soft" />
+      </div>
+      <div class="mt-6 flex flex-wrap items-center gap-3 print:mt-0">
+        <Badge variant={course.track.id as TrackId}>{course.track.data.title} · Grades {course.track.data.grades}</Badge>
+        <span class="text-small font-bold text-ink-soft">Module {mod.data.order}</span>
+      </div>
+      <h1 class="mt-3 text-display-lg text-ink">{guide.data.title}</h1>
+      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-ui text-ink-soft">
+        <span class="inline-flex items-center gap-2 font-bold text-ink"><Clock aria-hidden="true" className="size-5 text-ink-soft" />{guide.data.duration_minutes} minutes</span>
+        <ReviewBadge status={guide.data.status} />
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3" data-no-print>
+        <PrintButton client:load label="Print this guide" />
+        <a href={moduleHref(mod)} class={buttonVariants({ variant: "outline" })}>Open the lessons</a>
+        {mod.data.slides_url && <a href={mod.data.slides_url} class={buttonVariants({ variant: "outline" })}><ExternalLink aria-hidden="true" />Slide deck<span class="sr-only"> (Google Drive)</span></a>}
+      </div>
+
+      {guide.data.materials.length > 0 && (
+        <section aria-labelledby="materials-h" class="guide-box mt-8 rounded-xl border border-line bg-surface p-5">
+          <h2 id="materials-h" class="text-title text-ink">Materials</h2>
+          <ul class="mt-2 list-disc space-y-1 pl-6 text-ui text-ink">{guide.data.materials.map((m) => <li>{m}</li>)}</ul>
+        </section>
+      )}
+
+      {steps.length > 0 && (
+        <section aria-labelledby="steps-h" class="guide-box mt-6 rounded-xl border border-line bg-surface p-5">
+          <h2 id="steps-h" class="text-title text-ink">Lesson steps</h2>
+          <ol class="mt-2 space-y-1 text-ui text-ink">
+            {steps.map((s) => <li><span class="font-bold tabular-nums">{s.n}.</span> {s.title} <span class="text-ink-soft">({STEP_LABEL[s.type]}, {s.minutes} min)</span></li>)}
+          </ol>
+        </section>
+      )}
+
+      <div class="lesson-prose mt-8 text-lesson"><Content components={lessonComponents} /></div>
+
+      {mod.data.vocabulary.length > 0 && (
+        <section aria-labelledby="vocab-h" class="mt-10">
+          <h2 id="vocab-h" class="text-display-sm text-ink">Words to know</h2>
+          <dl class="mt-4 grid gap-3 sm:grid-cols-2 print:grid-cols-2">
+            {mod.data.vocabulary.map((v) => (
+              <div class="guide-box rounded-lg border border-line bg-surface p-4"><dt class="font-bold text-ink">{v.term}</dt><dd class="mt-1 text-ui text-ink-soft">{v.def}</dd></div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      {checks.length > 0 && (
+        <section aria-labelledby="checks-h" class="mt-10">
+          <h2 id="checks-h" class="text-display-sm text-ink">Workshop quick checks</h2>
+          <p class="mt-2 text-ui text-ink-soft">Learners can answer these on their own phones with no account. Answers count toward ARK's anonymous totals.</p>
+          <ul class="mt-3 space-y-2 text-ui">
+            {checks.map((phase) => (
+              <li><span class="font-bold text-ink">{phase === "pre" ? "Before the lesson:" : "After the lesson:"}</span> <a href={checkUrl(phase).pathname} class="break-all font-bold text-brand underline underline-offset-4">{checkUrl(phase).host}{checkUrl(phase).pathname}</a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </article>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  @page {
+    size: letter portrait;
+    margin: 0.6in 0.65in;
+  }
+  @media print {
+    [data-guide] {
+      font-size: 11pt;
+      line-height: 1.45;
+    }
+    [data-guide] h1 {
+      font-size: 22pt;
+    }
+    [data-guide] h2 {
+      font-size: 15pt;
+      break-after: avoid;
+    }
+    [data-guide] h3 {
+      font-size: 12.5pt;
+      break-after: avoid;
+    }
+    [data-guide] .text-lesson,
+    [data-guide] .text-ui {
+      font-size: 11pt;
+    }
+    [data-guide] tr,
+    [data-guide] li,
+    [data-guide] .guide-box,
+    [data-guide] details {
+      break-inside: avoid;
+    }
+    /* Discussion prompts print open, without the Show/Hide control. */
+    [data-guide] details > summary [aria-hidden="true"] {
+      display: none;
+    }
+    [data-guide] a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
+</style>

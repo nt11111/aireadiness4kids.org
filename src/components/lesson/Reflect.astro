@@ -1,0 +1,10 @@
+---
+// <Reflect prompt="..." />: saved only in the learner's browser (brief section 8.3).
+import { Reflect as ReflectIsland } from "../../app/components/lesson/Reflect";
+
+interface Props { prompt: string; id?: string }
+const { prompt, id } = Astro.props;
+if (!prompt) throw new Error('<Reflect>: add prompt="..."');
+---
+
+<div class="lesson-block"><ReflectIsland client:idle prompt={prompt} id={id} stepId={Astro.locals.lesson?.stepId} /></div>

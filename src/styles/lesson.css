@@ -1,0 +1,121 @@
+/* ============================================================
+   Lesson player and lesson content (brief sections 3, 6, 7).
+   ============================================================ */
+:root {
+  /* Minimum tap target. Explorers (K-5) lessons use 48px. */
+  --tap: 2.75rem;
+  /* Lesson top bar: 56px bar + 4px progress + 1px border. */
+  --lesson-top: 61px;
+}
+.lesson-explorers {
+  --tap: 3rem;
+}
+
+/* Keep focused things clear of the sticky top bar and the sticky Back / Next bar (WCAG 2.4.11). */
+html:has([data-lesson-root]) {
+  scroll-padding-top: calc(var(--lesson-top) + 1rem);
+  scroll-padding-bottom: 6rem;
+}
+
+/* Markdown in lessons. Only direct children, so components keep their own styles. */
+.lesson-prose { color: var(--ink); }
+.lesson-prose > * + * { margin-top: 1.1em; }
+.lesson-prose > h2 {
+  margin-top: 1.9em;
+  font-family: var(--font-display);
+  font-size: var(--text-display-sm);
+  line-height: 1.2;
+  font-weight: 600;
+}
+.lesson-prose > h3 {
+  margin-top: 1.6em;
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  line-height: 1.3;
+  font-weight: 600;
+}
+.lesson-prose > h2 + *,
+.lesson-prose > h3 + * { margin-top: 0.5em; }
+.lesson-prose > ul { list-style: disc; padding-left: 1.4em; }
+.lesson-prose > ol { list-style: decimal; padding-left: 1.4em; }
+.lesson-prose li + li { margin-top: 0.4em; }
+.lesson-prose li::marker { color: var(--ink-soft); }
+.lesson-prose a:not([class]) {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.lesson-prose a:not([class]):hover { text-decoration-thickness: 2px; }
+.lesson-prose strong { font-weight: 700; }
+.lesson-prose > blockquote {
+  border-left: 4px solid var(--line-strong);
+  padding-left: 1em;
+  color: var(--ink-soft);
+}
+/* Components (Check, Scenario, Figure...) get more room than paragraphs. */
+.lesson-prose > .lesson-block,
+.lesson-prose > .lesson-block + * { margin-top: 2em; }
+.lesson-block + .lesson-block { margin-top: 1.25em; }
+
+/* Tables (facilitator guides). Cells wrap so a 3-column table fits a phone. */
+.lesson-prose > table { width: 100%; border-collapse: collapse; font-size: var(--text-ui); }
+.lesson-prose th, .lesson-prose td { border-bottom: 1px solid var(--line); padding: 0.6em 0.75em 0.6em 0; text-align: left; vertical-align: top; }
+.lesson-prose th { font-weight: 700; color: var(--ink); border-bottom-color: var(--line-strong); }
+
+/* Sources: Markdown footnotes ([^name]) render as numbered links and a list at the end of the step. */
+/* Underlined, not just colored, so they stand out from the text without relying on color (WCAG 1.4.1). */
+.lesson-prose a[data-footnote-ref] {
+  padding: 0 0.15em;
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.lesson-prose > .footnotes {
+  margin-top: 3em;
+  border-top: 1px solid var(--line);
+  padding-top: 1.25em;
+  font-size: var(--text-small);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+/* The processor marks this heading sr-only; show it, since "Sources" is useful to everyone. */
+.lesson-prose .footnotes > #footnote-label {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+  font-family: var(--font-sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lesson-prose .footnotes ol { list-style: decimal; margin-top: 0.75em; padding-left: 1.4em; }
+.lesson-prose .footnotes li + li { margin-top: 0.6em; }
+.lesson-prose .footnotes a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.lesson-prose .footnotes .data-footnote-backref { margin-left: 0.25em; }
+
+/* Plain-text pages (DocLayout: privacy, terms, accessibility). */
+.doc-prose > h2 { padding-top: 1.25em; border-top: 1px solid var(--line); }
+.doc-prose > h2:first-of-type { border-top: 0; padding-top: 0; }
+.doc-prose > table { font-size: var(--text-small); }
+.doc-prose td:first-child { font-weight: 700; }
+.review-note {
+  border-radius: 4px;
+  background: var(--warning-soft);
+  box-shadow: inset 0 -2px 0 var(--warning);
+  padding: 0 0.25em;
+  color: var(--ink);
+  font-size: 0.92em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

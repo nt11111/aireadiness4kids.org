@@ -1,0 +1,21 @@
+---
+// <Discuss>: prompts for a class or family. Collapsed in the lesson; the facilitator guide passes open.
+import { MessagesSquare } from "lucide-react";
+interface Props { title?: string; open?: boolean }
+const { title = "Talk about it", open = false } = Astro.props;
+---
+
+<details class="lesson-block group rounded-xl border border-line bg-surface shadow-1" open={open}>
+  <summary class="flex min-h-[var(--tap)] cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
+    <MessagesSquare aria-hidden="true" className="size-5 shrink-0 text-brand" />
+    <span class="flex-1">
+      <span class="block font-bold text-ink">{title}</span>
+      <span class="block text-small text-ink-soft">For a class, a club, or around the dinner table</span>
+    </span>
+    <span aria-hidden="true" class="text-small font-bold text-brand group-open:hidden">Show</span>
+    <span aria-hidden="true" class="hidden text-small font-bold text-brand group-open:inline">Hide</span>
+  </summary>
+  <div class="discuss-body border-t border-line px-4 pb-5 pt-4 sm:px-5 [&_li+li]:mt-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
+    <slot />
+  </div>
+</details>

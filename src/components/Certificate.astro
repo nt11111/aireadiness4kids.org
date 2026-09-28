@@ -1,0 +1,53 @@
+---
+// The certificate itself (brief section 7): the module, the date, the ARK wordmark, and the learner's
+// display name (a child's is the nickname their parent chose). 13+ certificates add a verify line.
+// Sized with container units, so it keeps its landscape letter proportions on a phone and on paper.
+import { Logo } from "../app/components/site/Logo";
+import { cn } from "../app/components/ui/utils";
+import { trackStyle } from "../app/lib/tracks";
+
+interface Props {
+  name: string;
+  moduleTitle: string;
+  trackId: string;
+  trackTitle: string;
+  grades: string;
+  date: string;
+  /** Printed as "Verify at aireadiness4kids.org/verify/…" (13+ learners only). */
+  verifyUrl?: URL | null;
+  class?: string;
+}
+const { name, moduleTitle, trackId, trackTitle, grades, date, verifyUrl, class: className } = Astro.props;
+const s = trackStyle(trackId);
+const verifyText = verifyUrl ? `${verifyUrl.host}${verifyUrl.pathname}` : null;
+---
+
+<div class={cn("certificate @container w-full", className)} data-certificate>
+  <div class="relative aspect-[11/8.5] w-full overflow-hidden rounded-lg border border-line bg-white text-ink shadow-2 print:rounded-none print:border-0">
+    <div class={cn("absolute inset-x-0 top-0 h-[1.6cqw] print:hidden", s.bar)}></div>
+    <div class="absolute inset-[3.2cqw] rounded-[1cqw] border-[0.3cqw] border-brand/80">
+      <div class="absolute inset-[0.9cqw] rounded-[0.6cqw] border-[0.12cqw] border-accent"></div>
+    </div>
+    <div class="relative flex h-full flex-col items-center justify-between px-[9cqw] py-[7cqw] text-center">
+      <div class="text-[1.9cqw]"><Logo fluid /></div>
+      <div class="flex flex-col items-center">
+        <p class="text-[1.5cqw] font-bold uppercase tracking-[0.3em] text-brand">Certificate of completion</p>
+        <p class="mt-[2.4cqw] text-[1.9cqw] text-ink-soft">This certifies that</p>
+        <p class="mt-[0.8cqw] max-w-full break-words font-display text-[5.6cqw] font-semibold leading-tight text-ink" data-cert-name>{name}</p>
+        <div class="mt-[1.4cqw] h-[0.2cqw] w-[30cqw] bg-accent"></div>
+        <p class="mt-[1.8cqw] text-[1.9cqw] text-ink-soft">completed the module</p>
+        <p class="mt-[0.6cqw] font-display text-[3.4cqw] font-semibold leading-tight text-ink" data-cert-module>{moduleTitle}</p>
+        <p class="mt-[1cqw] text-[1.6cqw] text-ink-soft">{trackTitle} · Grades {grades}</p>
+      </div>
+      <div class="flex w-full items-end justify-between gap-[3cqw] text-left text-[1.4cqw] text-ink-soft">
+        <p><span class="block font-bold uppercase tracking-[0.14em] text-ink">Date</span>{date}</p>
+        <p class="max-w-[42cqw] text-center">ARK · AI Readiness for Kids<span class="block">Free AI literacy lessons for K-12</span></p>
+        {verifyText ? (
+          <p class="text-right"><span class="block font-bold uppercase tracking-[0.14em] text-ink">Verify at</span><span class="break-all" data-cert-verify>{verifyText}</span></p>
+        ) : (
+          <p class="text-right"><span class="block font-bold uppercase tracking-[0.14em] text-ink">Issued by</span>ARK</p>
+        )}
+      </div>
+    </div>
+  </div>
+</div>

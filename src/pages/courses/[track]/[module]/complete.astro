@@ -1,0 +1,122 @@
+---
+// Module completion (brief section 7): a calm celebration, what the learner covered, the optional
+// post-check with the before/after comparison, the certificate, and a next-module suggestion.
+// Server-rendered from the active learner's saved progress; signed-in only (src/lib/gate.ts).
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../../../components/Breadcrumbs.astro";
+import { Celebrate, CertificatePanel, PostCheck } from "../../../../app/components/lesson/Completion";
+import { Badge } from "../../../../app/components/ui/badge";
+import { buttonVariants } from "../../../../app/components/ui/button";
+import { ProgressRing } from "../../../../app/components/ui/progress-ring";
+import { trackStyle, type TrackId } from "../../../../app/lib/tracks";
+import { cn } from "../../../../app/components/ui/utils";
+import { getProfile } from "../../../../lib/accounts";
+import { activeLearner, learnerProgress } from "../../../../lib/learning";
+import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
+import { ArrowRight, Check } from "lucide-react";
+export const prerender = false;
+
+const courses = await getCourses();
+const courseIndex = courses.findIndex((c) => c.track.id === Astro.params.track);
+const course = courses[courseIndex];
+const modIndex = course ? course.modules.findIndex((m) => moduleSlug(m) === Astro.params.module) : -1;
+const mod = course?.modules[modIndex];
+const steps = course && mod ? getModuleSteps(course, mod) : [];
+// Stub modules have no steps, so there is nothing to finish yet.
+if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+
+const here = Astro.url.pathname;
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent(here)}`, 302);
+const profile = await getProfile(user.uid);
+if (!profile) return Astro.redirect("/signup", 302);
+const { learner, learners } = await activeLearner(user.uid, Astro.cookies);
+if (!learner) return Astro.redirect(`/account/add-learner?next=${encodeURIComponent(here)}`, 302);
+
+const p = (await learnerProgress(user.uid, learner.id))[mod.id];
+const done = new Set(p?.steps ?? []);
+const finished = Boolean(p?.completedAt);
+const doneCount = steps.filter((x) => done.has(x.slug)).length;
+const nextStep = steps.find((x) => !done.has(x.slug));
+const child = profile.accountType === "parent";
+const who = child ? learner.nickname : "You";
+const { title, objectives, topics, post_check, pre_check } = mod.data;
+const learned = objectives.length ? objectives : topics;
+const checkQuestions = post_check.length ? post_check : pre_check;
+
+// Next up: the next module in this course, or the first module of the next course.
+const nextCourse = courses[courseIndex + 1];
+const nextMod = course.modules[modIndex + 1] ?? nextCourse?.modules[0];
+const nextModCourse = course.modules[modIndex + 1] ? course : nextCourse;
+---
+
+<BaseLayout title={`${finished ? "Module complete" : "Almost there"}: ${title} | ARK`} noindex>
+  <section class="border-b border-line bg-surface-2 px-4 pb-10 pt-28 sm:px-6 lg:pb-12 lg:pt-36">
+    <div class="mx-auto max-w-site">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses", href: "/courses" }, { label: course.track.data.title, href: trackHref(course.track) }, { label: title, href: moduleHref(mod) }, { label: finished ? "Complete" : "Almost there" }]} class="text-ink-soft" />
+      <div class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+        <ProgressRing done={doneCount} total={steps.length} label={`${title}: steps done`} track={course.track.id as TrackId} size="lg" />
+        <div class="min-w-0">
+          <Badge variant={course.track.id as TrackId}>{course.track.data.title} · Grades {course.track.data.grades}</Badge>
+          <h1 class="mt-3 text-display-lg text-ink" data-complete={finished ? "yes" : "no"}>
+            {finished ? `${child ? `${who} finished` : "You finished"} ${title}` : `Almost there: ${title}`}
+          </h1>
+          <p class="mt-3 max-w-reading text-lesson text-ink-soft">
+            {finished
+              ? "Every step is done. Nice work taking the time to think this through."
+              : `${doneCount} of ${steps.length} steps done. Finish the rest to complete the module and get ${child ? "a" : "your"} certificate.`}
+          </p>
+          {!finished && nextStep && (
+            <a href={nextStep.href} class={cn(buttonVariants({ size: "lg" }), "mt-6")}>Continue with step {nextStep.n} <ArrowRight aria-hidden="true" /></a>
+          )}
+        </div>
+      </div>
+      {child && learners.length > 1 && (
+        <p class="mt-6 text-small text-ink-soft">Showing {learner.nickname}'s progress. <a href="/my-learning" class="font-bold text-brand underline underline-offset-4">Switch profiles on My learning</a></p>
+      )}
+    </div>
+  </section>
+
+  {finished && (
+    <div class="px-4 py-12 sm:px-6 lg:py-16">
+      <Celebrate client:idle />
+      <div class="mx-auto grid max-w-site gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+        <div class="min-w-0 space-y-8">
+          <section aria-labelledby="learned-h">
+            <h2 id="learned-h" class="text-display-sm text-ink">What you learned</h2>
+            <ul class="mt-5 space-y-3">
+              {learned.map((item) => (
+                <li class="flex gap-3 text-lesson text-ink"><Check aria-hidden="true" className="mt-1 size-5 shrink-0 text-brand" />{item}</li>
+              ))}
+            </ul>
+          </section>
+          {checkQuestions.length > 0 && (
+            <div><PostCheck client:load moduleId={mod.id} learnerId={learner.id} questions={checkQuestions} pre={p?.pre ?? null} after={p?.post ?? null} /></div>
+          )}
+        </div>
+
+        <div class="min-w-0 space-y-8">
+          <!-- Islands are display: contents, so each sits in a div for the column's spacing to apply. -->
+          <div><CertificatePanel client:load learnerId={learner.id} moduleId={mod.id} certificate={p?.certificateId ? { id: p.certificateId, public: !child } : null} child={child} nickname={learner.nickname} /></div>
+
+          {nextMod && nextModCourse && (
+            <section aria-labelledby="next-h" class="overflow-hidden rounded-xl border border-line bg-surface shadow-1">
+              <div class={cn("h-2", trackStyle(nextModCourse.track.id).bar)}></div>
+              <div class="p-5 sm:p-6">
+                <h2 id="next-h" class="text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Up next</h2>
+                <p class="mt-2 text-small font-bold text-ink-soft">{nextModCourse.track.data.title} · Module {nextMod.data.order}</p>
+                <p class="mt-1 font-display text-title font-semibold text-ink">{nextMod.data.title}</p>
+                <p class="mt-2 text-ui text-ink-soft">{nextMod.data.summary}</p>
+                <a href={moduleHref(nextMod)} class={cn(buttonVariants(), "mt-5")}>See the module<span class="sr-only">: {nextMod.data.title}</span> <ArrowRight aria-hidden="true" /></a>
+              </div>
+            </section>
+          )}
+          <div class="flex flex-wrap gap-3">
+            <a href="/my-learning" class={buttonVariants({ variant: "outline" })}>My learning</a>
+            <a href={moduleHref(mod)} class={buttonVariants({ variant: "ghost" })}>Back to the module</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+</BaseLayout>

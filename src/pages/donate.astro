@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { PageHero } from "../app/components/site/PageHero";
+import { DonatePanel } from "../app/sections/Donate";
+export const prerender = true;
+---
+
+<BaseLayout title="Donate | ARK · AI Readiness for Kids" description="Support ARK and keep AI literacy free for every K-12 learner.">
+  <PageHero
+    crumb="Donate"
+    eyebrow="Support ARK"
+    title="Keep AI literacy free for every kid."
+    lead="All curriculum and core programs are free to students and schools, and they always will be. Your gift funds curriculum development, free workshops, and facilitator training in the communities that need it most."
+  />
+  <section class="px-4 py-12 sm:px-6 lg:py-16">
+    <div class="max-w-site mx-auto">
+      <DonatePanel client:visible />
+    </div>
+  </section>
+</BaseLayout>

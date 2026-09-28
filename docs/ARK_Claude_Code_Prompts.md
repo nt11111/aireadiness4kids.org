@@ -64,7 +64,7 @@ Create a **new** Firebase project just for ARK. Don't reuse your other project. 
 4. **Project settings → Your apps → Web app:** copy the config values. These are public-safe.
 5. **Project settings → Service accounts → Generate new private key.** This file is a secret. Don't put it in the repo, email it, or paste it into chat. It only goes into Netlify's environment variables.
 6. **App Check:** register the web app with reCAPTCHA Enterprise.
-7. **Netlify:** connect the repo and add the env vars that `docs/SETUP_FIREBASE.md` lists.
+7. **Netlify (hosting):** connect the repo and add the env vars that `docs/SETUP_FIREBASE.md` lists. Your domain stays in **Cloudflare**; nothing changes there until the Phase 6 cutover.
 
 Phase 3 writes `docs/SETUP_FIREBASE.md` with exact click-paths and env var names, so you can also run Phase 3 first and follow that guide.
 
@@ -74,6 +74,7 @@ Phase 3 writes `docs/SETUP_FIREBASE.md` with exact click-paths and env var names
 Read docs/ARK_UI_BUILD_BRIEF.md (especially sections 7 and 8) and CLAUDE.md. Build Phase 3 only. Security matters more than speed here, so go carefully and explain your choices.
 
 - Write docs/SETUP_FIREBASE.md: a step-by-step guide a high schooler can follow for the new ARK Firebase project, App Check, API key restrictions, authorized domains, and Netlify env vars. Say exactly which values are public-safe and which are secret.
+- Use exactly these env var names (they are already set in Netlify): PUBLIC_FIREBASE_API_KEY, PUBLIC_FIREBASE_AUTH_DOMAIN, PUBLIC_FIREBASE_PROJECT_ID, PUBLIC_FIREBASE_APP_ID, PUBLIC_FIREBASE_MESSAGING_SENDER_ID, PUBLIC_RECAPTCHA_SITE_KEY (all public-safe), and FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY (secret, server only; init firebase-admin with cert({ projectId, clientEmail, privateKey }), and convert literal \n in the private key to real newlines). Keep the total size of all env vars under 4 KB (Netlify Functions limit). Add a .env.example with these names and empty values, and make sure .env is gitignored.
 - Add firebase (client) and firebase-admin (server). Create src/lib/firebase-client.ts (inMemoryPersistence) and src/lib/firebase-admin.ts (server only; import it only from server code).
 - Implement the session-cookie flow in 8.1: /api/session (create), /api/signout (clear + revoke), and Origin checks on every POST route.
 - Add firestore.rules with deny-all client access, and firebase.json for the emulators.
@@ -136,7 +137,7 @@ Read docs/ARK_UI_BUILD_BRIEF.md and CLAUDE.md. Build Phase 6 only.
 - Security review: go through every item in section 8 and report pass/fail with evidence. Re-run all auth and access tests on the emulator. Run npm audit. Add SECURITY.md.
 - Performance pass: check JS shipped per page type, image sizes, and font subsets. Report the numbers.
 - Full a11y audit across every page type, including sign-up and sign-in, fixing everything serious or critical.
-- Cutover prep: add netlify.toml, replace .github/workflows/deploy.yml with a CI workflow that only runs build + tests, and write DEPLOY.md with the exact steps to point aireadiness4kids.org at Netlify (DNS changes, removing the GitHub Pages custom domain). Don't merge to main. I'll do the cutover after review.
+- Cutover prep: add netlify.toml, replace .github/workflows/deploy.yml with a CI workflow that only runs build + tests, and write DEPLOY.md with the exact steps to point aireadiness4kids.org at Netlify. The domain and DNS are managed in Cloudflare and stay there. List the exact Cloudflare DNS records to remove (the current GitHub Pages ones) and add (Netlify's apex and www records, set to DNS only / grey cloud so Netlify can issue SSL), how to add the custom domain in Netlify, how to remove it from GitHub Pages, and how to roll back. Don't merge to main. I'll do the cutover after review.
 - Do a final visual consistency sweep.
 
 Report a before/after summary, the security checklist results, and the open questions from section 11 that are still unanswered. Do not merge to main.

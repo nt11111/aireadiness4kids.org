@@ -1,78 +1,84 @@
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
+import { buttonVariants } from "../ui/button";
+import { cn } from "../ui/utils";
+
+/* Building blocks for the organization pages (About, Workshops, Get involved, Donate, Contact).
+   Same look as the course pages: paper background, Fraunces headings at 600, flat cards with a
+   hairline border and the lightest shadow, and one clear action per section. */
 
 /* ---------- layout ---------- */
-export const Section = ({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) => (
-  <section id={id} className={`py-24 lg:py-32 px-6 scroll-mt-20 ${className}`}>
-    <div className="max-w-7xl mx-auto">{children}</div>
+export const Section = ({ children, className = "", id, tint = false, labelledBy }: { children: ReactNode; className?: string; id?: string; tint?: boolean; labelledBy?: string }) => (
+  <section id={id} aria-labelledby={labelledBy} className={cn("px-4 py-16 sm:px-6 lg:py-24", tint && "bg-surface-2", className)}>
+    <div className="mx-auto max-w-site">{children}</div>
   </section>
 );
 
-export const Eyebrow = ({ children, light = false }: { children: ReactNode; light?: boolean }) => (
-  <span className={`inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.2em] font-bold ${light ? "text-glow" : "text-accent"}`}>
-    <span className={`w-6 h-[2px] rounded ${light ? "bg-glow" : "bg-accent"}`} />
-    {children}
-  </span>
+export const Eyebrow = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <p className={cn("text-small font-bold uppercase tracking-[0.14em] text-brand", className)}>{children}</p>
 );
 
-export const H2 = ({ children, light = false, className = "" }: { children: ReactNode; light?: boolean; className?: string }) => (
-  <h2 className={`font-display text-4xl lg:text-5xl font-black leading-[1.06] mt-4 ${light ? "text-white" : "text-primary"} ${className}`}>{children}</h2>
+export const H2 = ({ children, id, className = "" }: { children: ReactNode; id?: string; className?: string }) => (
+  <h2 id={id} className={cn("mt-2 text-display-md text-ink", className)}>{children}</h2>
 );
 
-export const Lead = ({ children, light = false, className = "" }: { children: ReactNode; light?: boolean; className?: string }) => (
-  <p className={`text-lg leading-relaxed mt-5 ${light ? "text-white/65" : "text-muted-foreground"} ${className}`}>{children}</p>
+export const Lead = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <p className={cn("mt-4 max-w-reading text-lesson text-ink-soft", className)}>{children}</p>
 );
 
-export const SectionHead = ({ eyebrow, title, lead, light = false, center = false }: { eyebrow: string; title: ReactNode; lead?: ReactNode; light?: boolean; center?: boolean }) => (
-  <div className={`mb-14 reveal ${center ? "text-center max-w-3xl mx-auto" : "max-w-2xl"}`}>
-    <Eyebrow light={light}>{eyebrow}</Eyebrow>
-    <H2 light={light}>{title}</H2>
-    {lead && <Lead light={light}>{lead}</Lead>}
+export const SectionHead = ({ eyebrow, title, lead, id, center = false }: { eyebrow?: string; title: ReactNode; lead?: ReactNode; id?: string; center?: boolean }) => (
+  <div className={cn("mb-10", center ? "mx-auto max-w-3xl text-center [&_p]:mx-auto" : "max-w-3xl")}>
+    {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+    <H2 id={id}>{title}</H2>
+    {lead && <Lead>{lead}</Lead>}
   </div>
 );
 
-/* ---------- buttons ---------- */
-type BtnProps = { to: string; children: ReactNode; variant?: "accent" | "primary" | "ghost" | "ghost-dark" | "white"; size?: "md" | "lg"; arrow?: boolean; className?: string };
-export const Btn = ({ to, children, variant = "accent", size = "md", arrow = false, className = "" }: BtnProps) => {
-  const base = "sheen inline-flex items-center justify-center gap-2 rounded-full font-bold transition-all duration-200 hover:scale-[1.04] active:scale-95";
-  const sz = size === "lg" ? "px-8 py-4 text-[15px]" : "px-6 py-3 text-sm";
-  const v = {
-    accent: "bg-accent text-white hover:bg-accent/90 shadow-lg shadow-accent/25",
-    primary: "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20",
-    white: "bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10",
-    ghost: "border-[1.5px] border-primary/20 text-primary hover:border-primary hover:bg-primary/5",
-    "ghost-dark": "border-[1.5px] border-white/30 text-white hover:bg-white/10 hover:border-white/50",
-  }[variant];
-  const external = to.startsWith("http") || to.startsWith("mailto:");
-  const cls = `${base} ${sz} ${v} ${className}`;
-  return external ? <a href={to} className={cls}>{children}{arrow && <ArrowRight size={16} />}</a> : <Link to={to} className={cls}>{children}{arrow && <ArrowRight size={16} />}</Link>;
-};
+/* ---------- buttons: links styled by the design-system buttonVariants ---------- */
+type BtnProps = { to: string; children: ReactNode; variant?: "primary" | "outline"; size?: "md" | "lg"; arrow?: boolean; className?: string };
+export const Btn = ({ to, children, variant = "primary", size = "md", arrow = false, className = "" }: BtnProps) => (
+  <a href={to} className={cn(buttonVariants({ variant: variant === "primary" ? "default" : "outline", size: size === "lg" ? "lg" : "default" }), className)}>
+    {children}
+    {arrow && <ArrowRight aria-hidden="true" />}
+  </a>
+);
 
 /* ---------- card ---------- */
-export const Card = ({ children, className = "", hover = true }: { children: ReactNode; className?: string; hover?: boolean }) => (
-  <div className={`bg-card rounded-2xl border border-border p-8 ${hover ? "transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_60px_rgba(13,31,51,.12)] hover:border-accent/30" : ""} ${className}`}>{children}</div>
+export const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
+  <div className={cn("rounded-xl border border-line bg-surface p-6 shadow-1 sm:p-8", className)}>{children}</div>
 );
 
+/** A small icon in a soft green circle, above a card's heading. */
 export const IconBox = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 text-accent grid place-items-center mb-5 ${className}`}>{children}</div>
+  <div className={cn("mb-4 grid size-11 place-items-center rounded-full bg-brand-soft text-brand [&_svg]:size-5", className)}>{children}</div>
 );
 
-/* ---------- CTA band ---------- */
+/** A card heading (Fraunces, title size). */
+export const CardTitle = ({ children, as: Tag = "h3", className = "" }: { children: ReactNode; as?: "h2" | "h3" | "h4"; className?: string }) => (
+  <Tag className={cn("font-display text-title font-semibold text-ink", className)}>{children}</Tag>
+);
+
+/* ---------- closing call to action: the same soft green band as the home page ---------- */
 export const CTABand = ({ title, lead, primary, secondary }: { title: ReactNode; lead: ReactNode; primary: { label: string; to: string }; secondary?: { label: string; to: string } }) => (
-  <section className="px-6 py-12">
-    <div className="relative max-w-7xl mx-auto rounded-[32px] bg-primary overflow-hidden px-8 py-16 lg:px-16 lg:py-20 reveal">
-      <div className="absolute inset-0 circuit-grid opacity-[0.06]" />
-      <div className="absolute -top-32 -right-20 w-[480px] h-[480px] rounded-full bg-accent/20 blur-3xl pointer-events-none" />
-      <img src="/brand/ark-mark-web.png" alt="" aria-hidden className="absolute right-6 -bottom-10 w-56 opacity-[0.14] pointer-events-none select-none hidden md:block" />
-      <div className="relative max-w-2xl">
-        <h2 className="font-display text-4xl lg:text-5xl font-black text-white leading-[1.06]">{title}</h2>
-        <p className="text-white/65 text-lg leading-relaxed mt-5 max-w-xl">{lead}</p>
-        <div className="flex flex-wrap gap-4 mt-9">
-          <Btn to={primary.to} size="lg" arrow>{primary.label}</Btn>
-          {secondary && <Btn to={secondary.to} size="lg" variant="ghost-dark">{secondary.label}</Btn>}
-        </div>
+  <section aria-labelledby="cta-h" className="px-4 py-16 sm:px-6 lg:py-24">
+    <div className="mx-auto flex max-w-site flex-col gap-8 rounded-xl bg-brand-soft px-6 py-10 sm:px-10 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-14">
+      <div className="max-w-2xl">
+        <h2 id="cta-h" className="text-display-md text-ink">{title}</h2>
+        <p className="mt-3 text-lesson text-ink">{lead}</p>
+      </div>
+      <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
+        <Btn to={primary.to} size="lg">{primary.label}</Btn>
+        {secondary && <Btn to={secondary.to} size="lg" variant="outline">{secondary.label}</Btn>}
       </div>
     </div>
   </section>
+);
+
+/** A list of short points with a check mark (lucide's Check is passed in so this file stays icon-agnostic). */
+export const Ticks = ({ items, icon, className = "" }: { items: string[]; icon: ReactNode; className?: string }) => (
+  <ul className={cn("grid gap-2.5", className)}>
+    {items.map((x) => (
+      <li key={x} className="flex gap-3 text-ui text-ink"><span aria-hidden="true" className="mt-0.5 shrink-0 text-brand [&_svg]:size-[1.125rem]">{icon}</span>{x}</li>
+    ))}
+  </ul>
 );

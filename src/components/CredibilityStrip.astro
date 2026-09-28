@@ -1,0 +1,39 @@
+---
+// Reviewer names and partner logos (brief section 7). Renders nothing when there is no
+// real data, and a partner shows a logo only when its file exists (checked in site-data.ts).
+import { partners } from "../lib/site-data";
+import type { Reviewer } from "../app/components/site/ReviewBadge";
+
+interface Props { reviewers: Reviewer[] }
+const { reviewers } = Astro.props;
+const heading = reviewers.length && partners.length ? "Reviewed and supported by" : reviewers.length ? "Modules reviewed by" : "With support from";
+---
+
+{(reviewers.length > 0 || partners.length > 0) && (
+  <section aria-labelledby="credibility-h" data-credibility class="border-y border-line bg-surface px-4 py-12 sm:px-6">
+    <div class="mx-auto max-w-site text-center">
+      <h2 id="credibility-h" class="font-sans text-eyebrow font-bold uppercase tracking-[0.14em] text-ink-soft">{heading}</h2>
+      {reviewers.length > 0 && (
+        <ul class="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
+          {reviewers.map((r) => (
+            <li class="text-ui">
+              <span class="font-bold text-ink">{r.name}</span>
+              {r.credentials && <span class="text-ink-soft">, {r.credentials}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {partners.length > 0 && (
+        <ul class="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          {partners.map((p) => {
+            const mark = p.logo
+              ? <img src={p.logo} alt={p.name} class="h-10 w-auto max-w-[180px] object-contain" loading="lazy" />
+              : <span class="font-display text-title font-semibold text-ink">{p.name}</span>;
+            return <li>{p.url ? <a href={p.url} class="block rounded-sm">{mark}</a> : mark}</li>;
+          })}
+        </ul>
+      )}
+      <a href="/about#reviewers" class="mt-6 inline-block rounded-sm text-small font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">How we review modules</a>
+    </div>
+  </section>
+)}

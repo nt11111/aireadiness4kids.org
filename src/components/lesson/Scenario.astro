@@ -1,0 +1,12 @@
+---
+// <Scenario />: the prompt and choices come from this step's `scenario:` frontmatter (or props).
+import { Scenario as ScenarioIsland } from "../../app/components/lesson/Scenario";
+import type { ScenarioData } from "../../lib/lesson-types";
+
+type Props = Partial<ScenarioData>;
+const lesson = Astro.locals.lesson;
+const data = Astro.props.prompt && Astro.props.options ? (Astro.props as ScenarioData) : lesson?.scenario;
+if (!data) throw new Error("<Scenario />: add scenario: (prompt and options) to this step's frontmatter.");
+---
+
+<div class="lesson-block"><ScenarioIsland client:idle prompt={data.prompt} options={data.options} stepId={lesson?.stepId} /></div>

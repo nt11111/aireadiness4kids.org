@@ -1,0 +1,64 @@
+---
+// /account (brief section 7). Server-rendered and gated in middleware; checked again here.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { ProfileForm } from "../app/components/account/ProfileForm";
+import { LearnersManager } from "../app/components/account/LearnersManager";
+import { DeleteAccount, PasswordLink, SignOutButton } from "../app/components/account/AccountActions";
+import { getProfile, listLearners } from "../lib/accounts";
+export const prerender = false;
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent("/account")}`, 302);
+const profile = await getProfile(user.uid);
+if (!profile) return Astro.redirect("/signup", 302);
+const learners = await listLearners(user.uid);
+const self = learners.find((l) => l.isSelf);
+const children = learners.filter((l) => !l.isSelf).map(({ id, nickname, gradeBand }) => ({ id, nickname, gradeBand }));
+const setup = Astro.url.searchParams.get("setup") === "learners";
+const section = "rounded-xl border border-line bg-surface p-5 shadow-1 sm:p-8";
+---
+
+<BaseLayout title="Your account | ARK · AI Readiness for Kids" noindex>
+  <div class="bg-surface-2 px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto grid max-w-3xl gap-6">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 class="text-display-lg text-ink">Your account</h1>
+          <p class="mt-1 text-ui text-ink-soft [overflow-wrap:anywhere]">{user.email}{profile.accountType === "parent" ? " · Family account" : ""}</p>
+        </div>
+        <SignOutButton client:idle />
+      </div>
+
+      <section aria-labelledby="profile-h" class={section}>
+        <h2 id="profile-h" class="text-display-sm text-ink">Profile</h2>
+        <div class="mt-5"><ProfileForm client:idle displayName={profile.displayName} gradeBand={self?.gradeBand ?? null} accountType={profile.accountType} /></div>
+      </section>
+
+      {profile.accountType === "parent" && (
+        <section id="learners" aria-labelledby="learners-h" class={section}>
+          <h2 id="learners-h" class="text-display-sm text-ink">Learner profiles</h2>
+          <p class="mt-1 text-ui text-ink-soft">One for each child. Kids learn under their own profile; you keep the account.</p>
+          <div class="mt-5"><LearnersManager client:idle initial={children} setup={setup} /></div>
+        </section>
+      )}
+
+      {user.provider === "password" && user.email && (
+        <section aria-labelledby="password-h" class={section}>
+          <h2 id="password-h" class="text-display-sm text-ink">Password</h2>
+          <div class="mt-4"><PasswordLink client:idle email={user.email} /></div>
+        </section>
+      )}
+
+      <section aria-labelledby="data-h" class={section}>
+        <h2 id="data-h" class="text-display-sm text-ink">Your data</h2>
+        <p class="mt-2 text-ui text-ink-soft">A file with everything ARK stores about this account. Reflections you write in lessons are only saved in your own browser, so they aren't in it.</p>
+        <a href="/api/account/export" download class="mt-4 inline-flex h-11 items-center rounded-full border-[1.5px] border-input bg-surface px-6 font-bold text-ink hover:bg-surface-2">Download my data</a>
+      </section>
+
+      <section id="delete" aria-labelledby="delete-h" class={`${section} border-danger/30`}>
+        <h2 id="delete-h" class="text-display-sm text-ink">Delete my account</h2>
+        <div class="mt-4"><DeleteAccount client:idle /></div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

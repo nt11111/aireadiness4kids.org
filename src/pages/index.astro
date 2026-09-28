@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroArt from "../components/HeroArt.astro";
+import TrackCard from "../components/TrackCard.astro";
+import CredibilityStrip from "../components/CredibilityStrip.astro";
+import ImpactNumbers from "../components/ImpactNumbers.astro";
+import { buttonVariants } from "../app/components/ui/button";
+import { ContinueCard } from "../app/components/lesson/CourseProgress";
+import { getCourses, getReviewers, moduleLite } from "../lib/courses";
+import { ArrowRight } from "lucide-react";
+export const prerender = true;
+
+const courses = await getCourses();
+const reviewers = getReviewers(courses);
+const moduleCount = courses.reduce((n, c) => n + c.modules.length, 0);
+// Only modules with lesson steps can be "in progress".
+const started = courses.flatMap((c) => c.modules.map((m) => moduleLite(c, m))).filter((m) => m.steps.length > 0);
+
+const steps = [
+  { title: "Join a workshop, or jump right in", body: "ARK founders and student ambassadors lead workshops for schools and community groups. You can also start on your own, any time." },
+  { title: "Learn at your own speed", body: "Each module is split into short steps with stories, choices, and quick checks. Stop after any step and pick up where you left off." },
+  { title: "Earn a certificate", body: "Create a free account to save your progress. Finish a course and you earn a certificate to show what you learned." },
+];
+---
+
+<BaseLayout title="ARK | Free AI lessons for K-12 learners" description="Free, friendly AI lessons for every K-12 learner, from ARK (AI Readiness for Kids), a nonprofit. Three courses for grades K-5, 6-8, and 9-12. Always free.">
+  <section class="overflow-hidden px-4 pb-16 pt-28 sm:px-6 lg:pb-24 lg:pt-36">
+    <div class="mx-auto grid max-w-site items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+      <div>
+        <p class="text-eyebrow font-bold uppercase tracking-[0.14em] text-brand">AI literacy for grades K-12</p>
+        <h1 class="mt-4 text-display-lg text-ink sm:text-display-xl">Free AI lessons for every <span class="whitespace-nowrap">K-12</span> learner. <span class="text-brand">Always free.</span></h1>
+        <p class="mt-6 max-w-[34rem] text-lesson text-ink-soft">Short, friendly lessons that help kids understand how AI works, use it wisely, and think for themselves. Made by ARK, a nonprofit, for learners, families, and teachers.</p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/courses" class={buttonVariants({ size: "lg" })}>Start learning <ArrowRight aria-hidden="true" /></a>
+          <a href="/workshops" class={buttonVariants({ variant: "outline", size: "lg" })}>Bring ARK to your school</a>
+        </div>
+        <p class="mt-6 text-small text-ink-soft">{courses.length} courses · {moduleCount} modules · Browse without an account</p>
+      </div>
+      <HeroArt class="mx-auto w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[500px]" />
+    </div>
+  </section>
+
+  <!-- Signed-in learners with progress only (brief section 7); renders nothing for everyone else. -->
+  <ContinueCard client:idle modules={started} />
+
+  <section aria-labelledby="levels-h" class="px-4 pb-16 sm:px-6 lg:pb-24">
+    <div class="mx-auto max-w-site">
+      <h2 id="levels-h" class="text-display-md text-ink">Pick your level</h2>
+      <p class="mt-3 max-w-reading text-lesson text-ink-soft">One course for each grade band. Modules stand on their own, so a class or family can start with any of them.</p>
+      <ul class="mt-10 grid gap-6 lg:grid-cols-3">
+        {courses.map((course) => <li><TrackCard course={course} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="how-h" class="bg-surface-2 px-4 py-16 sm:px-6 lg:py-24">
+    <div class="mx-auto max-w-site">
+      <h2 id="how-h" class="text-display-md text-ink">How it works</h2>
+      <ol class="mt-10 grid gap-4 sm:gap-6 lg:grid-cols-3">
+        {steps.map((s, i) => (
+          <li class="flex gap-5 rounded-xl bg-surface p-6 shadow-1 sm:p-8 lg:block">
+            <span class="grid size-11 shrink-0 place-items-center rounded-full bg-brand-soft font-display text-title font-semibold text-brand" aria-hidden="true">{i + 1}</span>
+            <div>
+            <h3 class="mt-2 text-title text-ink lg:mt-5"><span class="sr-only">Step {i + 1}: </span>{s.title}</h3>
+            <p class="mt-2 text-ui text-ink-soft">{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <CredibilityStrip reviewers={reviewers} />
+  <ImpactNumbers />
+
+  <section aria-labelledby="school-h" class="px-4 py-16 sm:px-6 lg:py-24">
+    <div class="mx-auto flex max-w-site flex-col gap-8 rounded-xl bg-brand-soft px-6 py-10 sm:px-10 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-14">
+      <div class="max-w-2xl">
+        <h2 id="school-h" class="text-display-md text-ink">Bring ARK to your school or group</h2>
+        <p class="mt-3 text-lesson text-ink">We lead hands-on workshops for classrooms, clubs, libraries, and parent groups, then leave you with free lessons to keep going.</p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row lg:shrink-0">
+        <a href="/workshops" class={buttonVariants({ size: "lg" })}>Request a workshop</a>
+        <a href="/courses" class={buttonVariants({ variant: "outline", size: "lg" })}>Browse courses</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

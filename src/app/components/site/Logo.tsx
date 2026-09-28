@@ -1,28 +1,38 @@
-import { Link } from "react-router-dom";
+import type { CSSProperties } from "react";
+import { cn } from "../ui/utils";
 
-export function ARKMark({ className = "", size = 40 }: { className?: string; size?: number }) {
+/** The circuit-elephant mark. Brief section 3: use it at small sizes only. */
+export function ARKMark({ size = 28, decorative = false, className, style }: { size?: number; decorative?: boolean; className?: string; style?: CSSProperties }) {
   return (
     <img
-      src="/brand/ark-mark-web.png"
-      alt="ARK circuit elephant logo"
+      src="/brand/ark-mark-128.png"
+      alt={decorative ? "" : "ARK"}
       width={size}
-      height={size}
-      className={`object-contain select-none ${className}`}
+      height={Math.round(size * 0.77)}
+      className={cn("shrink-0 select-none object-contain", className)}
+      style={style}
       draggable={false}
     />
   );
 }
 
-export function Brand({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
+/**
+ * ARK wordmark: "ARK" in Fraunces with "AIReadiness4Kids" in small caps beneath.
+ * The single place to swap the logo (brief section 3).
+ * fluid: sized in em, so it scales with its parent's font size (the certificate sets that in
+ * container units, so the wordmark keeps its place on a phone and on paper).
+ */
+export function Logo({ tone = "dark", showMark = true, fluid = false, className }: { tone?: "dark" | "light"; showMark?: boolean; fluid?: boolean; className?: string }) {
+  const light = tone === "light";
   return (
-    <Link to="/" className="group flex items-center gap-3" aria-label="ARK home">
-      <ARKMark size={compact ? 36 : 44} className="transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-105 drop-shadow-[0_4px_10px_rgba(13,31,51,.25)]" />
+    <span className={cn("inline-flex items-center", fluid ? "gap-[0.625em]" : "gap-2.5", className)}>
+      {showMark && <ARKMark size={30} decorative style={fluid ? { width: "1.875em", height: "auto" } : undefined} />}
       <span className="flex flex-col leading-none">
-        <span className={`font-display text-xl font-black tracking-tight ${light ? "text-white" : "text-primary"}`}>ARK</span>
-        <span className={`text-[10px] font-mono uppercase tracking-[0.18em] mt-1 ${light ? "text-glow/80" : "text-accent"}`}>
-          AI Readiness for Kids
+        <span className={cn("font-display font-semibold tracking-tight", fluid ? "text-[1.625em]" : "text-[1.625rem]", light ? "text-white" : "text-ink")}>ARK</span>
+        <span className={cn("font-bold tracking-[0.04em] [font-variant-caps:small-caps]", fluid ? "mt-[0.125em] text-[0.8125em]" : "mt-0.5 text-[0.8125rem]", light ? "text-glow" : "text-brand")}>
+          AIReadiness4Kids
         </span>
       </span>
-    </Link>
+    </span>
   );
 }

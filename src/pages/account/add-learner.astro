@@ -1,0 +1,26 @@
+---
+// "Add your first learner" (Phase 4 follow-up). Progress is saved to a learner profile, so a parent
+// with none is sent here from a lesson or My learning instead of learning with nowhere to save.
+import AuthShell from "../../components/AuthShell.astro";
+import { FirstLearner } from "../../app/components/account/LearnersManager";
+import { getProfile, listLearners } from "../../lib/accounts";
+import { safeNext } from "../../lib/safe-next";
+export const prerender = false;
+
+const user = Astro.locals.user;
+const next = safeNext(Astro.url.searchParams.get("next"));
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname + Astro.url.search)}`, 302);
+const profile = await getProfile(user.uid);
+if (!profile) return Astro.redirect("/signup", 302);
+// Only parents without a learner profile belong here; everyone else goes on to where they were headed.
+if (profile.accountType !== "parent" || (await listLearners(user.uid)).length > 0) return Astro.redirect(next, 302);
+---
+
+<AuthShell
+  title="Add your first learner | ARK · AI Readiness for Kids"
+  heading="Add your first learner"
+  lead="ARK saves progress to a learner profile, like profiles on a streaming service. Add one for the child who'll use this lesson. It only needs a nickname and a grade, never an email or photo."
+>
+  <FirstLearner client:load next={next} />
+  <p class="mt-6 text-small text-ink-soft">You can add more children, or change these later, on your <a href="/account#learners" class="font-bold text-brand underline underline-offset-4">account page</a>.</p>
+</AuthShell>

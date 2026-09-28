@@ -1,0 +1,159 @@
+---
+// Presenter mode (brief section 7): /present/<track>/<module>?src=<workshop>. Facilitators and admins
+// only (middleware, and again below). One step per screen in large type, arrow keys to move, and QR
+// codes that send the room to the open workshop checks (/check/...) with the presenter's ?src= tag,
+// so answers count toward that workshop.
+import { render } from "astro:content";
+import PresentLayout from "../../../layouts/PresentLayout.astro";
+import { presentComponents } from "../../../components/present/present-components";
+import { ARKMark } from "../../../app/components/site/Logo";
+import { ReviewBadge } from "../../../app/components/site/ReviewBadge";
+import { trackStyle } from "../../../app/lib/tracks";
+import { cn } from "../../../app/components/ui/utils";
+import { getCourses, getModuleSteps, moduleHref, moduleSlug } from "../../../lib/courses";
+import { STEP_LABEL } from "../../../lib/lesson-types";
+import { qrSvg } from "../../../lib/qr";
+import { ArrowLeft, ArrowRight, Expand, X } from "lucide-react";
+export const prerender = false;
+
+const role = Astro.locals.user?.role;
+if (role !== "facilitator" && role !== "admin") return Astro.rewrite("/forbidden");
+
+const courses = await getCourses();
+const course = courses.find((c) => c.track.id === Astro.params.track);
+const mod = course?.modules.find((m) => moduleSlug(m) === Astro.params.module);
+const steps = course && mod ? getModuleSteps(course, mod) : [];
+if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+
+// The workshop tag goes into every QR code. Same format the rest of the site accepts (guest.ts).
+const rawSrc = (Astro.url.searchParams.get("src") ?? "").trim().toLowerCase();
+const src = /^[a-z0-9-]{1,40}$/.test(rawSrc) ? rawSrc : null;
+const tagged = (path: string) => {
+  const url = new URL(path, Astro.url.origin);
+  if (src) url.searchParams.set("src", src);
+  return url;
+};
+const shown = (url: URL) => `${url.host}${url.pathname}`;
+const slug = moduleSlug(mod);
+const preUrl = mod.data.pre_check.length ? tagged(`/check/${slug}/pre`) : null;
+const postUrl = mod.data.post_check.length ? tagged(`/check/${slug}/post`) : null;
+const moduleUrl = tagged(moduleHref(mod));
+const [preQr, postQr, moduleQr] = await Promise.all([
+  preUrl ? qrSvg(preUrl.href, "QR code for the before-the-lesson quick check") : null,
+  postUrl ? qrSvg(postUrl.href, "QR code for the quick check") : null,
+  qrSvg(moduleUrl.href, `QR code for the ${mod.data.title} module`),
+]);
+
+Astro.locals.lesson = { stepId: `${mod.id}/present`, moduleId: mod.id, track: course.track.id, vocabulary: mod.data.vocabulary, questions: [] };
+const slides = await Promise.all(
+  steps.map(async (step) => ({ step, Content: (await render(step.entry)).Content, components: presentComponents(step.entry.data) })),
+);
+const total = slides.length + 2;
+const s = trackStyle(course.track.id);
+const here = Astro.url.pathname;
+---
+
+<PresentLayout title={`Presenting: ${mod.data.title} | ARK`}>
+  <main data-present data-track={course.track.id} data-total={total} class={cn(course.track.id === "explorers" && "lesson-explorers")}>
+    <p class="sr-only" aria-live="polite" data-present-status></p>
+    <!-- Each slide's title is its h1: with JavaScript only the current slide is shown, so there's one at a time. -->
+
+    <!-- Title slide -->
+    <section id="slide-1" data-slide data-current aria-labelledby="slide-1-h" class="flex min-h-dvh flex-col px-6 pb-28 pt-8 sm:px-10">
+      <div class={cn("h-2 w-full max-w-6xl self-center rounded-full", s.bar)}></div>
+      <div class="mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 py-10 md:grid-cols-[minmax(0,1fr)_auto]">
+        <div class="min-w-0">
+          <p class="flex items-center gap-3 text-ui font-bold text-ink-soft"><ARKMark size={40} decorative />{course.track.data.title} · Grades {course.track.data.grades}</p>
+          <h1 id="slide-1-h" class="mt-4 text-display-lg text-ink sm:text-[3.4rem] sm:leading-tight">{mod.data.title}</h1>
+          <p class="mt-4 max-w-reading text-lesson text-ink-soft">{mod.data.summary}</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3 text-ui text-ink-soft">
+            <span>{steps.length} steps</span><ReviewBadge status={mod.data.status} />
+          </div>
+        </div>
+        {preQr && preUrl && (
+          <figure class="w-full max-w-[18rem] justify-self-center rounded-xl border border-line bg-white p-4 text-center shadow-1" data-qr="pre" data-qr-url={preUrl.href}>
+            <div class="aspect-square w-full" set:html={preQr} />
+            <figcaption class="mt-2 text-ui font-bold text-ink">Before we start: scan for {mod.data.pre_check.length} quick questions</figcaption>
+            <p class="mt-1 break-all text-small text-ink-soft">{shown(preUrl)}</p>
+          </figure>
+        )}
+      </div>
+      <form method="get" action={here} class="mx-auto flex w-full max-w-6xl flex-wrap items-end gap-3 border-t border-line pt-4 text-small" data-present-setup>
+        <label class="grid gap-1">
+          <span class="font-bold text-ink">Workshop tag for the QR codes</span>
+          <input name="src" value={src ?? ""} pattern="[a-z0-9\-]{1,40}" maxlength="40" placeholder="uys-fall26" class="h-11 w-56 rounded-lg border border-input bg-surface px-3 text-ui text-ink" aria-describedby="src-help" />
+        </label>
+        <button type="submit" class="h-11 rounded-full border border-line-strong bg-surface px-4 font-bold text-ink hover:bg-surface-2">Update</button>
+        <p id="src-help" class="basis-full text-ink-soft">
+          {src ? `Check answers count toward "${src}".` : rawSrc ? "That tag isn't valid: use lowercase letters, numbers, and dashes." : "Optional. Lowercase letters, numbers, and dashes, like uys-fall26."}
+        </p>
+      </form>
+    </section>
+
+    {slides.map(({ step, Content, components }, i) => {
+      const n = i + 2;
+      const qr = step.type === "check" && postQr && postUrl;
+      return (
+        <section id={`slide-${n}`} data-slide aria-labelledby={`slide-${n}-h`} class="flex min-h-dvh flex-col px-6 pb-28 pt-8 sm:px-10">
+          <p class="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-3 text-small font-bold text-ink-soft">
+            <span class={cn("inline-block size-3 rounded-full", s.bar)} aria-hidden="true"></span>
+            <span>{mod.data.title}</span><span aria-hidden="true">·</span><span>Step {step.n} of {steps.length}</span><span aria-hidden="true">·</span><span>{STEP_LABEL[step.type]}</span>
+          </p>
+          <div class={cn("mx-auto mt-6 grid w-full max-w-6xl flex-1 gap-10", qr && "md:grid-cols-[minmax(0,1fr)_18rem]")}>
+            <div class="min-w-0">
+              <h1 id={`slide-${n}-h`} class="text-display-lg text-ink sm:text-[2.8rem] sm:leading-tight">{step.title}</h1>
+              <div class="lesson-prose mt-6 text-lesson"><Content components={components} /></div>
+            </div>
+            {qr && (
+              <figure class="w-full max-w-[18rem] self-start justify-self-center rounded-xl border border-line bg-white p-4 text-center shadow-1 md:sticky md:top-8" data-qr="post" data-qr-url={postUrl.href}>
+                <div class="aspect-square w-full" set:html={postQr} />
+                <figcaption class="mt-2 text-ui font-bold text-ink">Scan to answer on your phone</figcaption>
+                <p class="mt-1 break-all text-small text-ink-soft">{shown(postUrl)}</p>
+              </figure>
+            )}
+          </div>
+        </section>
+      );
+    })}
+
+    <!-- Closing slide: keep going at home (the tag still counts sign-ups toward this workshop). -->
+    <section id={`slide-${total}`} data-slide aria-labelledby={`slide-${total}-h`} class="flex min-h-dvh flex-col px-6 pb-28 pt-8 sm:px-10">
+      <div class="mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
+        <div class="min-w-0">
+          <h1 id={`slide-${total}-h`} class="text-display-lg text-ink sm:text-[3.4rem] sm:leading-tight">Keep going</h1>
+          <p class="mt-4 max-w-reading text-lesson text-ink-soft">Every ARK lesson is free. Scan to open this module on your own device. A free account saves your progress and earns a certificate.</p>
+        </div>
+        <figure class="w-full max-w-[18rem] justify-self-center rounded-xl border border-line bg-white p-4 text-center shadow-1" data-qr="module" data-qr-url={moduleUrl.href}>
+          <div class="aspect-square w-full" set:html={moduleQr} />
+          <figcaption class="mt-2 text-ui font-bold text-ink">{mod.data.title}</figcaption>
+          <p class="mt-1 break-all text-small text-ink-soft">{shown(moduleUrl)}</p>
+        </figure>
+      </div>
+    </section>
+
+    <nav aria-label="Presenter controls" data-present-controls class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
+        <a href={moduleHref(mod)} data-present-exit class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft hover:bg-surface-2 hover:text-ink"><X aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Exit</span><span class="sr-only"> presenter mode</span></a>
+        <div class="flex items-center gap-2">
+          <button type="button" data-present-prev class="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-ui font-bold text-ink hover:bg-surface-2 disabled:opacity-40"><ArrowLeft aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Back</span></button>
+          <p class="min-w-[4.5rem] text-center text-ui font-bold tabular-nums text-ink" data-present-counter>1 / {total}</p>
+          <button type="button" data-present-next class="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-primary px-4 text-ui font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-40"><span class="sr-only sm:not-sr-only">Next</span><ArrowRight aria-hidden="true" className="size-5" /></button>
+        </div>
+        <button type="button" data-present-fullscreen aria-pressed="false" class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft hover:bg-surface-2 hover:text-ink"><Expand aria-hidden="true" className="size-5" /><span class="sr-only sm:not-sr-only">Full screen</span></button>
+      </div>
+    </nav>
+  </main>
+</PresentLayout>
+
+<script>import "../../../app/present/presenter";</script>
+
+<style is:global>
+  html:not(.js) [data-present-controls] {
+    display: none;
+  }
+  [data-qr] svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

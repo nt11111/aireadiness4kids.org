@@ -1,0 +1,63 @@
+---
+// A learner's own certificate, to view and print (brief section 7). Signed-in only, and only
+// certificates that belong to this account: anyone else's id gets the same 404 as a made-up one.
+// Prints on one landscape letter page (the @page rule below and src/styles/print.css).
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Certificate from "../../components/Certificate.astro";
+import { PrintButton } from "../../app/components/site/PrintButton";
+import { buttonVariants } from "../../app/components/ui/button";
+import { certificateDate, ownCertificate } from "../../lib/certificates";
+import { getCourses, moduleHref } from "../../lib/courses";
+import { ExternalLink } from "lucide-react";
+export const prerender = false;
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
+const cert = await ownCertificate(user.uid, Astro.params.id ?? "");
+const course = cert ? (await getCourses()).find((c) => c.modules.some((m) => m.id === cert.moduleId)) : undefined;
+const mod = course?.modules.find((m) => m.id === cert?.moduleId);
+if (!cert || !course || !mod) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+
+const date = certificateDate(cert.issuedAt);
+const verifyUrl = cert.public ? new URL(`/verify/${cert.id}`, Astro.site) : null;
+---
+
+<BaseLayout title={`Certificate: ${mod.data.title} | ARK`} noindex>
+  <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36 print:p-0">
+    <div class="mx-auto max-w-site print:max-w-none">
+      <div data-no-print>
+        <h1 class="text-display-lg text-ink">Certificate</h1>
+        <p class="mt-3 max-w-reading text-lesson text-ink-soft">
+          {cert.displayName} completed <a href={moduleHref(mod)} class="font-bold text-brand underline underline-offset-4">{mod.data.title}</a> on {date}.
+          {cert.public ? " Anyone can check it at its verify link." : " It's private: there's no public page for it."}
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <PrintButton client:load label="Print certificate" />
+          {verifyUrl && <a href={verifyUrl.pathname} class={buttonVariants({ variant: "outline" })}><ExternalLink aria-hidden="true" /> Public verify page</a>}
+          <a href="/my-learning" class={buttonVariants({ variant: "ghost" })}>My learning</a>
+        </div>
+        <p class="mt-3 text-small text-ink-soft">Tip: in the print dialog, choose landscape and turn off headers and footers.</p>
+      </div>
+      <Certificate class="mt-8 print:mt-0" name={cert.displayName} moduleTitle={mod.data.title} trackId={course.track.id} trackTitle={course.track.data.title} grades={course.track.data.grades} date={date} verifyUrl={verifyUrl} />
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  @page {
+    size: letter landscape;
+    margin: 0.35in;
+  }
+  @media print {
+    /* Fill the printable area (11 x 8.5 in, less the margins) and never spill onto a second page. */
+    [data-certificate] {
+      width: calc(11in - 0.7in);
+      max-height: calc(8.5in - 0.75in);
+      break-inside: avoid;
+    }
+    [data-certificate] > div {
+      aspect-ratio: auto;
+      height: calc(8.5in - 0.75in);
+    }
+  }
+</style>

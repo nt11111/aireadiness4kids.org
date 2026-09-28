@@ -1,0 +1,9 @@
+---
+import AuthShell from "../components/AuthShell.astro";
+import { SigninForm } from "../app/components/auth/SigninForm";
+export const prerender = true;
+---
+
+<AuthShell title="Sign in | ARK · AI Readiness for Kids" description="Sign in to ARK to save your progress and earn certificates." heading="Sign in" lead="Welcome back. Pick up where you left off.">
+  <SigninForm client:load />
+</AuthShell>

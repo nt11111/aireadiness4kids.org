@@ -1,0 +1,19 @@
+---
+// <Video src captions poster title>: optional lesson video. Captions (a WebVTT file) are required,
+// and it never autoplays (brief section 6).
+interface Props { src: string; captions: string; title: string; poster?: string; transcript?: string }
+const { src, captions, title, poster, transcript } = Astro.props;
+if (!captions) throw new Error(`<Video src="${src}">: captions="..." (a .vtt file) is required.`);
+if (!title) throw new Error(`<Video src="${src}">: title="..." is required so everyone knows what the video is.`);
+---
+
+<figure class="lesson-block">
+  <video controls preload="metadata" playsinline poster={poster} class="aspect-video w-full rounded-xl bg-ink" aria-label={title}>
+    <source src={src} />
+    <track kind="captions" src={captions} srclang="en" label="English" default />
+    <p>Your browser can't play this video. <a href={src}>Download it instead</a>.</p>
+  </video>
+  <figcaption class="mt-2 text-small text-ink-soft">
+    {title}{transcript && <> · <a href={transcript} class="font-bold text-brand underline underline-offset-4">Read the transcript</a></>}
+  </figcaption>
+</figure>
