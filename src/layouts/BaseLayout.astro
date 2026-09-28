@@ -5,6 +5,7 @@ import { Nav } from "../app/components/site/Nav";
 import { Footer } from "../app/components/site/Footer";
 import { GuestProgressOffer } from "../app/components/lesson/GuestProgressOffer";
 import LessonKeys from "../components/lesson/LessonKeys.astro";
+import { headerMe, type HeaderMe } from "../lib/me";
 
 interface Props {
   title: string;
@@ -15,6 +16,17 @@ interface Props {
 
 const { title, description, noindex = false, viewTransitions = false } = Astro.props;
 const pathname = Astro.url.pathname;
+
+// On a server-rendered page the middleware has already checked the session, so the header can be drawn
+// signed in (or out) on first paint. A static page can't know: `undefined` tells the header to ask /api/me.
+let me: HeaderMe | null | undefined;
+if (!Astro.isPrerendered) {
+  try {
+    me = await headerMe(Astro.locals.user, Astro.cookies);
+  } catch {
+    me = undefined;
+  }
+}
 ---
 
 <!doctype html>
@@ -24,7 +36,7 @@ const pathname = Astro.url.pathname;
   </head>
   <body>
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-5 focus:py-3 focus:font-bold focus:text-ink focus:shadow-2">Skip to content</a>
-    <Nav client:load pathname={pathname} />
+    <Nav client:load pathname={pathname} initialMe={me} />
     <main id="main">
       <slot />
     </main>
