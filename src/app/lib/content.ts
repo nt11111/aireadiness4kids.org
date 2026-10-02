@@ -53,6 +53,6 @@ export const FAQ = [
   { q: "Is the curriculum really free?", a: "Yes, completely. Every course and slide deck is free, with no paywall and no catch. Anyone can browse the courses without an account; a free account saves progress and earns certificates. Donations and grants keep it that way." },
   { q: "Who can request a workshop?", a: "Schools, districts, libraries, YMCAs, Boys and Girls Clubs, and after-school programs. We offer 60-minute Express sessions, 3-hour Half-Day programs, and 6-hour Full-Day Immersives." },
   { q: "Do I need a technical background to teach this?", a: "Not at all. Every module includes a facilitator guide written for non-specialists, and our Teacher Professional Development program certifies educators to deliver the curriculum confidently." },
-  { q: "Which grades does the curriculum cover?", a: "All of K-12 across three tracks: AI Explorers (K-5), AI Investigators (6-8), and AI Architects (9-12). Modules are standalone and can be taught in any order." },
+  { q: "Which grades does the curriculum cover?", a: "All of K-12 across three tracks: AI Aware (K-5), AI Literate (6-8), and AI Fluent (9-12). Modules are standalone and can be taught in any order." },
   { q: "Is content available in Spanish?", a: "Parent Information Nights are available in English and Spanish today. Full Spanish-language curriculum is on our Year-3 roadmap." },
 ];

@@ -260,7 +260,7 @@ test.describe("desktop player", () => {
   });
 });
 
-test.describe("Explorers (K-5) variant", () => {
+test.describe("AI Aware (K-5) variant", () => {
   test("20px text, 48px targets, and read-aloud on every step", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/dev/lesson-preview/2", { waitUntil: "networkidle" });
@@ -271,7 +271,7 @@ test.describe("Explorers (K-5) variant", () => {
       const box = await target.boundingBox();
       expect(box!.height, await target.textContent() ?? "").toBeGreaterThanOrEqual(48);
     }
-    await page.screenshot({ path: `screenshots/${PHASE}/explorers-sort-375.png` });
+    await page.screenshot({ path: `screenshots/${PHASE}/aware-sort-375.png` });
   });
 
   test("read-aloud is hidden when the browser can't speak", async ({ page }) => {
@@ -314,15 +314,15 @@ test.describe("signed out", () => {
 });
 
 test("Start course opens the first module with lessons, not a coming-soon stub", async ({ page }) => {
-  // Investigators: module 1 is still a stub, so Start goes to step 1 of Bias in AI (module 2).
-  await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+  // AI Literate: module 1 is still a stub, so Start goes to step 1 of Bias in AI (module 2).
+  await page.goto("/courses/literate", { waitUntil: "networkidle" });
   await hydrated(page);
   const start = page.getByRole("link", { name: "Start course" });
   await expect(start).toHaveAttribute("href", `${BIAS_MODULE}/${BIAS_STEPS[0]}`);
   await start.click();
   await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}/${BIAS_STEPS[0]}$`));
   // Courses with no lessons yet don't promise one: the button shows the modules (each has slides).
-  for (const trackId of ["explorers", "architects"]) {
+  for (const trackId of ["aware", "fluent"]) {
     await page.goto(`/courses/${trackId}`, { waitUntil: "networkidle" });
     await hydrated(page);
     await expect(page.getByRole("link", { name: "Start course" })).toHaveCount(0);

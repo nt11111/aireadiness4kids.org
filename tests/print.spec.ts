@@ -9,7 +9,7 @@ import { BIAS_STEPS } from "./routes";
 import { account, adminDb, call, signInBrowser } from "./support/firebase";
 
 const PHASE = process.env.PHASE ?? "phase-5";
-const MOD = "investigators/bias-in-ai";
+const MOD = "literate/bias-in-ai";
 
 /** Page count and the first page's size in points, read from the PDF's page objects. */
 function pdfPages(pdf: Buffer) {
@@ -59,7 +59,7 @@ for (const kind of ["learner", "parent"] as const) {
 }
 
 test("the facilitator guide prints on portrait letter pages without the site chrome", async ({ page }) => {
-  await page.goto("/educators/investigators/bias-in-ai", { waitUntil: "networkidle" });
+  await page.goto("/educators/literate/bias-in-ai", { waitUntil: "networkidle" });
   const pdf = await printTo(page, "guide-bias-in-ai");
   expect(pdf.width).toBe(612);
   expect(pdf.height).toBe(792);

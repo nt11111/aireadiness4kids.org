@@ -48,8 +48,8 @@ Read docs/ARK_UI_BUILD_BRIEF.md and CLAUDE.md. Build Phase 2 only. This is the m
 
 - Build the lesson player per section 7: collapsible outline sidebar on desktop, a bottom sheet on mobile, top progress bar, sticky Back/Next bar, ← → keys, and Astro View Transitions between steps.
 - Build every MDX component in section 6 as React islands only where interaction is needed, building on the existing components/ui primitives. Add each to /dev/components with an example.
-- Add the Explorers (K-5) variant: 20px body, read-aloud visible, 48px tap targets.
-- Write the full sample module Investigators → Bias in AI (6 steps: explainer, explainer, scenario, check, reflect, recap, plus guide.mdx and pre/post check questions). Follow the placeholder content rule: no invented stats or quotes; use [CITATION NEEDED].
+- Add the AI Aware (K-5) variant: 20px body, read-aloud visible, 48px tap targets.
+- Write the full sample module AI Literate → Bias in AI (6 steps: explainer, explainer, scenario, check, reflect, recap, plus guide.mdx and pre/post check questions). Follow the placeholder content rule: no invented stats or quotes; use [CITATION NEEDED].
 - Step completion can be in-memory for now. Real persistence comes in Phase 3.
 
 Test the whole module with keyboard only and on a 375px screenshot sequence. Run the section 9 checks, fix, commit, and report. Stop after Phase 2.
@@ -149,4 +149,4 @@ Report a before/after summary, the security checklist results, and the open ques
 
 - **When something looks off:** "On the course page at 375px, the syllabus rows feel cramped and the progress text wraps badly. Fix spacing and wrapping, then re-screenshot at all three widths."
 - **When it feels too 'tech':** "This still reads like a SaaS product. Make it warmer: less shadow, more paper background, softer corners on cards, more white space around headings. Show before/after screenshots."
-- **When adding a new module:** "Using the Bias in AI module as the pattern, build out Explorers → What Is AI? from the content I've pasted below. Keep status: draft."
+- **When adding a new module:** "Using the Bias in AI module as the pattern, build out AI Aware → What Is AI? from the content I've pasted below. Keep status: draft."

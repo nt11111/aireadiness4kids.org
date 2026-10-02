@@ -26,7 +26,7 @@ const [progress, certificates]: [Awaited<ReturnType<typeof learnerProgress>>, Aw
   ? await Promise.all([learnerProgress(user.uid, learner.id), learnerCertificates(user.uid, learner.id)])
   : [{}, new Map()];
 
-type Row = { id: string; title: string; href: string; track: "explorers" | "investigators" | "architects"; trackTitle: string; done: number; total: number; next: { href: string; n: number; title: string } | null; at: string };
+type Row = { id: string; title: string; href: string; track: "aware" | "literate" | "fluent"; trackTitle: string; done: number; total: number; next: { href: string; n: number; title: string } | null; at: string };
 const rows: Row[] = [];
 for (const course of await getCourses()) {
   for (const mod of course.modules) {

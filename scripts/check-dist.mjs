@@ -31,6 +31,8 @@ const stepPaths = new Set(
     ),
   ),
 );
+// A module with steps also has a server-rendered completion page.
+for (const path of [...stepPaths]) stepPaths.add(path.replace(/[^/]+$/, "complete"));
 const SSR_PAGES = new Set(["/account", "/my-learning", "/admin", "/forbidden"]);
 const SSR_PREFIXES = ["/present/", "/api/"];
 const isServerRoute = (path) => {

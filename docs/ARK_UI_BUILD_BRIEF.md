@@ -87,9 +87,9 @@ Update the existing variable names in `src/styles/theme.css` (`--background`, `-
 --accent:        #F2A93B   /* marigold: progress, completion, highlights */
 
 /* Track colors, used for chips, progress rings, and course headers */
---track-explorers:     #E08A1E   /* K-5 */
---track-investigators: #C9503A   /* 6-8 */
---track-architects:    #3D4FA8   /* 9-12 */
+--track-aware:     #E08A1E   /* K-5 */
+--track-literate: #C9503A   /* 6-8 */
+--track-fluent:    #3D4FA8   /* 9-12 */
 
 --success: #2E7D4F   --warning: #B7791F   --danger: #B42318
 
@@ -103,7 +103,7 @@ Update the existing variable names in `src/styles/theme.css` (`--background`, `-
 ### Type
 - **Headings:** Fraunces (already in the brand) at weights 500-600. Use it only for display headings.
 - **Body and UI:** Atkinson Hyperlegible, which is built for readability and suits young and struggling readers.
-- Base size is 18px for lesson body text and 16px for UI. The Explorers (K-5) lesson body is 20px with 1.6 line height.
+- Base size is 18px for lesson body text and 16px for UI. The AI Aware (K-5) lesson body is 20px with 1.6 line height.
 
 ### Logo
 The current logo is over-designed. For V1, use a **text wordmark** ("ARK" in Fraunces, with "AIReadiness4Kids" in small caps beneath) and the existing mark at small sizes only. Build it as a single `<Logo />` component so it can be replaced in one place.
@@ -145,9 +145,9 @@ The current logo is over-designed. For V1, use a **text wordmark** ("ARK" in Fra
 
 | Track | Grades | Modules |
 |---|---|---|
-| **AI Explorers** | K-5 | 1 What Is AI? · 2 AI Helpers, and When They Get It Wrong · 3 Being a Smart AI User · 4 Kindness, Feelings & AI · 5 My Digital Footprint |
-| **AI Investigators** | 6-8 | 1 How AI Actually Works · 2 Bias in AI · 3 AI & Schoolwork: Where's the Line? · 4 Deepfakes & Misinformation · 5 Privacy & Your Data · 6 Ethical Dilemmas in AI |
-| **AI Architects** | 9-12 | 1 The AI Landscape Today · 2 AI Ethics & Who Makes the Rules · 3 Algorithmic Bias & Systemic Justice · 4 AI & the Future of Work · 5 Building Responsibly: Design Thinking with AI · 6 Advocacy & Action |
+| **AI Aware** | K-5 | 1 What Is AI? · 2 AI Helpers, and When They Get It Wrong · 3 Being a Smart AI User · 4 Kindness, Feelings & AI · 5 My Digital Footprint |
+| **AI Literate** | 6-8 | 1 How AI Actually Works · 2 Bias in AI · 3 AI & Schoolwork: Where's the Line? · 4 Deepfakes & Misinformation · 5 Privacy & Your Data · 6 Ethical Dilemmas in AI |
+| **AI Fluent** | 9-12 | 1 The AI Landscape Today · 2 AI Ethics & Who Makes the Rules · 3 Algorithmic Bias & Systemic Justice · 4 AI & the Future of Work · 5 Building Responsibly: Design Thinking with AI · 6 Advocacy & Action |
 
 ---
 
@@ -156,11 +156,11 @@ The current logo is over-designed. For V1, use a **text wordmark** ("ARK" in Fra
 ```
 src/content/
   tracks/
-    explorers.md            # frontmatter: title, grades, color, tagline, summary, order
-    investigators.md
-    architects.md
+    aware.md            # frontmatter: title, grades, color, tagline, summary, order
+    literate.md
+    fluent.md
   modules/
-    investigators/
+    literate/
       bias-in-ai/
         index.mdx           # module frontmatter + overview body
         01-what-is-bias.mdx
@@ -175,7 +175,7 @@ src/content/
 **Module frontmatter**
 ```yaml
 title: Bias in AI
-track: investigators
+track: literate
 order: 2
 duration_minutes: 60
 summary: One-sentence description for cards.
@@ -197,7 +197,7 @@ minutes: 5
 
 **Review status is visible.** If `status: draft`, show a small, honest badge on the module page: *"Draft: under expert review."* If `status: reviewed`, show *"Reviewed by [names]"* with a link to /about#reviewers. Credibility with educators depends on this, so make it look good in both states.
 
-**Placeholder content rule:** Build **one complete sample module** (Investigators → Bias in AI) with draft content so every component is exercised. Every other module gets a stub: real title, the key topics from the templates doc, and "Content coming soon." Do not invent statistics, studies, or quotes. Where a fact is needed, write `[CITATION NEEDED]` so reviewers can find it.
+**Placeholder content rule:** Build **one complete sample module** (AI Literate → Bias in AI) with draft content so every component is exercised. Every other module gets a stub: real title, the key topics from the templates doc, and "Content coming soon." Do not invent statistics, studies, or quotes. Where a fact is needed, write `[CITATION NEEDED]` so reviewers can find it.
 
 ---
 
@@ -217,7 +217,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 | `<Reflect prompt="">` | Free-text reflection | Saved **locally only**; never sent anywhere. The UI says so. Text typed before the island loads is kept and saved, not replaced by an older saved answer the box wasn't showing |
 | `<Discuss>` | Discussion prompts for class or family | Shows only in the facilitator view + as a collapsible in the lesson |
 | `<Recap>` | Key takeaways | Used on the last step |
-| `<ReadAloud />` | Reads the step aloud via the Web Speech API | On by default for the Explorers track; hidden if unsupported |
+| `<ReadAloud />` | Reads the step aloud via the Web Speech API | On by default for the AI Aware track; hidden if unsupported |
 
 ---
 
@@ -252,7 +252,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 - A step counts as complete when the learner hits Next, or answers a Check or Scenario.
 - **The gate:** a signed-out visitor can do step 1 fully. Pressing Next on step 1 opens a friendly sign-up panel (not a hard redirect): "Keep going for free: create an account to save your progress and earn a certificate." It offers "Continue with Google", "Sign up with email", and "Already have an account? Sign in". Steps 2+ also check the session **on the server** and redirect to `/signin?next=<step>` if it's missing. Hiding them only in the UI doesn't count as a gate.
 - Smooth page transitions via Astro View Transitions. The outline sidebar keeps its state between steps.
-- **Explorers (K-5) variant:** larger type, read-aloud visible, more illustration space, shorter paragraphs, and bigger tap targets (48px).
+- **AI Aware (K-5) variant:** larger type, read-aloud visible, more illustration space, shorter paragraphs, and bigger tap targets (48px).
 
 ### Completion `/…/complete`
 - A calm celebration (confetti only if motion is allowed), a summary of what they learned, and the **post-check** (same questions as the pre-check, optional).

@@ -25,7 +25,7 @@ function collect(root: Element) {
 
 /**
  * <ReadAloud />: reads the step aloud with the browser's built-in speech (Web Speech API).
- * Shown on every Explorers step; other tracks can add it. Stays hidden if the browser can't speak.
+ * Shown on every AI Aware step; other tracks can add it. Stays hidden if the browser can't speak.
  * It never starts on its own.
  */
 export function ReadAloud({ target = "[data-lesson-article]", className }: { target?: string; className?: string }) {

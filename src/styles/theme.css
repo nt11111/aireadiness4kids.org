@@ -38,18 +38,18 @@
 
   /* Tracks: fill (headers, chip backgrounds), -on (text on the fill),
      -ink (text and strokes on light surfaces), -soft (tint backgrounds) */
-  --track-explorers: #E08A1E;
-  --track-explorers-on: #1C2430;
-  --track-explorers-ink: #995E15;
-  --track-explorers-soft: #FBEEDE;
-  --track-investigators: #C74D37;       /* brief #C9503A: white text was 4.48:1 */
-  --track-investigators-on: #FFFFFF;
-  --track-investigators-ink: #B74732;
-  --track-investigators-soft: #FAEDEB;
-  --track-architects: #3D4FA8;
-  --track-architects-on: #FFFFFF;
-  --track-architects-ink: #3D4FA8;
-  --track-architects-soft: #DADEF2;
+  --track-aware: #E08A1E;
+  --track-aware-on: #1C2430;
+  --track-aware-ink: #995E15;
+  --track-aware-soft: #FBEEDE;
+  --track-literate: #C74D37;       /* brief #C9503A: white text was 4.48:1 */
+  --track-literate-on: #FFFFFF;
+  --track-literate-ink: #B74732;
+  --track-literate-soft: #FAEDEB;
+  --track-fluent: #3D4FA8;
+  --track-fluent-on: #FFFFFF;
+  --track-fluent-ink: #3D4FA8;
+  --track-fluent-soft: #DADEF2;
 
   /* Status */
   --success: #2D794D;           /* brief #2E7D4F: 4.40:1 on --surface-2, darkened to pass AA */
@@ -150,18 +150,18 @@
   --color-brand-soft: var(--brand-soft);
   --color-accent-strong: var(--accent-strong);
   --color-glow: var(--glow);
-  --color-track-explorers: var(--track-explorers);
-  --color-track-explorers-on: var(--track-explorers-on);
-  --color-track-explorers-ink: var(--track-explorers-ink);
-  --color-track-explorers-soft: var(--track-explorers-soft);
-  --color-track-investigators: var(--track-investigators);
-  --color-track-investigators-on: var(--track-investigators-on);
-  --color-track-investigators-ink: var(--track-investigators-ink);
-  --color-track-investigators-soft: var(--track-investigators-soft);
-  --color-track-architects: var(--track-architects);
-  --color-track-architects-on: var(--track-architects-on);
-  --color-track-architects-ink: var(--track-architects-ink);
-  --color-track-architects-soft: var(--track-architects-soft);
+  --color-track-aware: var(--track-aware);
+  --color-track-aware-on: var(--track-aware-on);
+  --color-track-aware-ink: var(--track-aware-ink);
+  --color-track-aware-soft: var(--track-aware-soft);
+  --color-track-literate: var(--track-literate);
+  --color-track-literate-on: var(--track-literate-on);
+  --color-track-literate-ink: var(--track-literate-ink);
+  --color-track-literate-soft: var(--track-literate-soft);
+  --color-track-fluent: var(--track-fluent);
+  --color-track-fluent-on: var(--track-fluent-on);
+  --color-track-fluent-ink: var(--track-fluent-ink);
+  --color-track-fluent-soft: var(--track-fluent-soft);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
@@ -183,7 +183,7 @@
   --font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Type scale. Headings use Fraunces 500-600; lesson body 18px; UI 16px; Explorers lessons 20px/1.6. */
+  /* Type scale. Headings use Fraunces 500-600; lesson body 18px; UI 16px; AI Aware lessons 20px/1.6. */
   --text-display-xl: 3.5rem;
   --text-display-xl--line-height: 1.05;
   --text-display-lg: 2.75rem;
@@ -196,8 +196,8 @@
   --text-title--line-height: 1.3;
   --text-lesson: 1.125rem;
   --text-lesson--line-height: 1.7;
-  --text-lesson-explorers: 1.25rem;
-  --text-lesson-explorers--line-height: 1.6;
+  --text-lesson-aware: 1.25rem;
+  --text-lesson-aware--line-height: 1.6;
   --text-ui: 1rem;
   --text-ui--line-height: 1.5;
   --text-small: 0.875rem;

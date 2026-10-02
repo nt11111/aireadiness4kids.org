@@ -26,8 +26,8 @@ test("every sitemap address answers 200 directly, with public pages only", async
   const locs = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]));
   expect(locs.every((u) => u.origin === "https://aireadiness4kids.org")).toBe(true);
   const paths = locs.map((u) => u.pathname);
-  expect(paths).toContain("/courses/investigators/bias-in-ai/");
-  expect(paths).toContain("/courses/investigators/bias-in-ai/what-is-bias");
+  expect(paths).toContain("/courses/literate/bias-in-ai/");
+  expect(paths).toContain("/courses/literate/bias-in-ai/what-is-bias");
   expect(paths).toContain("/privacy/");
   expect(paths.filter((p) => /^\/courses\/[^/]+\/[^/]+\/$/.test(p))).toHaveLength(17); // every module page
   for (const p of paths) {

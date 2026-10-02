@@ -1,12 +1,12 @@
 import { cn } from "./utils";
 
-type Track = "explorers" | "investigators" | "architects" | "brand";
+type Track = "aware" | "literate" | "fluent" | "brand";
 
 // Strokes use the text-safe "-ink" shades so the ring meets 3:1 on light surfaces.
 const STROKE: Record<Track, string> = {
-  explorers: "var(--track-explorers-ink)",
-  investigators: "var(--track-investigators-ink)",
-  architects: "var(--track-architects-ink)",
+  aware: "var(--track-aware-ink)",
+  literate: "var(--track-literate-ink)",
+  fluent: "var(--track-fluent-ink)",
   brand: "var(--accent-strong)",
 };
 const SIZE = {

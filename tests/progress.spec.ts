@@ -9,9 +9,10 @@ import { BIAS_MODULE, BIAS_STEPS } from "./routes";
 import { account, adminAuth, adminDb, BASE, call, createUser, idTokenFor, LEARNER_SIGNUP, sessionCookieFrom, signInBrowser, unique, type Account } from "./support/firebase";
 import { beforeHydration, hydrated } from "./support/hydration";
 import { chooseBirth, confirmEmail, PASSWORD, signInWithForm } from "./support/flows";
+import { RENAMED_TRACKS } from "../src/lib/renamed-tracks.mjs";
 
-const MOD = "investigators/bias-in-ai";
-const DOC = "investigators__bias-in-ai";
+const MOD = "literate/bias-in-ai";
+const DOC = "literate__bias-in-ai";
 const RIGHT = { "pc-training-data": "a", "pc-past-hiring": "b", "pc-catch-bias": "b" };
 const WRONG = { "pc-training-data": "b", "pc-past-hiring": "a", "pc-catch-bias": "a" };
 const PHASE = process.env.PHASE ?? "phase-4";
@@ -79,9 +80,9 @@ test.describe("progress API", () => {
   test("anything that isn't real content is rejected before it's stored", async () => {
     const a = await learnerAccount();
     const step = (body: object) => call("/api/progress/step", { cookie: a.cookie, body: { learnerId: a.learnerId, moduleId: MOD, step: BIAS_STEPS[0], ...body } });
-    expect((await step({ moduleId: "investigators/not-a-module" })).status).toBe(404);
+    expect((await step({ moduleId: "literate/not-a-module" })).status).toBe(404);
     expect((await step({ step: "not-a-step" })).status).toBe(400);
-    for (const moduleId of ["../users", "investigators", "Investigators/Bias", `${MOD}/x`, "a".repeat(100)]) expect((await step({ moduleId })).status, moduleId).toBe(400);
+    for (const moduleId of ["../users", "literate", "Literate/Bias", `${MOD}/x`, "a".repeat(100)]) expect((await step({ moduleId })).status, moduleId).toBe(400);
     for (const s of ["01-what-is-bias", "../x", "What-Is-Bias", ""]) expect((await step({ step: s })).status, s).toBe(400);
     const pre = (answers: object) => call("/api/progress/precheck", { cookie: a.cookie, body: { learnerId: a.learnerId, moduleId: MOD, answers } });
     expect((await pre({ "pc-training-data": "a" })).status, "missing answers").toBe(400);
@@ -124,7 +125,7 @@ test.describe("progress API", () => {
     expect(check.status).toBe(200);
     const res = await call("/api/progress/merge", {
       cookie: a.cookie,
-      body: { learnerId: a.learnerId, steps: { [MOD]: [BIAS_STEPS[0]], "investigators/gone-module": ["x"] }, pre: { [MOD]: WRONG }, anonSid },
+      body: { learnerId: a.learnerId, steps: { [MOD]: [BIAS_STEPS[0]], "literate/gone-module": ["x"] }, pre: { [MOD]: WRONG }, anonSid },
     });
     expect(res.json).toMatchObject({ ok: true, merged: { steps: 1, pre: 1, checks: 1 } });
     expect(await stepsIn(a.uid, a.learnerId)).toEqual([BIAS_STEPS[0]]);
@@ -305,6 +306,26 @@ test("signing in where someone left guest progress asks first, and \"Add it\" ad
   await expect.poll(() => stepsIn(acct.uid, learnerId)).toEqual([BIAS_STEPS[0]]);
   expect(await guestKey(page)).toBeNull();
   await expect(page.getByRole("status").filter({ hasText: "steps done" })).toHaveText("1 of 6 steps done.");
+});
+
+test("guest progress saved under a module's pre-rename id is added under its new id", async ({ page, context }) => {
+  const acct = await account("learner", { name: "Lou" });
+  const learnerId = await selfLearner(acct.uid);
+  const [oldTrack] = Object.entries(RENAMED_TRACKS).find(([, to]) => MOD.startsWith(`${to}/`))!;
+  const oldId = MOD.replace(/^[a-z]+/, oldTrack);
+  await page.goto("/");
+  await page.evaluate(([old, current]) => localStorage.setItem("ark.guest.v1", JSON.stringify({
+    v: 1,
+    steps: { [old]: ["what-is-bias"], [current]: ["where-it-comes-from"] },
+    pre: { [old]: { answers: { "pc-training-data": "a", "pc-past-hiring": "b", "pc-catch-bias": "a" }, score: 2, total: 3 } },
+  })), [oldId, MOD]);
+  await signInBrowser(context, acct);
+  await page.goto(BIAS_MODULE);
+  await page.getByRole("dialog", { name: OFFER }).getByRole("button", { name: "Add it" }).click();
+  await expect.poll(() => stepsIn(acct.uid, learnerId)).toEqual([BIAS_STEPS[0], BIAS_STEPS[1]].sort());
+  await expect.poll(async () => (await progressDoc(acct.uid, learnerId).get()).get("pre")).toMatchObject({ score: 2, outOf: 3 });
+  expect((await adminDb.doc(`users/${acct.uid}/learners/${learnerId}/progress/${oldId.replace("/", "__")}`).get()).exists).toBe(false);
+  expect(await guestKey(page)).toBeNull();
 });
 
 test("\"No thanks\" deletes this device's copy and adds nothing", async ({ page, context }) => {

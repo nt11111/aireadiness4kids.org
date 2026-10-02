@@ -34,17 +34,17 @@ test.describe("(a) user A can't read or write user B's data through any API rout
     expect(lb).toMatch(/^[A-Za-z0-9]{20}$/);
 
     // B's data that later phases write (progress, a certificate, a check result).
-    await adminDb.doc(`users/${b.uid}/learners/${lb}/progress/investigators__bias-in-ai`).set({ steps: { s1: 1 } });
+    await adminDb.doc(`users/${b.uid}/learners/${lb}/progress/literate__bias-in-ai`).set({ steps: { s1: 1 } });
     const certB = `cert-${b.uid.slice(0, 8)}`;
-    await adminDb.doc(`certificates/${certB}`).set({ uid: b.uid, learnerId: lb, scope: "module", refId: "investigators/bias-in-ai", public: false });
-    const checkB = await adminDb.collection("checkResults").add({ uid: b.uid, learnerId: lb, moduleId: "investigators/bias-in-ai", score: 2, outOf: 3 });
+    await adminDb.doc(`certificates/${certB}`).set({ uid: b.uid, learnerId: lb, scope: "module", refId: "literate/bias-in-ai", public: false });
+    const checkB = await adminDb.collection("checkResults").add({ uid: b.uid, learnerId: lb, moduleId: "literate/bias-in-ai", score: 2, outOf: 3 });
 
     // Writing to B's learner with A's session: not found, and nothing changes.
     expect((await call("/api/account/learners/update", { cookie: a.cookie, body: { learnerId: lb, nickname: "Hacked", gradeBand: "k-2" } })).status).toBe(404);
     expect((await call("/api/account/learners/delete", { cookie: a.cookie, body: { learnerId: lb } })).status).toBe(404);
     const lbDoc = await adminDb.doc(`users/${b.uid}/learners/${lb}`).get();
     expect(lbDoc.get("nickname")).toBe("Bo");
-    expect((await adminDb.doc(`users/${b.uid}/learners/${lb}/progress/investigators__bias-in-ai`).get()).exists).toBe(true);
+    expect((await adminDb.doc(`users/${b.uid}/learners/${lb}/progress/literate__bias-in-ai`).get()).exists).toBe(true);
 
     // Path tricks never reach Firestore.
     for (const bad of ["../../users/x", `${b.uid}/learners/${lb}`, "", "a".repeat(40), `${lb}/progress/x`]) {
@@ -76,7 +76,7 @@ test.describe("(a) user A can't read or write user B's data through any API rout
     const a = await account("learner");
     const learners = await adminDb.collection(`users/${a.uid}/learners`).get();
     const self = learners.docs[0].id;
-    await adminDb.doc(`users/${a.uid}/learners/${self}/progress/investigators__bias-in-ai`).set({ steps: {} });
+    await adminDb.doc(`users/${a.uid}/learners/${self}/progress/literate__bias-in-ai`).set({ steps: {} });
     await adminDb.doc(`certificates/cert-a-${a.uid.slice(0, 6)}`).set({ uid: a.uid, learnerId: self, public: true });
     const check = await adminDb.collection("checkResults").add({ uid: a.uid, learnerId: self, score: 3, outOf: 3 });
 
@@ -85,7 +85,7 @@ test.describe("(a) user A can't read or write user B's data through any API rout
     expect(res.status).toBe(200);
     expect(sessionCookieFrom(res.headers)).toMatch(/Max-Age=0|Expires=Thu, 01 Jan 1970/);
     expect((await adminDb.doc(`users/${a.uid}`).get()).exists).toBe(false);
-    expect((await adminDb.doc(`users/${a.uid}/learners/${self}/progress/investigators__bias-in-ai`).get()).exists).toBe(false);
+    expect((await adminDb.doc(`users/${a.uid}/learners/${self}/progress/literate__bias-in-ai`).get()).exists).toBe(false);
     expect((await adminDb.doc(`certificates/cert-a-${a.uid.slice(0, 6)}`).get()).exists).toBe(false);
     const unlinked = await check.get();
     expect(unlinked.exists).toBe(true);
@@ -111,7 +111,7 @@ test.describe("(a) user A can't read or write user B's data through any API rout
 });
 
 test.describe("(c) signed-out requests to gated routes get a redirect, not content", () => {
-  const gated = [...BIAS_STEPS.slice(1).map((s) => `${BIAS_MODULE}/${s}`), "/my-learning", "/account", "/admin", "/present/investigators/bias-in-ai"];
+  const gated = [...BIAS_STEPS.slice(1).map((s) => `${BIAS_MODULE}/${s}`), "/my-learning", "/account", "/admin", "/present/literate/bias-in-ai"];
 
   for (const path of gated) {
     test(`GET ${path}`, async () => {
@@ -186,12 +186,12 @@ test.describe("(d) roles are checked on the server", () => {
     expect(page.status).toBe(403);
     expect(page.text).toMatch(/You don(&#39;|')t have access/);
     expect((await call("/api/admin/stats", { method: "GET", cookie: a.cookie })).status).toBe(403);
-    expect((await call("/present/investigators/bias-in-ai", { method: "GET", cookie: a.cookie })).status).toBe(403);
+    expect((await call("/present/literate/bias-in-ai", { method: "GET", cookie: a.cookie })).status).toBe(403);
   });
 
   test("a facilitator can present but not open /admin", async () => {
     const f = await account("learner", { role: "facilitator" });
-    expect((await call("/present/investigators/bias-in-ai", { method: "GET", cookie: f.cookie })).status).toBe(200);
+    expect((await call("/present/literate/bias-in-ai", { method: "GET", cookie: f.cookie })).status).toBe(200);
     expect((await call("/admin", { method: "GET", cookie: f.cookie })).status).toBe(403);
     expect((await call("/api/admin/stats", { method: "GET", cookie: f.cookie })).status).toBe(403);
   });
@@ -224,7 +224,7 @@ test.describe("(e) open redirects are blocked", () => {
     ]) {
       expect(safeNext(bad), String(bad)).toBe("/my-learning");
     }
-    expect(safeNext("/courses/investigators/bias-in-ai/check")).toBe("/courses/investigators/bias-in-ai/check");
+    expect(safeNext("/courses/literate/bias-in-ai/check")).toBe("/courses/literate/bias-in-ai/check");
     expect(safeNext("/account?setup=learners#learners")).toBe("/account?setup=learners#learners");
     expect(safeNext("/%2F%2Fevil.example")).toBe("/%2F%2Fevil.example"); // stays a path on this site
   });

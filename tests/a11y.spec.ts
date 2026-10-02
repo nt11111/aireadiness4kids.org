@@ -105,7 +105,7 @@ test("keyboard: nav dropdown opens, is reachable, closes on Escape", async ({ pa
 });
 
 test("keyboard: syllabus rows open and close with Enter", async ({ page }) => {
-  await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+  await page.goto("/courses/literate", { waitUntil: "networkidle" });
   const row = page.locator("details").nth(1);
   const summary = row.locator("summary");
   await expect(row).not.toHaveAttribute("open", "");
@@ -149,7 +149,7 @@ test("privacy, terms, and the parent notice are marked as drafts for legal revie
 });
 
 test("the footer links to privacy, terms, and accessibility on every page type", async ({ page }) => {
-  for (const path of ["/", "/courses/investigators/bias-in-ai", "/signin", "/this-page-does-not-exist"]) {
+  for (const path of ["/", "/courses/literate/bias-in-ai", "/signin", "/this-page-does-not-exist"]) {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     const legal = page.getByRole("navigation", { name: "Legal" });
     for (const name of ["Privacy", "Terms", "Accessibility"]) await expect(legal.getByRole("link", { name })).toBeVisible();

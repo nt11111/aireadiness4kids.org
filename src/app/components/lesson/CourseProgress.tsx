@@ -6,7 +6,7 @@ import { cn } from "../ui/utils";
 
 /** What these islands need to know about a module (plain data from the static page). */
 export type ModuleLite = { id: string; title: string; href: string; track: string; trackTitle?: string; steps: { id: string; href: string; title?: string }[] };
-type TrackId = "explorers" | "investigators" | "architects";
+type TrackId = "aware" | "literate" | "fluent";
 
 const countDone = (steps: ModuleLite["steps"], completed: StepSet) => steps.filter((s) => completed.has(s.id)).length;
 

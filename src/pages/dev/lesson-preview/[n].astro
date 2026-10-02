@@ -1,6 +1,6 @@
 ---
-// Explorers (K-5) player preview for the style guide: 20px text, read-aloud on every step, 48px targets.
-// Sample text for layout only; there is no Explorers lesson content yet. Not linked publicly; noindex.
+// AI Aware (K-5) player preview for the style guide: 20px text, read-aloud on every step, 48px targets.
+// Sample text for layout only; there is no AI Aware lesson content yet. Not linked publicly; noindex.
 import LessonLayout from "../../../layouts/LessonLayout.astro";
 import LessonPlayer from "../../../components/lesson/LessonPlayer.astro";
 import Callout from "../../../components/lesson/Callout.astro";
@@ -23,15 +23,15 @@ export function getStaticPaths() {
 const index = Number(Astro.params.n) - 1;
 ---
 
-<LessonLayout title={`${steps[index].title} | Explorers preview | ARK`} noindex>
+<LessonLayout title={`${steps[index].title} | AI Aware preview | ARK`} noindex>
   <LessonPlayer
-    track={{ id: "explorers", title: "AI Explorers", href: "/courses/explorers" }}
+    track={{ id: "aware", title: "AI Aware", href: "/courses/aware" }}
     module={{ title: "Sample lesson (preview)", href: "/dev/components", status: "draft" }}
     steps={steps}
     index={index}
     finishHref="/dev/components#lesson"
   >
-    <Callout kind="warning" title="Style guide preview"><p>Sample text to show the Explorers layout. This is not lesson content.</p></Callout>
+    <Callout kind="warning" title="Style guide preview"><p>Sample text to show the AI Aware layout. This is not lesson content.</p></Callout>
     {index === 0 && (
       <>
         <p>AI is a computer program that learns from lots of examples.</p>

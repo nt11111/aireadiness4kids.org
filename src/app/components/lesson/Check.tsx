@@ -83,7 +83,7 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
         return (
           <div key={q.id} className="rounded-xl border border-line bg-surface p-5 shadow-1 sm:p-6">
             <p className="text-small font-bold text-ink-soft">Question {i + 1} of {questions.length}</p>
-            <p id={promptId} className="mt-1 text-lesson font-bold text-ink [.lesson-explorers_&]:text-lesson-explorers">{q.prompt}</p>
+            <p id={promptId} className="mt-1 text-lesson font-bold text-ink [.lesson-aware_&]:text-lesson-aware">{q.prompt}</p>
             <RadioGroup
               value={s.selected ?? ""}
               onValueChange={(v) => update(q.id, { selected: v, nudge: false })}

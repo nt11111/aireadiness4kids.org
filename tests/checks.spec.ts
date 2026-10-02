@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { account, adminDb, call, signInBrowser, unique } from "./support/firebase";
 import { beforeHydration, hydrated } from "./support/hydration";
 
-const MOD = "investigators/bias-in-ai";
+const MOD = "literate/bias-in-ai";
 const PAGE = "/check/bias-in-ai/pre";
 const RIGHT = { "pc-training-data": "a", "pc-past-hiring": "b", "pc-catch-bias": "b" };
 const PHASE = process.env.PHASE ?? "phase-4";
@@ -38,7 +38,7 @@ test("anyone can take a workshop check: scored on the server, tagged with the wo
   await page.getByRole("button", { name: "Send my answers" }).click();
   await expect(page.getByText("Thanks! Your answers are in.")).toBeVisible();
   await expect(page.getByText("You got 2 of 3.")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Create a free account" })).toHaveAttribute("href", "/signup?next=%2Fcourses%2Finvestigators%2Fbias-in-ai");
+  await expect(page.getByRole("link", { name: "Create a free account" })).toHaveAttribute("href", "/signup?next=%2Fcourses%2Fliterate%2Fbias-in-ai");
   await page.screenshot({ path: `screenshots/${PHASE}/checks/thanks.png`, fullPage: true });
   const { violations } = await new AxeBuilder({ page }).analyze();
   expect(violations.filter((v) => v.impact === "serious" || v.impact === "critical").map((v) => v.id)).toEqual([]);
@@ -102,9 +102,9 @@ test.describe("/api/checks", () => {
   });
 
   test("bad input is rejected", async () => {
-    expect((await submit({ moduleId: "investigators/not-a-module" })).status).toBe(404);
+    expect((await submit({ moduleId: "literate/not-a-module" })).status).toBe(404);
     // A module with no check questions has no check.
-    expect((await submit({ moduleId: "explorers/what-is-ai" })).status).toBe(404);
+    expect((await submit({ moduleId: "aware/what-is-ai" })).status).toBe(404);
     expect((await submit({ phase: "during" })).status).toBe(400);
     expect((await submit({ answers: { "pc-training-data": "a" } })).status).toBe(400);
     expect((await submit({ answers: { ...RIGHT, "pc-catch-bias": "e" } })).status).toBe(400);
