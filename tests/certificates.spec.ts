@@ -8,8 +8,8 @@ import { BIAS_MODULE, BIAS_STEPS } from "./routes";
 import { account, adminDb, call, createUser, idTokenFor, LEARNER_SIGNUP, sessionCookieFrom, signInBrowser, unique, type Account } from "./support/firebase";
 import { hydrated } from "./support/hydration";
 
-const MOD = "investigators/bias-in-ai";
-const DOC = "investigators__bias-in-ai";
+const MOD = "literate/bias-in-ai";
+const DOC = "literate__bias-in-ai";
 const RIGHT = { "pc-training-data": "a", "pc-past-hiring": "b", "pc-catch-bias": "b" };
 const newSrc = () => `t-${unique()}`.toLowerCase().slice(0, 40);
 
@@ -94,7 +94,7 @@ test.describe("certificates API", () => {
     expect((await call("/api/certificates/issue", { body: { learnerId: a.learnerId, moduleId: MOD } })).status).toBe(401);
     expect((await call("/api/certificates/issue", { method: "GET", cookie: a.cookie })).status).toBe(405);
     expect((await call("/api/certificates/issue", { cookie: a.cookie, origin: "https://evil.example", body: { learnerId: a.learnerId, moduleId: MOD } })).status).toBe(403);
-    expect((await call("/api/certificates/issue", { cookie: a.cookie, body: { learnerId: a.learnerId, moduleId: "investigators/nope" } })).status).toBe(404);
+    expect((await call("/api/certificates/issue", { cookie: a.cookie, body: { learnerId: a.learnerId, moduleId: "literate/nope" } })).status).toBe(404);
   });
 
   test("the post-check is scored on the server and the first result is kept", async () => {
@@ -116,7 +116,7 @@ test.describe("completion page", () => {
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toBe(`/signin?next=${encodeURIComponent(`${BIAS_MODULE}/complete`)}`);
     const a = await learnerAccount();
-    expect((await call("/courses/investigators/deepfakes-and-misinformation/complete", { method: "GET", cookie: a.cookie })).status).toBe(404);
+    expect((await call("/courses/literate/deepfakes-and-misinformation/complete", { method: "GET", cookie: a.cookie })).status).toBe(404);
   });
 
   test("before the last step it says what's left", async ({ page }) => {

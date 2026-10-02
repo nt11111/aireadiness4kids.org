@@ -14,6 +14,8 @@
  * Storage can be blocked (private mode, school policies), so every access is wrapped in try/catch
  * and the site works the same without it; progress just isn't kept.
  */
+import { renameModuleId } from "../../lib/renamed-tracks.mjs";
+
 export type GuestPre = { answers: Record<string, string>; score: number; total: number };
 export type Guest = { v: 1; src?: string; anonSid?: string; claim?: string; steps: Record<string, string[]>; pre: Record<string, GuestPre> };
 
@@ -25,11 +27,26 @@ export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const empty = (): Guest => ({ v: 1, steps: {}, pre: {} });
 
+/**
+ * Re-keys a guest map by the current module ids: a guest key saved before the courses were renamed
+ * holds the old ones (src/lib/renamed-tracks.mjs). Steps saved under both ids are combined.
+ */
+function renameKeys<T>(map: Record<string, T>, combine: (current: T, old: T) => T): Record<string, T> {
+  const out: Record<string, T> = {};
+  for (const [id, value] of Object.entries(map)) {
+    const key = renameModuleId(id);
+    out[key] = key in out ? (key === id ? combine(value, out[key]) : combine(out[key], value)) : value;
+  }
+  return out;
+}
+
 export function readGuest(): Guest {
   try {
     const raw = JSON.parse(localStorage.getItem(GUEST_KEY) ?? "null");
     if (!raw || raw.v !== 1) return empty();
-    return { ...empty(), ...raw, steps: raw.steps ?? {}, pre: raw.pre ?? {} };
+    const steps = renameKeys<string[]>(raw.steps ?? {}, (current, old) => [...new Set([...(Array.isArray(current) ? current : []), ...(Array.isArray(old) ? old : [])])]);
+    const pre = renameKeys<GuestPre>(raw.pre ?? {}, (current) => current);
+    return { ...empty(), ...raw, steps, pre };
   } catch {
     return empty();
   }

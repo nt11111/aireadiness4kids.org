@@ -4,7 +4,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-export const TRACK_IDS = ["explorers", "investigators", "architects"] as const;
+export const TRACK_IDS = ["aware", "literate", "fluent"] as const;
 export const STEP_TYPES = ["explainer", "video", "scenario", "check", "reflect", "recap", "activity"] as const;
 export const REVIEW_STATUSES = ["draft", "in-review", "reviewed"] as const;
 
@@ -13,7 +13,7 @@ const tracks = defineCollection({
   schema: z.object({
     title: z.string().min(1),
     grades: z.string().regex(/^(K|\d{1,2})-\d{1,2}$/, 'Use a grade range like "K-5" or "9-12"'),
-    color: z.enum(["track-explorers", "track-investigators", "track-architects"]),
+    color: z.enum(["track-aware", "track-literate", "track-fluent"]),
     tagline: z.string().min(1),
     summary: z.string().min(1),
     order: z.number().int().positive(),

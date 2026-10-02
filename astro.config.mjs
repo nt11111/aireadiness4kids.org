@@ -1,5 +1,6 @@
 // @ts-check
-import { writeFileSync } from "node:fs";
+import { readdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, envField } from "astro/config";
 import { loadEnv } from "vite";
@@ -9,6 +10,7 @@ import { satteri } from "@astrojs/markdown-satteri";
 import netlify from "@astrojs/netlify";
 import tailwindcss from "@tailwindcss/vite";
 import { netlifyHeadersFile } from "./src/lib/security/policy.mjs";
+import { RENAMED_TRACKS } from "./src/lib/renamed-tracks.mjs";
 
 // Production builds for Netlify. Tests build the same site with the Node adapter (ARK_ADAPTER=node)
 // so middleware and server routes run locally against the Firebase emulators.
@@ -29,6 +31,31 @@ const staticSecurityHeaders = () => ({
     },
   },
 });
+
+/**
+ * Renamed courses (src/lib/renamed-tracks.mjs): every page that lived under an old track id redirects
+ * to the same page under the new one: the course page, each module's overview, steps, and completion
+ * page, its educator guide, and its presenter view. They're listed one by one from the module folders
+ * because Netlify's adapter can't express a [...path] redirect.
+ */
+const renamedCourses = () => {
+  const modules = fileURLToPath(new URL("./src/content/modules/", import.meta.url));
+  /** @type {Record<string, string>} */
+  const out = {};
+  for (const [from, to] of Object.entries(RENAMED_TRACKS)) {
+    out[`/courses/${from}`] = `/courses/${to}`;
+    for (const mod of readdirSync(join(modules, to))) {
+      const files = readdirSync(join(modules, to, mod));
+      const steps = files.map((f) => /^\d{2}-([a-z0-9-]+)\.mdx$/.exec(f)?.[1]).filter(Boolean);
+      for (const path of ["", ...steps.map((s) => `/${s}`), ...(steps.length ? ["/complete"] : [])]) {
+        out[`/courses/${from}/${mod}${path}`] = `/courses/${to}/${mod}${path}`;
+      }
+      if (files.includes("guide.mdx")) out[`/educators/${from}/${mod}`] = `/educators/${to}/${mod}`;
+      if (steps.length) out[`/present/${from}/${mod}`] = `/present/${to}/${mod}`;
+    }
+  }
+  return out;
+};
 
 // Pages that don't need a session set `export const prerender = true` and are served as static files.
 // Server-rendered: lesson steps, /account, /my-learning, /present, /admin, /forbidden, and /api/*.
@@ -71,6 +98,7 @@ export default defineConfig({
   redirects: {
     "/curriculum": "/courses",
     "/programs": "/workshops",
+    ...renamedCourses(),
   },
   vite: {
     plugins: [tailwindcss()],

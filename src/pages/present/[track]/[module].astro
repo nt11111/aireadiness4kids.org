@@ -54,7 +54,7 @@ const here = Astro.url.pathname;
 ---
 
 <PresentLayout title={`Presenting: ${mod.data.title} | ARK`}>
-  <main data-present data-track={course.track.id} data-total={total} class={cn(course.track.id === "explorers" && "lesson-explorers")}>
+  <main data-present data-track={course.track.id} data-total={total} class={cn(course.track.id === "aware" && "lesson-aware")}>
     <p class="sr-only" aria-live="polite" data-present-status></p>
     <!-- Each slide's title is its h1: with JavaScript only the current slide is shown, so there's one at a time. -->
 

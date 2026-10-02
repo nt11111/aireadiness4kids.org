@@ -3,7 +3,7 @@
  * spelled out here rather than built from the id. Contrast for every pair is
  * checked by scripts/check-contrast.mjs.
  */
-export type TrackId = "explorers" | "investigators" | "architects";
+export type TrackId = "aware" | "literate" | "fluent";
 
 export const TRACK_STYLE: Record<TrackId, {
   /** Solid fill + readable text on it (course headers, number badges). */
@@ -21,33 +21,33 @@ export const TRACK_STYLE: Record<TrackId, {
   /** Button variant that reads clearly on the fill. */
   button: "ink" | "light";
 }> = {
-  explorers: {
-    fill: "bg-track-explorers text-track-explorers-on",
-    onFill: "text-track-explorers-on",
-    chip: "bg-track-explorers-soft text-track-explorers-ink",
-    ink: "text-track-explorers-ink",
-    bar: "bg-track-explorers",
+  aware: {
+    fill: "bg-track-aware text-track-aware-on",
+    onFill: "text-track-aware-on",
+    chip: "bg-track-aware-soft text-track-aware-ink",
+    ink: "text-track-aware-ink",
+    bar: "bg-track-aware",
     ring: "[--ring:var(--ink)]",
     button: "ink",
   },
-  investigators: {
-    fill: "bg-track-investigators text-track-investigators-on",
-    onFill: "text-track-investigators-on",
-    chip: "bg-track-investigators-soft text-track-investigators-ink",
-    ink: "text-track-investigators-ink",
-    bar: "bg-track-investigators",
+  literate: {
+    fill: "bg-track-literate text-track-literate-on",
+    onFill: "text-track-literate-on",
+    chip: "bg-track-literate-soft text-track-literate-ink",
+    ink: "text-track-literate-ink",
+    bar: "bg-track-literate",
     ring: "[--ring:#ffffff]",
     button: "light",
   },
-  architects: {
-    fill: "bg-track-architects text-track-architects-on",
-    onFill: "text-track-architects-on",
-    chip: "bg-track-architects-soft text-track-architects-ink",
-    ink: "text-track-architects-ink",
-    bar: "bg-track-architects",
+  fluent: {
+    fill: "bg-track-fluent text-track-fluent-on",
+    onFill: "text-track-fluent-on",
+    chip: "bg-track-fluent-soft text-track-fluent-ink",
+    ink: "text-track-fluent-ink",
+    bar: "bg-track-fluent",
     ring: "[--ring:#ffffff]",
     button: "light",
   },
 };
 
-export const trackStyle = (id: string) => TRACK_STYLE[id as TrackId] ?? TRACK_STYLE.investigators;
+export const trackStyle = (id: string) => TRACK_STYLE[id as TrackId] ?? TRACK_STYLE.literate;

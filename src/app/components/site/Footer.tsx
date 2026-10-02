@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 import { ORG } from "../../lib/content";
 
 const cols = [
-  { heading: "Learn", links: [["All courses", "/courses"], ["AI Explorers (K-5)", "/courses/explorers"], ["AI Investigators (6-8)", "/courses/investigators"], ["AI Architects (9-12)", "/courses/architects"]] },
+  { heading: "Learn", links: [["All courses", "/courses"], ["AI Aware (K-5)", "/courses/aware"], ["AI Literate (6-8)", "/courses/literate"], ["AI Fluent (9-12)", "/courses/fluent"]] },
   { heading: "Our Work", links: [["Workshops & programs", "/workshops"], ["For educators", "/educators"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/workshops#research"], ["How we review modules", "/about#reviewers"]] },
   { heading: "Join Us", links: [["Become an Ambassador", "/get-involved#ambassadors"], ["Volunteer", "/get-involved#volunteer"], ["Partner With Us", "/get-involved#partners"], ["Mailing List", "/contact#newsletter"]] },
   { heading: "Organization", links: [["About", "/about"], ["Leadership", "/about#team"], ["Donate", "/donate"], ["Contact", "/contact"]] },

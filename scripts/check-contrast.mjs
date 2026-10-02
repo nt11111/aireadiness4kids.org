@@ -26,7 +26,7 @@ const pairs = [
   ...LIGHT.map((bg) => ["accent-strong", bg, UI, "progress fill"]),
   ...LIGHT.map((bg) => ["line-strong", bg, UI, "control border"]),
   ...LIGHT.map((bg) => ["brand", bg, UI, "focus ring"]),
-  ...["explorers", "investigators", "architects"].flatMap((t) => [
+  ...["aware", "literate", "fluent"].flatMap((t) => [
     [`track-${t}-on`, `track-${t}`, TEXT, "text on track fill"],
     ...LIGHT.map((bg) => [`track-${t}-ink`, bg, TEXT, "track text / ring"]),
     [`track-${t}-ink`, `track-${t}-soft`, TEXT, "chip text on tint"], ["ink", `track-${t}-soft`, TEXT, "ink on track tint"],

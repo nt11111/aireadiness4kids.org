@@ -1,4 +1,4 @@
-// Sample data for /dev/components and the Explorers player preview. Layout examples only,
+// Sample data for /dev/components and the AI Aware player preview. Layout examples only,
 // not lesson content; real lessons keep their questions in step frontmatter.
 import type { Question, ScenarioData, SortData } from "./lesson-types";
 

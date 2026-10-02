@@ -1,0 +1,71 @@
+---
+title: "Where does bias come from?"
+type: explainer
+minutes: 7
+sort:
+  prompt: "Where did the bias come in? Put each card in a bucket."
+  buckets:
+    - { id: data, label: "The data it learned from" }
+    - { id: choices, label: "Choices people made" }
+  items:
+    - id: kid-faces
+      text: "A face recognition tool learned mostly from photos of adults, so it often gets kids' faces wrong."
+      bucket: data
+      why: "The examples left a group out, so the tool had little to learn from about kids."
+    - id: best-past
+      text: "A team told its hiring tool to find applicants \"most like our best past employees.\""
+      bucket: choices
+      why: "That goal asks the tool to copy the past. A person chose the goal."
+    - id: old-records
+      text: "A tool learned from years of old records that reflected unfair treatment of some neighborhoods."
+      bucket: data
+      why: "Old records can carry old unfairness, and the tool learns it as if it were normal."
+    - id: accents
+      text: "A voice assistant was tested only by the people who built it, who all had similar accents."
+      bucket: choices
+      why: "Who tests a tool is a choice. Testing with more kinds of speakers would have caught the problem."
+    - id: one-country
+      text: "A music app learned from listeners in one country, so it rarely suggests music from anywhere else."
+      bucket: data
+      why: "The listening history it learned from came from one place, so its idea of \"good music\" is narrow."
+    - id: adult-essays
+      text: "A school used a tool built to score adults' writing to grade middle schoolers' essays."
+      bucket: choices
+      why: "Using a tool on people it wasn't built or tested for is a choice about how it's used."
+---
+
+Bias can get into an AI tool at more than one point. Here are three big ones.
+
+<Figure
+  src="/lessons/literate/bias-in-ai/where-bias-enters.svg"
+  alt="A chain of five boxes from top to bottom: 1, the data it learns from; 2, the goal people choose; the AI model; 3, how it's tested and used; and the people affected. Bias can enter at boxes 1, 2, and 3."
+  caption="Three places bias can enter an AI tool."
+  width={440}
+  height={560}
+/>
+
+## 1. The data it learns from
+
+A tool learns from its <Vocab term="training data" />. If the data leaves people out, or comes from a time when some people were treated unfairly, the tool can pick up those patterns and repeat them.
+
+## 2. The goal people choose
+
+Someone decides what the tool should do and what counts as a good answer. "Find applicants like the people we hired before" sounds reasonable. But if past hiring was unfair, that goal asks the tool to copy the unfairness. In 2018, the news agency Reuters reported that Amazon had scrapped an experimental résumé-screening tool after its team found the tool favored men.[^resume]
+
+## 3. How it's tested and used
+
+Even a well-built tool can cause harm if it's only tested on some kinds of people, or used for a job it wasn't built for.
+
+Some police departments have used tools that predict where crime might happen, based on past arrest records. Researchers have shown how this can go wrong: the tool sends more officers to the same neighborhoods, which leads to more arrests there, which the tool then treats as proof it was right.[^policing] That kind of cycle is called a <Vocab term="feedback loop" />.
+
+## Try it
+
+<Sort />
+
+<Callout kind="tip">
+When you hear about a new AI tool, ask three questions: What did it learn from? Who decided what it should do? Who was it tested on?
+</Callout>
+
+[^resume]: Jeffrey Dastin, "Amazon scraps secret AI recruiting tool that showed bias against women," Reuters, October 10, 2018, [reuters.com](https://www.reuters.com/article/us-amazon-com-jobs-automation-insight-idUSKCN1MK08G/).
+
+[^policing]: Danielle Ensign, Sorelle A. Friedler, Scott Neville, Carlos Scheidegger, and Suresh Venkatasubramanian, "Runaway Feedback Loops in Predictive Policing," Conference on Fairness, Accountability and Transparency, 2018, [arxiv.org/abs/1706.09847](https://arxiv.org/abs/1706.09847).

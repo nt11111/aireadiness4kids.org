@@ -6,8 +6,8 @@ import { test, expect } from "@playwright/test";
 import { BIAS_STEPS } from "./routes";
 import { account, adminDb, call, createUser, idTokenFor, LEARNER_SIGNUP, sessionCookieFrom, signInBrowser, unique } from "./support/firebase";
 
-const MOD = "investigators/bias-in-ai";
-const PRESENT = "/present/investigators/bias-in-ai";
+const MOD = "literate/bias-in-ai";
+const PRESENT = "/present/literate/bias-in-ai";
 const RIGHT = { "pc-training-data": "a", "pc-past-hiring": "b", "pc-catch-bias": "b" };
 const ONE_RIGHT = { ...RIGHT, "pc-past-hiring": "a", "pc-catch-bias": "a" };
 const newSrc = () => `t-${unique()}`.toLowerCase().slice(0, 40);
@@ -62,12 +62,12 @@ test.describe("presenter mode", () => {
 
   test("Exit leaves presenter mode for the page the presenter came from, or the module page", async ({ page }) => {
     await signInBrowser(page.context(), await account("learner", { role: "facilitator" }));
-    await page.goto("/courses/investigators", { waitUntil: "networkidle" });
+    await page.goto("/courses/literate", { waitUntil: "networkidle" });
     await page.evaluate((href) => { location.href = href; }, PRESENT);
     await page.waitForURL(`**${PRESENT}`);
     await page.keyboard.press("ArrowRight");
     await page.getByRole("link", { name: /^Exit/ }).click();
-    await expect(page).toHaveURL(/\/courses\/investigators\/?$/);
+    await expect(page).toHaveURL(/\/courses\/literate\/?$/);
     await expect(page.locator("header").first()).toBeVisible();
     // Opened directly (a bookmark, or from the presenter list): Exit goes to the module's page.
     for (const viaList of [false, true]) {
@@ -79,7 +79,7 @@ test.describe("presenter mode", () => {
         await page.goto(PRESENT, { waitUntil: "networkidle" });
       }
       await page.getByRole("link", { name: /^Exit/ }).click();
-      await expect(page).toHaveURL(/\/courses\/investigators\/bias-in-ai\/?$/);
+      await expect(page).toHaveURL(/\/courses\/literate\/bias-in-ai\/?$/);
       expect(await page.evaluate(() => document.documentElement.classList.contains("present"))).toBe(false);
     }
   });
@@ -104,8 +104,8 @@ test.describe("presenter mode", () => {
     const list = await call("/present", { method: "GET", cookie: f.cookie });
     expect(list.status).toBe(200);
     expect(list.text).toContain(`href="${PRESENT}"`);
-    expect((await call("/present/investigators/deepfakes-and-misinformation", { method: "GET", cookie: f.cookie })).status).toBe(404);
-    expect((await call("/present/investigators/nope", { method: "GET", cookie: f.cookie })).status).toBe(404);
+    expect((await call("/present/literate/deepfakes-and-misinformation", { method: "GET", cookie: f.cookie })).status).toBe(404);
+    expect((await call("/present/literate/nope", { method: "GET", cookie: f.cookie })).status).toBe(404);
   });
 });
 
@@ -148,7 +148,7 @@ test.describe("admin impact page", () => {
     expect(csv.text).toContain(`source,${src}`);
     expect(csv.text).toContain("moduleCompletions,1");
     expect(csv.text).toContain("certificates,1");
-    expect(csv.text).toContain("Bias in AI,investigators,1,1,1,33,2,100,67");
+    expect(csv.text).toContain("Bias in AI,literate,1,1,1,33,2,100,67");
 
     await signInBrowser(page.context(), admin);
     await page.goto(`/admin?source=${src}`);
@@ -186,9 +186,9 @@ test.describe("admin impact page", () => {
 
 test.describe("educator pages", () => {
   test("open to everyone, linked from the module page, with the guide's sections", async ({ page }) => {
-    await page.goto("/courses/investigators/bias-in-ai");
+    await page.goto("/courses/literate/bias-in-ai");
     await page.getByRole("link", { name: "Facilitator guide for Bias in AI" }).click();
-    await expect(page).toHaveURL(/\/educators\/investigators\/bias-in-ai$/);
+    await expect(page).toHaveURL(/\/educators\/literate\/bias-in-ai$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Facilitator guide: Bias in AI");
     for (const h of ["Materials", "Learning objectives", "Timing (60 minutes)", "Discussion prompts", "Answer notes", "Words to know", "Workshop quick checks"]) {
       await expect(page.getByRole("heading", { name: h, exact: true })).toBeVisible();

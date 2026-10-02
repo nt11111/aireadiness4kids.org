@@ -2,12 +2,12 @@
    Lesson player and lesson content (brief sections 3, 6, 7).
    ============================================================ */
 :root {
-  /* Minimum tap target. Explorers (K-5) lessons use 48px. */
+  /* Minimum tap target. AI Aware (K-5) lessons use 48px. */
   --tap: 2.75rem;
   /* Lesson top bar: 56px bar + 4px progress + 1px border. */
   --lesson-top: 61px;
 }
-.lesson-explorers {
+.lesson-aware {
   --tap: 3rem;
 }
 

@@ -25,14 +25,14 @@ interface Props {
 
 const { track, module, steps, index, finishHref = `${Astro.props.module.href}/complete`, signedIn = true } = Astro.props;
 const step = steps[index];
-const explorers = track.id === "explorers";
+const aware = track.id === "aware";
 const s = trackStyle(track.id);
 const pct = Math.round(((index + 1) / steps.length) * 100);
 const prevHref = index === 0 ? module.href : steps[index - 1].href;
 const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href;
 ---
 
-<div data-lesson-root data-track={track.id} class={cn("lesson", explorers && "lesson-explorers")}>
+<div data-lesson-root data-track={track.id} class={cn("lesson", aware && "lesson-aware")}>
   <header class="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur" transition:name="lesson-top" transition:animate="none">
     <div class="flex h-14 items-center gap-3 px-3 sm:px-4">
       <a href="/" class="grid size-11 shrink-0 place-items-center rounded-full" aria-label="ARK home">
@@ -67,15 +67,15 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
     <main id="lesson-main" class="flex min-h-[calc(100dvh-var(--lesson-top))] min-w-0 flex-1 flex-col">
       <article
         data-lesson-article
-        class={cn("mx-auto w-full flex-1 px-4 pb-16 pt-8 sm:px-6 lg:pt-12", explorers ? "max-w-[60ch] text-lesson-explorers" : "max-w-reading text-lesson")}
+        class={cn("mx-auto w-full flex-1 px-4 pb-16 pt-8 sm:px-6 lg:pt-12", aware ? "max-w-[60ch] text-lesson-aware" : "max-w-reading text-lesson")}
         transition:animate={fade({ duration: "0.2s" })}
       >
         <p class="flex flex-wrap items-center gap-x-2 text-small font-bold text-ink-soft">
           <span>Step {index + 1} of {steps.length}</span><span aria-hidden="true">·</span><span>{STEP_LABEL[step.type]}</span><span aria-hidden="true">·</span><span>{step.minutes} min</span>
           {module.status !== "reviewed" && <ReviewBadge status={module.status} className="ml-1 md:hidden" />}
         </p>
-        <h1 data-focus-on-nav tabindex="-1" class={cn("mt-2 text-ink focus:outline-none", explorers ? "text-display-lg" : "text-display-md sm:text-display-lg")}>{step.title}</h1>
-        {explorers && <ReadAloud class="mt-5" />}
+        <h1 data-focus-on-nav tabindex="-1" class={cn("mt-2 text-ink focus:outline-none", aware ? "text-display-lg" : "text-display-md sm:text-display-lg")}>{step.title}</h1>
+        {aware && <ReadAloud class="mt-5" />}
         <div class="lesson-prose mt-6">
           <slot />
         </div>

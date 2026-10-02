@@ -3,7 +3,7 @@ import { Timestamp } from "firebase-admin/firestore";
 import type { Route } from "../routes";
 import { account, adminDb, call, signInBrowser, type Account } from "./firebase";
 
-const BIAS = "investigators/bias-in-ai";
+const BIAS = "literate/bias-in-ai";
 const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiring-bot", "check", "reflect", "recap"];
 
 /**

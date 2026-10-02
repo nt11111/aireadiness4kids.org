@@ -41,7 +41,7 @@ export function getCatalog(): Promise<Map<string, CatalogModule>> {
   return catalog;
 }
 
-/** Module ids look like "investigators/bias-in-ai". Rejects anything else before a lookup. */
+/** Module ids look like "literate/bias-in-ai". Rejects anything else before a lookup. */
 export const MODULE_ID = /^[a-z]+\/[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const STEP_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

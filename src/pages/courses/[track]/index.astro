@@ -32,9 +32,9 @@ const reviewLine =
 <BaseLayout title={`${title}, grades ${grades} | ARK courses`} description={summary}>
   <section class={cn("relative overflow-hidden px-4 pb-12 pt-28 sm:px-6 lg:pb-16 lg:pt-36", s.fill, s.ring)}>
     <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false" class="pointer-events-none absolute -bottom-16 right-0 hidden w-[360px] opacity-15 lg:block xl:right-[5%]">
-      {track.id === "explorers" && <circle cx="100" cy="100" r="96" fill="currentColor" />}
-      {track.id === "investigators" && <rect x="22" y="22" width="156" height="156" rx="36" fill="currentColor" transform="rotate(-9 100 100)" />}
-      {track.id === "architects" && <path d="M22 196 V 94 a 78 78 0 0 1 156 0 V 196 Z" fill="currentColor" />}
+      {track.id === "aware" && <circle cx="100" cy="100" r="96" fill="currentColor" />}
+      {track.id === "literate" && <rect x="22" y="22" width="156" height="156" rx="36" fill="currentColor" transform="rotate(-9 100 100)" />}
+      {track.id === "fluent" && <path d="M22 196 V 94 a 78 78 0 0 1 156 0 V 196 Z" fill="currentColor" />}
     </svg>
     <div class="relative mx-auto max-w-site">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses", href: "/courses" }, { label: title }]} />
@@ -49,7 +49,7 @@ const reviewLine =
           <li class="inline-flex items-center gap-2"><HeartHandshake aria-hidden="true" className="size-5" />Free</li>
         </ul>
         <!-- "Start course" until progress loads (and without JavaScript); then "Resume" with a progress ring. -->
-        <CourseStart client:load modules={lites} trackId={track.id as "explorers" | "investigators" | "architects"} variant={s.button} />
+        <CourseStart client:load modules={lites} trackId={track.id as "aware" | "literate" | "fluent"} variant={s.button} />
       </div>
     </div>
   </section>

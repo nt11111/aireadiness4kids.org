@@ -141,7 +141,7 @@ Umami Cloud or Cloudflare Web Analytics. Until someone decides, analytics stay o
 
 | Track | Module | Lesson steps | Facilitator guide | Slides | Status |
 |---|---|---|---|---|---|
-| Investigators | **Bias in AI** | 6 (complete sample module) | Yes | Yes | Draft |
+| AI Literate | **Bias in AI** | 6 (complete sample module) | Yes | Yes | Draft |
 | All three | The other 16 modules | None (stub) | "Coming soon" | Yes | Draft |
 
 - Every module shows **"Draft: under expert review"** with a link to how review works.

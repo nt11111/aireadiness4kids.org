@@ -9,7 +9,7 @@ const KINDS = {
   think: { label: "Think about it", Icon: MessageCircleQuestion, box: "border-line bg-surface-2", icon: "text-brand" },
   tip: { label: "Tip", Icon: Lightbulb, box: "border-brand/25 bg-brand-soft", icon: "text-brand" },
   warning: { label: "Heads up", Icon: TriangleAlert, box: "border-warning/35 bg-warning-soft", icon: "text-warning" },
-  fact: { label: "Fact", Icon: BookOpenCheck, box: "border-track-architects/25 bg-track-architects-soft", icon: "text-track-architects-ink" },
+  fact: { label: "Fact", Icon: BookOpenCheck, box: "border-track-fluent/25 bg-track-fluent-soft", icon: "text-track-fluent-ink" },
 } as const;
 if (!(kind in KINDS)) throw new Error(`<Callout kind="${kind}">: use think, tip, warning, or fact.`);
 const k = KINDS[kind];
