@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 444" width="440" height="444" role="img" aria-labelledby="t">
+  <title id="t">Task map: routine to non-routine, digital to physical</title>
+  <style>
+    text { font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #1C2430; }
+    .h { font-size: 18px; font-weight: 700; }
+    .ax { font-size: 16px; font-weight: 700; fill: #4A5563; }
+    .digital { fill: #E3F1EC; stroke: #908776; stroke-width: 1.5; }
+    .physical { fill: #FCEBD0; stroke: #908776; stroke-width: 1.5; }
+    .axis { stroke: #4A5563; stroke-width: 2; fill: none; marker-start: url(#a); marker-end: url(#a); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#4A5563" />
+    </marker>
+  </defs>
+  <rect width="440" height="444" rx="16" fill="#F4EFE6" />
+
+  <!-- Axes -->
+  <path class="axis" d="M46 28 V 372" />
+  <text class="ax" x="30" y="110" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 30 110)">Digital</text>
+  <text class="ax" x="30" y="290" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 30 290)">Physical</text>
+  <path class="axis" d="M72 398 H 416" />
+  <text class="ax" x="154" y="426" text-anchor="middle">Routine</text>
+  <text class="ax" x="334" y="426" text-anchor="middle">Non-routine</text>
+
+  <!-- Cells -->
+  <rect class="digital" x="64" y="20" width="180" height="180" rx="12" />
+  <rect class="digital" x="244" y="20" width="180" height="180" rx="12" />
+  <rect class="physical" x="64" y="200" width="180" height="180" rx="12" />
+  <rect class="physical" x="244" y="200" width="180" height="180" rx="12" />
+
+  <!-- Routine, digital: data entry (a spreadsheet) -->
+  <rect x="132" y="62" width="44" height="34" rx="3" fill="#FFFFFF" stroke="#1F6F5C" stroke-width="2" />
+  <path d="M132 73 H176 M132 84 H176 M147 62 V96 M161 62 V96" stroke="#1F6F5C" stroke-width="1.5" />
+  <text class="h" x="154" y="132" text-anchor="middle">Data entry</text>
+
+  <!-- Non-routine, digital: negotiating a deal (two speech bubbles) -->
+  <rect x="306" y="58" width="34" height="24" rx="6" fill="#1F6F5C" />
+  <path d="M314 81 L312 90 L322 81 Z" fill="#1F6F5C" />
+  <rect x="330" y="72" width="34" height="24" rx="6" fill="#FFFFFF" stroke="#1F6F5C" stroke-width="2" />
+  <path d="M354 95 L357 104 L348 96" fill="#FFFFFF" stroke="#1F6F5C" stroke-width="2" stroke-linejoin="round" />
+  <text class="h" x="334" y="132" text-anchor="middle">Negotiating</text>
+  <text class="h" x="334" y="154" text-anchor="middle">a deal</text>
+
+  <!-- Routine, physical: warehouse picking (a box) -->
+  <rect x="134" y="240" width="40" height="34" rx="3" fill="#BF780D" />
+  <rect x="134" y="240" width="40" height="9" rx="2" fill="#9A600A" />
+  <rect x="149" y="240" width="10" height="16" fill="#F4EFE6" />
+  <text class="h" x="154" y="312" text-anchor="middle">Warehouse</text>
+  <text class="h" x="154" y="334" text-anchor="middle">picking</text>
+
+  <!-- Non-routine, physical: plumbing repair (a wrench) -->
+  <g transform="rotate(-45 334 258)">
+    <rect x="328" y="252" width="12" height="34" rx="6" fill="#4A5563" />
+    <circle cx="334" cy="246" r="13" fill="#4A5563" />
+    <rect x="329" y="230" width="10" height="14" fill="#FCEBD0" />
+  </g>
+  <text class="h" x="334" y="312" text-anchor="middle">Plumbing</text>
+  <text class="h" x="334" y="334" text-anchor="middle">repair</text>
+</svg>
