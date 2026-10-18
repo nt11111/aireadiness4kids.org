@@ -1,0 +1,29 @@
+---
+// <ArkView view="..." against="..." />: ARK's opinion, kept apart from the facts (curriculum guide
+// section 7b). Two labeled panels: the view and the best case against it. The labels are the
+// writer's: "ARK's view" / "The best case against", or in AI Aware "What ARK thinks" / "Some people say".
+// No grade or check ever depends on agreeing; the reflect prompt that follows stays a normal <Reflect>.
+import { Scale } from "lucide-react";
+
+interface Props { view: string; against: string; viewLabel?: string; againstLabel?: string }
+const { view, against, viewLabel = "ARK's view", againstLabel = "The best case against" } = Astro.props;
+if (!view || !against) throw new Error("<ArkView>: add view=\"...\" and against=\"...\" (ARK's position and the best case against it).");
+---
+
+<section aria-label="ARK's opinion" data-ark-view class="lesson-block rounded-xl border border-line-strong bg-surface p-4 shadow-1 sm:p-5">
+  <p class="flex items-center gap-2">
+    <Scale aria-hidden="true" className="size-5 shrink-0 text-ink-soft" />
+    <span class="rounded-full bg-ink px-2.5 py-0.5 text-small font-bold text-surface">ARK's opinion</span>
+    <span class="text-small text-ink-soft">Not a fact. You can disagree.</span>
+  </p>
+  <div class="mt-4 grid gap-4 md:grid-cols-2">
+    <div class="border-l-4 border-ink pl-4">
+      <p class="font-bold text-ink">{viewLabel}</p>
+      <p class="mt-1 text-ink">{view}</p>
+    </div>
+    <div class="border-l-4 border-line-strong pl-4">
+      <p class="font-bold text-ink">{againstLabel}</p>
+      <p class="mt-1 text-ink">{against}</p>
+    </div>
+  </div>
+</section>

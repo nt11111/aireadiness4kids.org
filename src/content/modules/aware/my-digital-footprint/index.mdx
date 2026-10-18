@@ -2,19 +2,62 @@
 title: "My Digital Footprint"
 track: aware
 order: 5
+duration_minutes: 40
 summary: "Students learn that AI tools collect and remember information, and what that means for their privacy."
+big_idea: "What you tell a computer can be kept, and sometimes shared. Share the least you can."
 topics:
   - "What is a digital footprint?"
   - "What information AI can see or remember"
   - "Keeping personal information private"
   - "Simple rules for staying safe online"
-objectives: []
-vocabulary: []
+objectives:
+  - "Say what a digital footprint is."
+  - "Name three kinds of personal information to keep private."
+  - "Explain that AI tools can save what you type or say."
+  - "Follow three simple safety rules."
+vocabulary:
+  - term: "digital footprint"
+    def: "The trail of things you do online."
+  - term: "personal information"
+    def: "Facts about you, like your full name, address, school, or birthday."
+  - term: "private"
+    def: "Just for you and your family."
+  - term: "password"
+    def: "A secret word that keeps your things locked."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1RYbLbLHwLRpE_rclLNijLlNRRi-0K2Q-/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is a digital footprint?"
+    options:
+      - { id: a, text: "The trail of things you do online" }
+      - { id: b, text: "A footprint in mud" }
+      - { id: c, text: "A type of robot" }
+      - { id: d, text: "A video game" }
+    answer: a
+    explanation: "It is the trail you leave when you use devices and apps."
+  - id: pc-2
+    prompt: "Which should you keep private?"
+    options:
+      - { id: a, text: "Your favorite food" }
+      - { id: b, text: "Your password" }
+      - { id: c, text: "Your favorite animal" }
+      - { id: d, text: "Your favorite song" }
+    answer: b
+    explanation: "A password keeps your things locked, so never share it."
+  - id: pc-3
+    prompt: "A chatbot asks where you live. What should you do?"
+    options:
+      - { id: a, text: "Tell it" }
+      - { id: b, text: "Ask a grown-up first" }
+      - { id: c, text: "Make up a story and share it everywhere" }
+      - { id: d, text: "Ask your friends what to say" }
+    answer: b
+    explanation: "A grown-up can help you stay safe."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

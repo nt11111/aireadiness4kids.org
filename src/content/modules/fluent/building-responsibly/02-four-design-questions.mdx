@@ -1,0 +1,25 @@
+---
+title: "Four design questions"
+type: explainer
+minutes: 7
+---
+
+Before writing any code, answer four questions:
+
+1. **Who is this for?** Name real users. "Everyone" is not an answer.
+2. **Who could it harm?** Include people who never use it.
+3. **What data does it need?** Collect only what the job requires.
+4. **What happens when it is wrong?** Who notices, and how do they fix it?
+
+Question 2 is where a stakeholder map helps. Start with the people in the middle and work outward.
+
+<Figure pending alt={"Four nested rings showing stakeholders of a product, from direct users in the center to operators, bystanders, and society on the outside."} brief={"A stakeholder map of four rings. Center: direct users, the people who choose the product. Next ring: operators, such as teachers, moderators, and support staff. Next: bystanders, people it touches who never signed up. Outer ring: society, where norms, jobs, and trust shift at scale"} />
+
+Here is a worked example. The product is an AI tool that summarizes school board meetings for students who can't attend.
+
+- **Who is it for?** High school students who want to follow board decisions about their school.
+- **Who could it harm?** Board members, if a summary misquotes them. Students, if they act on a wrong summary. Parents and teachers, the bystanders who never chose the tool.
+- **What data does it need?** Only the public meeting recordings. No student data at all.
+- **What happens when it is wrong?** Each summary links to the exact moment in the recording. There is a "report an error" button, and a person reviews summaries before posting.
+
+Notice how the answers to question 4 turn into features. That is the point. Design questions become design decisions.

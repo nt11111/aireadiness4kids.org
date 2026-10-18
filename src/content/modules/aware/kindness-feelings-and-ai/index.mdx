@@ -2,19 +2,62 @@
 title: "Kindness, Feelings & AI"
 track: aware
 order: 4
+duration_minutes: 40
 summary: "Students think about how AI-generated content (images, videos, messages) can affect emotions and relationships."
+big_idea: "AI can sound like a friend, but it has no feelings. People do."
 topics:
   - "Can AI be kind or unkind?"
   - "Cyberbullying and AI-generated content"
   - "How does seeing AI-made images affect how we feel?"
   - "Treating others kindly online even when talking to a bot"
-objectives: []
-vocabulary: []
+objectives:
+  - "Explain that AI has no feelings, but its words and pictures can affect ours."
+  - "Notice when a picture or message might be made by AI."
+  - "Choose a kind response when AI-made content is used to tease someone."
+  - "Know to tell a trusted adult."
+vocabulary:
+  - term: "bot"
+    def: "A program that chats like a person."
+  - term: "AI-made"
+    def: "Made by an AI, not drawn or photographed by a person."
+  - term: "cyberbullying"
+    def: "Being mean to someone again and again using phones or computers."
+  - term: "trusted adult"
+    def: "A grown-up you feel safe with, like a parent or teacher."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/16xiDyT6PHCDUTh3vj6cF0yu5FAcHjacw/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Does an AI toy feel sad when you leave?"
+    options:
+      - { id: a, text: "Yes, very sad" }
+      - { id: b, text: "No, it has no feelings" }
+      - { id: c, text: "Only at night" }
+      - { id: d, text: "Only if it is new" }
+    answer: b
+    explanation: "It may say sad words, but it does not feel them."
+  - id: pc-2
+    prompt: "Can AI-made pictures make people feel bad?"
+    options:
+      - { id: a, text: "No, never" }
+      - { id: b, text: "Yes, they can" }
+      - { id: c, text: "Only grown-ups" }
+      - { id: d, text: "Only in movies" }
+    answer: b
+    explanation: "People have feelings, even when a bot made the picture."
+  - id: pc-3
+    prompt: "Something online makes you feel bad. Who can help?"
+    options:
+      - { id: a, text: "A trusted adult" }
+      - { id: b, text: "A chatbot" }
+      - { id: c, text: "Nobody" }
+      - { id: d, text: "A game" }
+    answer: a
+    explanation: "A trusted adult can help."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

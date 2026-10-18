@@ -2,19 +2,74 @@
 title: "The AI Landscape Today"
 track: fluent
 order: 1
+duration_minutes: 49
 summary: "Students survey the current state of AI: what's real vs. hype, what's possible now, and what's coming."
+hard_idea: "The jagged frontier. AI can be excellent at one task and unreliable at another that looks just as hard, and the line between them is hard to see from outside."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "the July 2026 Hugging Face incident"
+    - "the FTC's 2025 order against an AI detector's accuracy claims"
+    - "GPT-5.6 Sol's July 2026 scores"
+    - "Stanford's 2026 AI Index"
+    - "Waymo's school bus recall"
 topics:
   - "Generative AI, large language models, and what they can and can't do"
   - "The gap between AI marketing claims and reality"
   - "Industries being transformed by AI right now"
   - "What \"artificial general intelligence\" means and why it matters"
-objectives: []
-vocabulary: []
+objectives:
+  - "Explain how an LLM is trained and why that makes confident errors a built-in risk, not a glitch."
+  - "Describe what people mean by artificial general intelligence and why experts disagree about it."
+  - "Test a claim like \"anyone can build an app with AI\" by vibe coding a small tool and explaining where it fell short."
+  - "Decide whether a use of AI is a good one by asking what data it takes and who it could harm."
+vocabulary:
+  - term: "generative AI"
+    def: "AI that produces new text, images, audio, or code from a prompt."
+  - term: "large language model (LLM)"
+    def: "A model trained on a very large body of text to predict what comes next."
+  - term: "hallucination"
+    def: "A confident answer from a model that is false or made up."
+  - term: "benchmark"
+    def: "A standard test used to compare AI systems."
+  - term: "artificial general intelligence (AGI)"
+    def: "A hypothetical AI that could match people across most intellectual tasks. There is no agreed definition."
+  - term: "vibe coding"
+    def: "Building software by telling an AI tool what you want in plain language and letting it write the code."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1xDrLlIEts8zwkT8EZCEexY9CzoCs0HR8/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which best describes how a large language model writes?"
+    options:
+      - { id: a, text: "It retrieves stored answers from a database" }
+      - { id: b, text: "It predicts likely next text based on patterns from training" }
+      - { id: c, text: "It reasons from rules of grammar" }
+      - { id: d, text: "It copies the top search result" }
+    answer: b
+    explanation: "An LLM predicts likely text from patterns it learned, then is tuned toward answers people prefer."
+  - id: pc-2
+    prompt: "\"Our AI is 99% accurate.\" What is the best first question?"
+    options:
+      - { id: a, text: "How much does it cost?" }
+      - { id: b, text: "Which company built it?" }
+      - { id: c, text: "Accurate at what, measured how, and by whom?" }
+      - { id: d, text: "Is it the newest version?" }
+    answer: c
+    explanation: "A number means little without the task, the method, and the source."
+  - id: pc-3
+    prompt: "Which statement about AGI is most accurate?"
+    options:
+      - { id: a, text: "It was achieved in 2023" }
+      - { id: b, text: "It has one agreed scientific definition" }
+      - { id: c, text: "It is the same as generative AI" }
+      - { id: d, text: "Experts disagree on what it means and when it might arrive" }
+    answer: d
+    explanation: "There is no agreed definition or timeline."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

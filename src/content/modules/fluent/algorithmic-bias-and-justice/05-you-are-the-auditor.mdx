@@ -1,0 +1,45 @@
+---
+title: "You are the auditor"
+type: scenario
+minutes: 6
+scenario:
+  prompt: "What do you do first?"
+  options:
+    - id: a
+      text: "Compare error rates across groups, including overlapping ones."
+      feedback: "Strong. This is where hidden harm shows up. Averages can look fine while one group carries most of the mistakes."
+    - id: b
+      text: "Read the code."
+      feedback: "Useful later. The code shows what the tool computes, not how its errors fall on real students. Start with outcomes."
+    - id: c
+      text: "Interview flagged students."
+      feedback: "A strong second step. Students know what the label did to them. Interviews alone can't show whether errors fall unevenly."
+    - id: d
+      text: "Ask what the flag is used for."
+      feedback: "Also strong. A flag that triggers extra tutoring carries different stakes than one that moves a student to a separate classroom."
+sources:
+  - title: "Gender Shades (Buolamwini and Gebru, 2018)"
+    url: "https://proceedings.mlr.press/v81/buolamwini18a.html"
+  - title: "Crenshaw, Demarginalizing the Intersection of Race and Sex (1989)"
+    url: "https://scholarship.law.columbia.edu/faculty_scholarship/3007"
+  - title: "Actionable Auditing (Raji and Buolamwini, 2019)"
+    url: "https://www.media.mit.edu/publications/actionable-auditing-investigating-the-impact-of-publicly-naming-biased-performance-results-of-commercial-ai-products/"
+  - title: "NYC Local Law 144"
+    url: "https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page"
+  - title: "361,000 resumes and five AI models (An et al., PNAS Nexus, March 2025)"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC11937954/"
+  - title: "Wisconsin's dropout algorithm (The Markup, April 2023)"
+    url: "https://themarkup.org/the-breakdown/2023/04/27/takeaways-from-our-investigation-into-wisconsins-racially-inequitable-dropout-algorithm"
+---
+
+An <Vocab term="algorithmic audit" /> tests a system for unequal outcomes. The first rule of auditing: check overlapping groups, not just averages. In the 2018 Gender Shades study, three commercial gender classification systems had error rates up to 34.7% for darker-skinned women. The highest rate for lighter-skinned men was 0.8%. Checking skin tone alone or gender alone would hide the worst-hit group. That is <Vocab term="intersectionality" />, a term Kimberlé Crenshaw introduced in 1989.
+
+The rule holds for newer AI too. In 2025, researchers ran about 361,000 resumes through five AI models. The models scored women higher than men overall, but gave lower scores to Black men with comparable qualifications.
+
+Audits work. Within seven months of Gender Shades, all three companies released new versions with lower error rates for darker-skinned women. Since July 2023, New York City has required bias audits for automated hiring tools.
+
+A school district uses an early-warning score that flags middle schoolers as "at risk" of not graduating on time. You are asked to audit it.
+
+<Scenario />
+
+This is close to a real case. In 2023, The Markup found that Wisconsin's Dropout Early Warning System used race and free or reduced-price lunch status as inputs. It was wrong nearly three-quarters of the time when it predicted a student would not graduate on time. It was wrong more often for Black and Hispanic students than for white students.

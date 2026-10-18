@@ -103,8 +103,8 @@ test.describe("/api/checks", () => {
 
   test("bad input is rejected", async () => {
     expect((await submit({ moduleId: "literate/not-a-module" })).status).toBe(404);
-    // A module with no check questions has no check.
-    expect((await submit({ moduleId: "aware/what-is-ai" })).status).toBe(404);
+    // Every module has a check now; a real module with the wrong track is still unknown.
+    expect((await submit({ moduleId: "fluent/bias-in-ai" })).status).toBe(404);
     expect((await submit({ phase: "during" })).status).toBe(400);
     expect((await submit({ answers: { "pc-training-data": "a" } })).status).toBe(400);
     expect((await submit({ answers: { ...RIGHT, "pc-catch-bias": "e" } })).status).toBe(400);

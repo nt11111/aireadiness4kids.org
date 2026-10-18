@@ -1,6 +1,6 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { BIAS_MODULE, BIAS_STEPS } from "./routes";
+import { BIAS_MODULE, BIAS_STEPS, stepSlugs } from "./routes";
 import { account, signInBrowser } from "./support/firebase";
 import { hydrated } from "./support/hydration";
 
@@ -313,23 +313,15 @@ test.describe("signed out", () => {
   });
 });
 
-test("Start course opens the first module with lessons, not a coming-soon stub", async ({ page }) => {
-  // AI Literate: module 1 is still a stub, so Start goes to step 1 of Bias in AI (module 2).
-  await page.goto("/courses/literate", { waitUntil: "networkidle" });
-  await hydrated(page);
-  const start = page.getByRole("link", { name: "Start course" });
-  await expect(start).toHaveAttribute("href", `${BIAS_MODULE}/${BIAS_STEPS[0]}`);
-  await start.click();
-  await expect(page).toHaveURL(new RegExp(`${BIAS_MODULE}/${BIAS_STEPS[0]}$`));
-  // Courses with no lessons yet don't promise one: the button shows the modules (each has slides).
-  for (const trackId of ["aware", "fluent"]) {
+test("Start course opens step 1 of the course's first module", async ({ page }) => {
+  // Every module has lessons now, so each course starts at module 1.
+  for (const [trackId, first] of [["aware", "aware/what-is-ai"], ["literate", "literate/how-ai-actually-works"], ["fluent", "fluent/ai-landscape-today"]] as const) {
     await page.goto(`/courses/${trackId}`, { waitUntil: "networkidle" });
     await hydrated(page);
-    await expect(page.getByRole("link", { name: "Start course" })).toHaveCount(0);
-    const see = page.getByRole("link", { name: "See the modules" });
-    await expect(see).toHaveAttribute("href", "#syllabus");
-    await expect(page.getByText("Lessons for this course are being written.")).toBeVisible();
-    await see.click();
-    await expect(page.getByRole("heading", { name: "Syllabus" })).toBeInViewport();
+    const start = page.getByRole("link", { name: "Start course" });
+    const href = `/courses/${first}/${stepSlugs(first)[0]}`;
+    await expect(start).toHaveAttribute("href", href);
+    await start.click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
   }
 });

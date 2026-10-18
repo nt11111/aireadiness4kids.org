@@ -73,7 +73,7 @@ test.describe("presenter mode", () => {
     for (const viaList of [false, true]) {
       if (viaList) {
         await page.goto("/present", { waitUntil: "networkidle" });
-        await page.getByRole("link", { name: /^Present/ }).click();
+        await page.getByRole("link", { name: "Present Bias in AI" }).click();
         await page.waitForURL(`**${PRESENT}`);
       } else {
         await page.goto(PRESENT, { waitUntil: "networkidle" });
@@ -95,7 +95,7 @@ test.describe("presenter mode", () => {
     expect(new URL((await page.locator('[data-qr="module"]').getAttribute("data-qr-url"))!).searchParams.get("src")).toBe("lib-night");
   });
 
-  test("only facilitators and admins can present; stubs and unknown modules are 404", async () => {
+  test("only facilitators and admins can present; unknown modules are 404", async () => {
     const learner = await account("learner");
     const f = await account("learner", { role: "facilitator" });
     expect((await call("/present", { method: "GET", cookie: learner.cookie })).status).toBe(403);
@@ -104,7 +104,11 @@ test.describe("presenter mode", () => {
     const list = await call("/present", { method: "GET", cookie: f.cookie });
     expect(list.status).toBe(200);
     expect(list.text).toContain(`href="${PRESENT}"`);
-    expect((await call("/present/literate/deepfakes-and-misinformation", { method: "GET", cookie: f.cookie })).status).toBe(404);
+    // Every module presents now, including the new components (Try it, ARK's view, pending figures).
+    for (const m of ["literate/deepfakes-and-misinformation", "fluent/ai-landscape-today", "aware/what-is-ai"]) {
+      const res = await call(`/present/${m}`, { method: "GET", cookie: f.cookie });
+      expect(res.status, m).toBe(200);
+    }
     expect((await call("/present/literate/nope", { method: "GET", cookie: f.cookie })).status).toBe(404);
   });
 });
@@ -195,6 +199,6 @@ test.describe("educator pages", () => {
     }
     await page.goto("/educators");
     await expect(page.getByRole("link", { name: "Facilitator guide for Bias in AI" })).toBeVisible();
-    await expect(page.getByText("Guide coming soon")).toHaveCount(16);
+    await expect(page.getByText("Guide coming soon")).toHaveCount(0);
   });
 });

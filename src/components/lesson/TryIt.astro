@@ -1,0 +1,33 @@
+---
+// <TryIt offline="No AI tool? ..." warning="...">: a hands-on task (the curriculum guide's [TRY] tag).
+// The slot holds the task and what to look for. `offline` is the version that works without an AI tool,
+// and it always shows, since the site has no practice tool yet; its opening question ("No AI tool?") is
+// set in bold. `warning` is the writer's personal-information line. Never link to or name an AI product.
+import { FlaskConical, NotebookPen } from "lucide-react";
+import Callout from "./Callout.astro";
+
+interface Props { title?: string; offline?: string; warning?: string }
+const { title = "Try it", offline, warning } = Astro.props;
+const lead = offline?.match(/^(No [^?]+\?)\s*(.*)$/s);
+---
+
+<section aria-label={title} data-try-it class="lesson-block overflow-hidden rounded-xl border border-line bg-surface shadow-1">
+  <div class="flex gap-3 p-4 sm:gap-4 sm:p-5">
+    <FlaskConical aria-hidden="true" className="mt-1 size-5 shrink-0 text-brand" />
+    <div class="min-w-0 [&>*+*]:mt-3 [&_li+li]:mt-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
+      <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{title}</p>
+      <slot />
+    </div>
+  </div>
+  {offline && (
+    <div data-try-offline class="flex gap-3 border-t border-line bg-surface-2 p-4 sm:gap-4 sm:p-5">
+      <NotebookPen aria-hidden="true" className="mt-1 size-5 shrink-0 text-ink-soft" />
+      <p class="min-w-0">{lead ? <><strong class="font-bold">{lead[1]}</strong> {lead[2]}</> : offline}</p>
+    </div>
+  )}
+  {warning && (
+    <div class="border-t border-line p-4 sm:p-5 [&>.lesson-block]:mt-0">
+      <Callout kind="warning">{warning}</Callout>
+    </div>
+  )}
+</section>

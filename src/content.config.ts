@@ -26,17 +26,24 @@ const tracks = defineCollection({
 const unique = (ids: string[]) => new Set(ids).size === ids.length;
 
 // A multiple-choice or true/false question (for true/false, list "True" and "False" as the options).
-const question = z
-  .object({
-    id: z.string().min(1),
-    prompt: z.string().min(1),
-    options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1) })).min(2).max(5),
-    answer: z.string().min(1),
-    // Shown after the learner checks their answer, right or wrong. Explain why; never scold.
-    explanation: z.string().min(1),
-  })
-  .refine((q) => q.options.some((o) => o.id === q.answer), { message: "answer must match one of the option ids" })
-  .refine((q) => unique(q.options.map((o) => o.id)), { message: "option ids must be unique" });
+const questionFields = {
+  id: z.string().min(1),
+  prompt: z.string().min(1),
+  options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1) })).min(2).max(5),
+  answer: z.string().min(1),
+  // Shown after the learner checks their answer, right or wrong. Explain why; never scold.
+  explanation: z.string().min(1),
+};
+const questionRules = <T extends z.ZodType<{ options: { id: string }[]; answer: string }>>(schema: T) =>
+  schema
+    .refine((q) => q.options.some((o) => o.id === q.answer), { message: "answer must match one of the option ids" })
+    .refine((q) => unique(q.options.map((o) => o.id)), { message: "option ids must be unique" });
+const question = questionRules(z.object(questionFields));
+// The module's pre/post check never shows explanations, so a writer may leave them out there.
+const checkQuestion = questionRules(z.object({ ...questionFields, explanation: z.string().min(1).optional() }));
+
+// "Sources" at the bottom of a step: the title and a working link, nothing else.
+const source = z.object({ title: z.string().min(1), url: z.url() });
 
 // <Scenario>: "What would you do?" Every option gets its own feedback; none is "wrong" (brief section 6).
 const scenario = z
@@ -78,9 +85,14 @@ const modules = defineCollection({
       status: z.enum(REVIEW_STATUSES),
       reviewers: z.array(z.object({ name: z.string().min(1), credentials: z.string().optional() })).default([]),
       slides_url: z.union([z.url(), z.literal("")]).default(""),
+      // The one idea a learner should still remember in a year: big_idea (AI Aware, AI Literate), hard_idea (AI Fluent).
+      big_idea: z.string().min(1).optional(),
+      hard_idea: z.string().min(1).optional(),
+      // AI Fluent: the dated events the module uses, rechecked each term.
+      recent_events: z.object({ last_checked: z.coerce.date(), items: z.array(z.string().min(1)).min(1) }).optional(),
       // Optional "See what you already know" check on the module page, repeated after the module (brief section 7).
-      pre_check: z.array(question).max(5).default([]),
-      post_check: z.array(question).max(5).default([]),
+      pre_check: z.array(checkQuestion).max(5).default([]),
+      post_check: z.array(checkQuestion).max(5).default([]),
     })
     .superRefine((m, ctx) => {
       if (m.status === "reviewed" && m.reviewers.length === 0) {
@@ -113,6 +125,7 @@ const steps = defineCollection({
       questions: z.array(question).max(5).default([]),
       scenario: scenario.optional(),
       sort: sort.optional(),
+      sources: z.array(source).default([]),
     })
     .superRefine((s, ctx) => {
       if (s.type === "check" && s.questions.length === 0) ctx.addIssue({ code: "custom", path: ["questions"], message: "A check step needs 1 to 5 questions" });

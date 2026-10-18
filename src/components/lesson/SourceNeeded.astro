@@ -1,0 +1,9 @@
+---
+// <SourceNeeded />: a small inline marker where a draft still needs a source (a leftover
+// [CITATION NEEDED] or [VERIFY]). A module can't be marked reviewed with one of these in it.
+import { CircleHelp } from "lucide-react";
+interface Props { note?: string }
+const { note } = Astro.props;
+---
+
+<span data-source-needed title={note} class="mx-0.5 inline-flex translate-y-[-1px] items-center gap-1 whitespace-nowrap rounded-full border border-warning/35 bg-warning-soft px-2 py-0.5 align-middle text-[0.8125rem] font-bold leading-tight text-warning"><CircleHelp aria-hidden="true" className="size-3.5" />Source needed</span>

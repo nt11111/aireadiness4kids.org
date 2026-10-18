@@ -1,0 +1,32 @@
+---
+title: "How a chatbot is made, and why it guesses"
+type: explainer
+minutes: 7
+sources:
+  - title: "Fine-tuning with human feedback, and a 1.3-billion-parameter model preferred over a 175-billion one (Ouyang et al., 2022)"
+    url: "https://arxiv.org/abs/2203.02155"
+  - title: "Why language models hallucinate (Kalai et al., 2025)"
+    url: "https://arxiv.org/abs/2509.04664"
+  - title: "AI Hallucination Cases database (Charlotin, updated October 10, 2026)"
+    url: "https://www.damiencharlotin.com/hallucinations/"
+---
+
+Most AI text tools run on a <Vocab term="large language model (LLM)">large language model</Vocab>, or LLM. It is built in three stages.
+
+**Stage 1: pretraining.** The model reads an enormous amount of text and practices one task over and over. It predicts the next small chunk of text, called a token. Nobody tells it what is true. It learns what usually comes next.
+
+**Stage 2: fine-tuning.** People write example answers and rank the model's replies from best to worst. The model is then trained to favor the replies people rank highest. In a 2022 OpenAI study, people preferred a fine-tuned model's answers to those of a model 100 times its size. Rankings have a side effect, too: agreeable answers tend to win. Module 5 returns to this.
+
+**Stage 3: testing.** Companies score the model on a <Vocab term="benchmark" />, a standard test used to compare systems. A high score means the model did well on that test. It does not mean it will do well on your task.
+
+<Figure pending alt={"Diagram of the three stages of building a chatbot: pretraining on text, fine-tuning with human rankings, and testing on benchmarks."} brief={"Three panels, left to right: a stack of books and web pages labeled \"predict the next token,\" two people ranking two answers, and a test sheet with a score"} />
+
+A model can state false things with total confidence. This is called a <Vocab term="hallucination" />. A 2025 research paper argues that hallucinations are built into this process, not random glitches.
+
+Think of a multiple-choice test with no penalty for wrong answers. A student who guesses on every question will usually beat one who leaves blanks. The paper says most AI benchmarks are graded the same way. "I don't know" earns zero, while a confident guess sometimes earns full marks. So training and testing both reward guessing.
+
+<Callout kind="fact">
+Fluent is not the same as correct. By October 2026, a public database listed 2,184 court cases where filings contained AI-invented citations.
+</Callout>
+
+The paper's proposed fix is partly social: score the major tests so honest uncertainty stops losing points. That is a human choice, not a law of nature.

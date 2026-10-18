@@ -10,5 +10,8 @@ import Reflect from "./Reflect.astro";
 import Discuss from "./Discuss.astro";
 import Recap from "./Recap.astro";
 import ReadAloud from "./ReadAloud.astro";
+import TryIt from "./TryIt.astro";
+import ArkView from "./ArkView.astro";
+import SourceNeeded from "./SourceNeeded.astro";
 
-export const lessonComponents = { Callout, Vocab, Figure, Video, Scenario, Check, Sort, Reflect, Discuss, Recap, ReadAloud };
+export const lessonComponents = { Callout, Vocab, Figure, Video, Scenario, Check, Sort, Reflect, Discuss, Recap, ReadAloud, TryIt, ArkView, SourceNeeded };

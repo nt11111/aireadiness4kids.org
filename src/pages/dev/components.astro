@@ -17,6 +17,10 @@ import Sort from "../../components/lesson/Sort.astro";
 import Reflect from "../../components/lesson/Reflect.astro";
 import Discuss from "../../components/lesson/Discuss.astro";
 import Recap from "../../components/lesson/Recap.astro";
+import TryIt from "../../components/lesson/TryIt.astro";
+import ArkView from "../../components/lesson/ArkView.astro";
+import SourceNeeded from "../../components/lesson/SourceNeeded.astro";
+import Sources from "../../components/lesson/Sources.astro";
 import { ReadAloud } from "../../app/components/lesson/ReadAloud";
 import { SAMPLE_CHECK, SAMPLE_SCENARIO, SAMPLE_SORT } from "../../lib/dev-samples";
 import { Button } from "../../app/components/ui/button";
@@ -347,6 +351,7 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
             <Callout kind="tip"><p>Read the question twice before you answer.</p></Callout>
             <Callout kind="warning"><p>Never type a password or your home address into an AI chatbot.</p></Callout>
             <Callout kind="fact"><p>Fact callouts need a source before review. Until then, mark them [CITATION NEEDED].</p></Callout>
+            <Callout kind="tip" title="Level up (grades 3-5)" optional><p>A harder idea for older learners. Younger groups can skip it.</p></Callout>
           </div>
         </div>
 
@@ -362,6 +367,35 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
           <p class="mt-1 text-small text-ink-soft">alt is required; the build fails without it.</p>
           <div class="lesson-prose mt-4 max-w-reading text-lesson">
             <Figure src="/lessons/literate/bias-in-ai/where-bias-enters.svg" alt="A chain of five boxes: the data, the goal people choose, the AI model, how it's tested and used, and the people affected." caption="Three places bias can enter an AI tool." width={440} height={560} />
+          </div>
+          <p class="mt-6 text-small text-ink-soft"><code class="font-mono">&lt;Figure pending alt brief /&gt;</code>: the picture isn't made yet. The placeholder shows the alt text; <code class="font-mono">brief</code> stays in the file for the illustrator.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <Figure pending alt="A sample diagram: three boxes in a row joined by arrows." brief="Three boxes, left to right, with arrows between them." />
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">TryIt <code class="font-mono text-small font-normal text-ink-soft">&lt;TryIt offline warning&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">A hands-on task. The no-AI version always shows. Never name or link an AI product.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <TryIt offline="No AI tool? Do the same task on paper with a partner." warning="Never type your name, school, or anything personal into an AI tool."><p>Sample task: ask a tool to do one small job, then test it with three tricky inputs.</p></TryIt>
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">ArkView <code class="font-mono text-small font-normal text-ink-soft">&lt;ArkView view against /&gt;</code></h3>
+          <p class="mt-1 text-small text-ink-soft">ARK's opinion, labeled as one, with the best case against it. Looks different from fact callouts on purpose.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <ArkView view="Sample view: a position, and the reason behind it." against="Sample counterpoint, written as well as its supporters would write it." />
+          </div>
+        </div>
+
+        <div class="demo">
+          <h3 class="text-title text-ink">SourceNeeded and Sources</h3>
+          <p class="mt-1 text-small text-ink-soft"><code class="font-mono">&lt;SourceNeeded /&gt;</code> marks a claim in a draft that still needs a source. A step's <code class="font-mono">sources:</code> frontmatter shows as a collapsed list at the end.</p>
+          <div class="lesson-prose mt-4 max-w-reading text-lesson">
+            <p>A sample sentence that still needs a source. <SourceNeeded /></p>
+            <Sources sources={[{ title: "Sample source title (Publisher, 2026)", url: "https://example.org/" }]} />
           </div>
         </div>
 

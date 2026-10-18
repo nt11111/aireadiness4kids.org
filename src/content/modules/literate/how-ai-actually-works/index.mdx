@@ -2,19 +2,65 @@
 title: "How AI Actually Works"
 track: literate
 order: 1
+duration_minutes: 30
 summary: "Students get a non-technical but accurate introduction to how machine learning works, including training data, patterns, and predictions."
 topics:
   - "Training data and how AI learns from examples"
   - "Pattern recognition vs. true understanding"
   - "The difference between AI, machine learning, and algorithms"
   - "Inputs, outputs, and feedback loops: a simple mental model"
-objectives: []
-vocabulary: []
+objectives:
+  - "Describe how a machine learning model learns from training data."
+  - "Explain the difference between spotting patterns and knowing what something means."
+  - "Tell apart AI, machine learning, and an algorithm."
+  - "Describe an AI tool they use in terms of input, model, prediction, and feedback."
+vocabulary:
+  - term: "algorithm"
+    def: "A set of step-by-step instructions that a computer follows."
+  - term: "machine learning"
+    def: "A way of building AI where a program learns patterns from examples, so nobody has to write every rule by hand."
+  - term: "training data"
+    def: "The examples an AI tool learns from."
+  - term: "model"
+    def: "What you get after training: a program that takes an input and makes a prediction."
+  - term: "prediction"
+    def: "A model's best guess for a new input."
+  - term: "feedback loop"
+    def: "When a tool's results become its future data, so a pattern keeps repeating."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/14lBVS5vqATsPsrUnPw0yVS4rDpiryw8T/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What does a machine learning model learn from?"
+    options:
+      - { id: a, text: "A rule book written by one programmer" }
+      - { id: b, text: "Examples that people collected or labeled" }
+      - { id: c, text: "The internet connection" }
+      - { id: d, text: "Its own opinions" }
+    answer: b
+    explanation: "Models learn patterns from examples."
+  - id: pc-2
+    prompt: "Which of these is an algorithm?"
+    options:
+      - { id: a, text: "A recipe with steps in order" }
+      - { id: b, text: "A photo" }
+      - { id: c, text: "A battery" }
+      - { id: d, text: "A password" }
+    answer: a
+    explanation: "An algorithm is a set of step-by-step instructions."
+  - id: pc-3
+    prompt: "A model trained only on daytime photos fails at night. Why?"
+    options:
+      - { id: a, text: "Night photos are not allowed" }
+      - { id: b, text: "Its training data had no examples like these" }
+      - { id: c, text: "Models need rest" }
+      - { id: d, text: "The camera is broken" }
+    answer: b
+    explanation: "A model struggles with inputs that look nothing like what it trained on."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

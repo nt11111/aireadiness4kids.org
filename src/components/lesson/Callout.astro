@@ -1,10 +1,11 @@
 ---
 // <Callout kind="think|tip|warning|fact">: a highlighted aside. The label and icon carry the meaning, not just the color.
+// `optional` marks a box a group can skip, such as AI Aware's "Level up (grades 3-5)" (dashed border and an "Optional" tag).
 import { Lightbulb, MessageCircleQuestion, TriangleAlert, BookOpenCheck } from "lucide-react";
 import { cn } from "../../app/components/ui/utils";
 
-interface Props { kind?: "think" | "tip" | "warning" | "fact"; title?: string }
-const { kind = "tip", title } = Astro.props;
+interface Props { kind?: "think" | "tip" | "warning" | "fact"; title?: string; optional?: boolean }
+const { kind = "tip", title, optional = false } = Astro.props;
 const KINDS = {
   think: { label: "Think about it", Icon: MessageCircleQuestion, box: "border-line bg-surface-2", icon: "text-brand" },
   tip: { label: "Tip", Icon: Lightbulb, box: "border-brand/25 bg-brand-soft", icon: "text-brand" },
@@ -15,10 +16,13 @@ if (!(kind in KINDS)) throw new Error(`<Callout kind="${kind}">: use think, tip,
 const k = KINDS[kind];
 ---
 
-<div role="note" aria-label={title ?? k.label} class={cn("lesson-block flex gap-3 rounded-xl border p-4 sm:gap-4 sm:p-5", k.box)}>
+<div role="note" aria-label={optional ? `${title ?? k.label} (optional)` : title ?? k.label} data-optional={optional ? "" : undefined} class={cn("lesson-block flex gap-3 rounded-xl border p-4 sm:gap-4 sm:p-5", k.box, optional && "border-2 border-dashed")}>
   <k.Icon aria-hidden="true" className={cn("mt-1 size-5 shrink-0", k.icon)} />
   <div class="min-w-0 [&>*+*]:mt-2">
-    <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{title ?? k.label}</p>
+    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-small font-bold uppercase tracking-[0.1em] text-ink">
+      <span>{title ?? k.label}</span>
+      {optional && <span class="rounded-full border border-line-strong bg-surface px-2 py-0.5 text-[0.75rem] normal-case tracking-normal text-ink-soft">Optional</span>}
+    </p>
     <slot />
   </div>
 </div>

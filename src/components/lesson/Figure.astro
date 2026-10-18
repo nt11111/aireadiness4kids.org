@@ -1,12 +1,28 @@
 ---
 // <Figure src alt caption>: images for lessons. Put files in public/lessons/<track>/<module>/.
 // alt is required: describe what the image shows. The build fails without it.
-interface Props { src: string; alt: string; caption?: string; width?: number; height?: number }
-const { src, alt, caption, width, height } = Astro.props;
-if (typeof alt !== "string" || !alt.trim()) throw new Error(`<Figure src="${src}">: add alt="..." describing the image for people who can't see it.`);
+// <Figure pending alt="..." brief="..." />: the picture isn't made yet. A neutral placeholder shows the
+// alt text instead; `brief` is the illustrator's description, kept in the file but not shown.
+import { ImageIcon } from "lucide-react";
+
+interface Props { src?: string; alt: string; caption?: string; width?: number; height?: number; pending?: boolean; brief?: string }
+const { src, alt, caption, width, height, pending = false } = Astro.props;
+if (typeof alt !== "string" || !alt.trim()) throw new Error(`<Figure src="${src ?? ""}">: add alt="..." describing the image for people who can't see it.`);
+if (!pending && !src) throw new Error(`<Figure alt="${alt}">: add src="...", or mark it pending until the picture exists.`);
 ---
 
-<figure class="lesson-block mx-auto" style={width ? `max-width:${width}px` : undefined}>
-  <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" class="h-auto w-full rounded-xl border border-line bg-surface" />
-  {caption && <figcaption class="mt-2 text-small text-ink-soft">{caption}</figcaption>}
-</figure>
+{pending ? (
+  <figure class="lesson-block mx-auto" data-figure-pending>
+    <div class="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-line-strong bg-surface-2 px-5 py-8 text-center sm:px-8 sm:py-10">
+      <ImageIcon aria-hidden="true" className="size-8 text-ink-soft" />
+      <p class="text-small font-bold uppercase tracking-[0.1em] text-ink-soft">Picture coming soon</p>
+      <p class="max-w-[48ch] text-ui text-ink">{alt}</p>
+    </div>
+    {caption && <figcaption class="mt-2 text-small text-ink-soft">{caption}</figcaption>}
+  </figure>
+) : (
+  <figure class="lesson-block mx-auto" style={width ? `max-width:${width}px` : undefined}>
+    <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" class="h-auto w-full rounded-xl border border-line bg-surface" />
+    {caption && <figcaption class="mt-2 text-small text-ink-soft">{caption}</figcaption>}
+  </figure>
+)}

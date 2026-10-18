@@ -111,12 +111,12 @@ test.describe("certificates API", () => {
 });
 
 test.describe("completion page", () => {
-  test("signed out, it asks for sign-in; stub modules have no completion page", async () => {
+  test("signed out, it asks for sign-in; unknown modules have no completion page", async () => {
     const res = await call(`${BIAS_MODULE}/complete`, { method: "GET" });
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toBe(`/signin?next=${encodeURIComponent(`${BIAS_MODULE}/complete`)}`);
     const a = await learnerAccount();
-    expect((await call("/courses/literate/deepfakes-and-misinformation/complete", { method: "GET", cookie: a.cookie })).status).toBe(404);
+    expect((await call("/courses/literate/not-a-module/complete", { method: "GET", cookie: a.cookie })).status).toBe(404);
   });
 
   test("before the last step it says what's left", async ({ page }) => {

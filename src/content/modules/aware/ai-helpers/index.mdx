@@ -2,19 +2,62 @@
 title: "AI Helpers, and When They Get It Wrong"
 track: aware
 order: 2
+duration_minutes: 40
 summary: "Students explore when AI is helpful and when it makes mistakes, building early critical thinking about trusting technology."
+big_idea: "AI can be wrong and still sound sure. People find the mistakes, and people fix them."
 topics:
   - "AI errors and why they happen"
   - "Stories of AI being wrong or unfair"
   - "When should we trust AI? When should we double-check?"
   - "Who is responsible when AI makes a mistake?"
-objectives: []
-vocabulary: []
+objectives:
+  - "Give one example of an AI helper making a mistake."
+  - "Explain one reason AI gets things wrong: it saw too few examples, or its examples were wrong."
+  - "Decide when an AI answer needs a double-check."
+  - "Say who fixes an AI mistake: people."
+vocabulary:
+  - term: "mistake"
+    def: "When an AI makes a wrong guess."
+  - term: "double-check"
+    def: "To look again, or ask someone, to be sure."
+  - term: "trust"
+    def: "Believing that something is right."
+  - term: "fair"
+    def: "Giving everyone a good chance, and leaving nobody out."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1iznODGb8DDAJumMA2PXNNAncAXWidqm6/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Can AI make mistakes?"
+    options:
+      - { id: a, text: "No, never" }
+      - { id: b, text: "Yes, sometimes" }
+      - { id: c, text: "Only robots" }
+      - { id: d, text: "Only at night" }
+    answer: b
+    explanation: "AI can make mistakes, even when it sounds sure."
+  - id: pc-2
+    prompt: "Why might an AI get something wrong?"
+    options:
+      - { id: a, text: "It is tired" }
+      - { id: b, text: "It saw too few examples, or wrong ones" }
+      - { id: c, text: "It wants to trick you" }
+      - { id: d, text: "It is hungry" }
+    answer: b
+    explanation: "AI learns from examples, so bad examples lead to mistakes."
+  - id: pc-3
+    prompt: "An answer seems off. What should you do?"
+    options:
+      - { id: a, text: "Believe it" }
+      - { id: b, text: "Check a book or ask a grown-up" }
+      - { id: c, text: "Share it with friends" }
+      - { id: d, text: "Forget about it" }
+    answer: b
+    explanation: "A second source helps you find the truth."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

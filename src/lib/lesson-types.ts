@@ -4,7 +4,7 @@
 export type StepType = "explainer" | "video" | "scenario" | "check" | "reflect" | "recap" | "activity";
 
 export type Option = { id: string; text: string };
-export type Question = { id: string; prompt: string; options: Option[]; answer: string; explanation: string };
+export type Question = { id: string; prompt: string; options: Option[]; answer: string; explanation?: string };
 export type ScenarioData = { prompt: string; options: { id: string; text: string; feedback: string }[] };
 export type SortData = {
   prompt: string;

@@ -12,6 +12,9 @@ import Callout from "../lesson/Callout.astro";
 import Figure from "../lesson/Figure.astro";
 import Video from "../lesson/Video.astro";
 import Recap from "../lesson/Recap.astro";
+import TryIt from "../lesson/TryIt.astro";
+import ArkView from "../lesson/ArkView.astro";
+import SourceNeeded from "../lesson/SourceNeeded.astro";
 
 const letter = (i: number) => String.fromCharCode(65 + i);
 
@@ -81,6 +84,10 @@ export function presentComponents(step: StepData) {
     Figure,
     Video,
     Recap,
+    // Already read-only: the task with its no-AI version, ARK's labeled opinion, and the draft marker.
+    TryIt,
+    ArkView,
+    SourceNeeded,
     Check: ({ questions }: { questions?: Question[] }) => <Questions questions={questions ?? step.questions} />,
     Scenario: (props: Partial<ScenarioData>) => <Choices scenario={props.prompt && props.options ? (props as ScenarioData) : step.scenario!} />,
     Sort: (props: Partial<SortData>) => <Cards sort={props.prompt && props.buckets && props.items ? (props as SortData) : step.sort!} />,

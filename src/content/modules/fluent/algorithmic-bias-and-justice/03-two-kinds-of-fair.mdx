@@ -1,0 +1,35 @@
+---
+title: "Two kinds of fair"
+type: explainer
+minutes: 7
+sources:
+  - title: "Inherent trade-offs in risk scores (Kleinberg, Mullainathan, and Raghavan, 2016)"
+    url: "https://arxiv.org/abs/1609.05807"
+  - title: "Fair prediction with disparate impact (Chouldechova, 2017)"
+    url: "https://arxiv.org/abs/1703.00056"
+  - title: "Amsterdam's Smart Check pilot (MIT Technology Review with Lighthouse Reports and Trouw, June 11, 2025)"
+    url: "https://www.technologyreview.com/2025/06/11/1118233/amsterdam-fair-welfare-ai-discriminatory-algorithms-failure/"
+---
+
+Back to COMPAS. ProPublica asked: among people who did not reoffend, were both groups flagged at the same rate? No. Northpointe asked: does a given score mean the same chance of reoffending in both groups? Northpointe said yes.
+
+These are two different definitions of fair. In 2016 and 2017, researchers proved that you can't meet both when groups differ in how often the outcome happens. Here is why, with made-up numbers.
+
+Group A has 100 people, and 50 will reoffend. Group B has 100 people, and 30 will. That share is the group's <Vocab term="base rate" />.
+
+Suppose "high risk" means a 60% chance of reoffending in both groups, and "low risk" means 20%. To fit the base rates, the tool labels 75 people in Group A high risk, and 25 in Group B. Now look only at people who will not reoffend:
+
+- Group A: 30 of its 50 are labeled high risk anyway. That is 60%.
+- Group B: 10 of its 70 are. That is about 14%.
+
+The label means the same thing in both groups. Yet a person in Group A who will not reoffend is about four times as likely to be flagged. Equalize those mistakes, and "high risk" stops meaning the same thing.
+
+<Figure pending alt={"Two groups of 100 people showing that a score with the same meaning in both groups still flags many more people who will not reoffend in the group with the higher base rate."} brief={"Two grids of 100 dots, one per group. Filled dots will reoffend. Dots labeled \"high risk\" have a red outline. In Group A, many unfilled dots have red outlines. In Group B, few do"} />
+
+The math allows two ways out: equal base rates, or a perfect predictor. Real life offers neither. So every risk tool picks which kind of fairness to protect.
+
+Amsterdam tried hard to escape this. In 2023 the city built a welfare-fraud model without nationality, gender, or age. Its first version still wrongly flagged non-Western applicants nearly twice as often. After a fix, it tested fair. In a live pilot of about 1,600 applications, the errors shifted onto Dutch nationals and women. The city shut it down.
+
+<Callout kind="think">
+If you were being scored, which would you want? A label that means the same thing for everyone, or an equal chance of being wrongly flagged? Who should make that choice?
+</Callout>

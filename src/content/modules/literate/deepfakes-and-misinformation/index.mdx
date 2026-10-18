@@ -2,19 +2,61 @@
 title: "Deepfakes & Misinformation"
 track: literate
 order: 4
+duration_minutes: 44
 summary: "Students learn to spot AI-generated content and think critically about media they encounter online."
 topics:
   - "What are deepfakes and how are they made?"
   - "How to spot AI-generated images, video, and audio"
   - "Why people create and spread misinformation"
   - "Tools and habits for fact-checking"
-objectives: []
-vocabulary: []
+objectives:
+  - "Explain what a deepfake is and, in general terms, how AI produces one."
+  - "Question an image, video, or audio clip using a short checklist."
+  - "Give two reasons people create and spread false content."
+  - "Use three fact-checking moves: stop, check the source, find a second source."
+vocabulary:
+  - term: "deepfake"
+    def: "AI-made or AI-altered video, image, or audio that shows a real person doing or saying something they did not."
+  - term: "misinformation"
+    def: "False information shared by someone who does not know it is false."
+  - term: "disinformation"
+    def: "False information spread on purpose."
+  - term: "lateral reading"
+    def: "Leaving a page to see what other trusted sources say about it."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1C--5TdobXzpUnMC7kPPPFTZ52l-oiBS_/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which one is a deepfake?"
+    options:
+      - { id: a, text: "A photo with a funny filter" }
+      - { id: b, text: "A video clip cut shorter to fit a screen" }
+      - { id: c, text: "AI-made audio of a real person saying words they never said" }
+      - { id: d, text: "A post with lots of shares" }
+    answer: c
+    explanation: "A deepfake uses AI to make a real person seem to say or do something they never did."
+  - id: pc-2
+    prompt: "Which is the strongest sign a clip may be fake?"
+    options:
+      - { id: a, text: "Only one account posted it, and no trusted source backs it up" }
+      - { id: b, text: "The hands and lighting look a little odd" }
+      - { id: c, text: "It looks so real that it must be real" }
+      - { id: d, text: "A detector tool says it is probably real" }
+    answer: a
+    explanation: "The source matters more than how a clip looks."
+  - id: pc-3
+    prompt: "A shocking clip lands in your group chat. What should you do first?"
+    options:
+      - { id: a, text: "Forward it so friends can decide" }
+      - { id: b, text: "Reply that it's fake" }
+      - { id: c, text: "Delete the whole chat" }
+      - { id: d, text: "Stop, check who posted it, then look for a second source" }
+    answer: d
+    explanation: "Pause first. Then check the source and find a second trusted source."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

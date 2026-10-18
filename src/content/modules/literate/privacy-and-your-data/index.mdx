@@ -2,19 +2,58 @@
 title: "Privacy & Your Data"
 track: literate
 order: 5
+duration_minutes: 44
 summary: "Students explore how AI companies collect data, what they do with it, and how students can protect themselves."
 topics:
   - "What data AI apps collect about users"
   - "Data brokers and how personal information is sold"
   - "Reading privacy policies (and why almost no one does)"
   - "Practical steps: settings, permissions, and habits"
-objectives: []
-vocabulary: []
+objectives:
+  - "List the kinds of data AI apps collect."
+  - "Explain in simple terms how personal data gets bought and sold."
+  - "Find three answers in a privacy policy: what is collected, who gets it, and how to delete it."
+  - "Change two settings or habits to protect their data."
+vocabulary:
+  - term: "personal data"
+    def: "Information that can be tied to you, such as your name, location, contacts, or what you type."
+  - term: "data broker"
+    def: "A company that collects information about people and sells it."
+  - term: "privacy policy"
+    def: "A document where a company says what data it collects and what it does with it."
+  - term: "permission"
+    def: "Access you give an app, such as to your camera, contacts, or location."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1bu1Pr4AH3eJBpUQkPE_lyqI4BwBT2UWL/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which is an example of personal data?"
+    options:
+      - { id: a, text: "The temperature outside" }
+      - { id: b, text: "Your home address" }
+      - { id: c, text: "The name of a city" }
+      - { id: d, text: "A song title" }
+    answer: b
+  - id: pc-2
+    prompt: "A company collects facts about people and sells them to others. What is it called?"
+    options:
+      - { id: a, text: "An app store" }
+      - { id: b, text: "A search engine" }
+      - { id: c, text: "A data broker" }
+      - { id: d, text: "An internet provider" }
+    answer: c
+  - id: pc-3
+    prompt: "Which is one way to limit what an app collects?"
+    options:
+      - { id: a, text: "Turn off permissions it doesn't need" }
+      - { id: b, text: "Use the app more often" }
+      - { id: c, text: "Give it your contacts" }
+      - { id: d, text: "Share your password" }
+    answer: a
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

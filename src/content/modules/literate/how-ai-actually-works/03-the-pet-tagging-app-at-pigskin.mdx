@@ -1,0 +1,26 @@
+---
+title: "The pet-tagging app at Pigskin"
+type: scenario
+minutes: 6
+scenario:
+  prompt: "What's the most likely reason?"
+  options:
+    - id: a
+      text: "The app is broken and needs a restart."
+      feedback: "A restart won't change what the model learned. The mistake comes from training, not a glitch."
+    - id: b
+      text: "The model learned \"grass means dog\" from her photos."
+      feedback: "Most likely. The pattern it found was the background, not the animal. During testing, it was right for the wrong reasons."
+    - id: c
+      text: "That cat looks a lot like a dog."
+      feedback: "Possible, but the grass explains it better. Ask what her dog photos had in common."
+    - id: d
+      text: "AI can't tell animals apart."
+      feedback: "It can, with the right data. Photos of dogs and cats in many different places would help."
+---
+
+A friend builds an app for the Pigskin club fair. It tags photos as "dog" or "cat." She trained it on photos from her own phone. In nearly all of her dog photos, the dog is outside on grass. At the fair, the app tags a cat sitting on a lawn as a dog.
+
+<Scenario />
+
+Follow-up: What would you add to the training data to fix it?

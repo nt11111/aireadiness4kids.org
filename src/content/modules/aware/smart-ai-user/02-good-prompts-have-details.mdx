@@ -1,0 +1,43 @@
+---
+title: "Good prompts have details"
+type: explainer
+minutes: 7
+sort:
+  prompt: "Clear or fuzzy?"
+  buckets:
+    - { id: clear, label: "Clear" }
+    - { id: fuzzy, label: "Fuzzy" }
+  items:
+    - id: i1
+      text: "\"Write a story.\""
+      bucket: fuzzy
+      why: "About what? For whom? How long?"
+    - id: i2
+      text: "\"Write a short story about a brave cat for my little brother.\""
+      bucket: clear
+      why: "It says what, who, and how long."
+    - id: i3
+      text: "\"Help with math.\""
+      bucket: fuzzy
+      why: "Which math? What kind of help?"
+    - id: i4
+      text: "\"Show me two ways to add 8 and 5.\""
+      bucket: clear
+      why: "It says exactly what you want."
+---
+
+A fuzzy prompt gets a fuzzy answer. A clear prompt gets a better one.
+
+Fuzzy: "Tell me about dogs."
+
+Clear: "Tell me three fun facts about puppies for a first grader."
+
+The clear prompt says three things:
+
+- **Who** it is for: a first grader.
+- **What** you want: fun facts about puppies.
+- **How much:** three facts.
+
+<Sort />
+
+Even a clear prompt can get a wrong answer. So check it with a second <Vocab term="source" />. A book or a teacher works.

@@ -2,19 +2,70 @@
 title: "Advocacy & Action"
 track: fluent
 order: 6
+duration_minutes: 47
 summary: "Students develop and present a concrete action plan for advancing responsible AI in their school, community, or beyond."
+hard_idea: "Theory of change. Every plan rests on assumptions about how change happens. Write them down, find the weakest one, and test it first."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "the \"Pacing the Frontier\" letter from AI company employees (July 2026)"
+    - "the AI Kill Switch Act (H.R. 9917)"
+    - "Stanford's 2026 AI Index findings on students and school AI policies"
 topics:
   - "Forms of advocacy: writing, organizing, building, speaking"
   - "How to write a policy brief or op-ed on AI"
   - "Student-led campaigns and real examples of youth AI advocacy"
   - "Capstone: each student develops a 1-page action plan and presents to peers"
-objectives: []
-vocabulary: []
+objectives:
+  - "Choose a form of advocacy that fits an issue and an audience."
+  - "Outline a one-page policy brief or op-ed with a clear, specific ask."
+  - "Write a theory of change for a plan and name the assumption most likely to fail."
+  - "Present a one-page action plan and give useful feedback to a peer."
+vocabulary:
+  - term: "advocacy"
+    def: "Working to change a decision, a rule, or how people think about an issue."
+  - term: "policy brief"
+    def: "A short document that explains a problem to a decision-maker and recommends an action."
+  - term: "op-ed"
+    def: "An opinion article written by someone outside a news outlet's staff."
+  - term: "the ask"
+    def: "The one specific thing you want your audience to do."
+  - term: "theory of change"
+    def: "The chain of assumptions that explains how your actions will lead to your goal."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1PVxz0pvkBfqL9CC-Vk7B1MINKPNbKl89/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is \"the ask\"?"
+    options:
+      - { id: a, text: "The question you ask at the end of a speech" }
+      - { id: b, text: "The one specific thing you want your audience to do" }
+      - { id: c, text: "A survey of your audience" }
+      - { id: d, text: "The title of an op-ed" }
+    answer: b
+    explanation: "A good ask names an action, a person, and a time."
+  - id: pc-2
+    prompt: "You want a state lawmaker to support an AI bill. Which method fits best?"
+    options:
+      - { id: a, text: "A policy brief or testimony aimed at the lawmaker" }
+      - { id: b, text: "A post for your friends" }
+      - { id: c, text: "A club with no outside audience" }
+      - { id: d, text: "Waiting for the bill to pass" }
+    answer: a
+    explanation: "Match the method to the person who decides."
+  - id: pc-3
+    prompt: "Which three parts belong in every policy brief?"
+    options:
+      - { id: a, text: "A joke, a story, and a poem" }
+      - { id: b, text: "The problem, the evidence, and the ask" }
+      - { id: c, text: "Your name, your school, and your grade" }
+      - { id: d, text: "A history of AI, a glossary, and a quiz" }
+    answer: b
+    explanation: "Problem, evidence, ask."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

@@ -1,0 +1,76 @@
+---
+title: "Where your data goes"
+type: explainer
+minutes: 7
+sort:
+  prompt: "Does the app need this data to work?"
+  buckets:
+    - { id: needed, label: "Needed" }
+    - { id: not-needed, label: "Not needed" }
+  items:
+    - id: i1
+      text: "A map app and your location"
+      bucket: needed
+      why: "It must know where you are."
+    - id: i2
+      text: "A video call app and your camera"
+      bucket: needed
+      why: "The call needs your video."
+    - id: i3
+      text: "A photo editing app and the photo you pick"
+      bucket: needed
+      why: "It can't edit a photo it can't see."
+    - id: i4
+      text: "A weather app and your city"
+      bucket: needed
+      why: "It needs a place to forecast."
+    - id: i5
+      text: "A food delivery app and your address"
+      bucket: needed
+      why: "The driver must find you."
+    - id: i6
+      text: "A voice assistant and your microphone"
+      bucket: needed
+      why: "It must hear you to answer."
+    - id: i7
+      text: "A flashlight app and your contacts"
+      bucket: not-needed
+      why: "A flashlight never uses your contacts."
+    - id: i8
+      text: "Instagram and your contacts"
+      bucket: not-needed
+      why: "It works without them. Uploading is your choice."
+sources:
+  - title: "FTC Recommends Congress Require the Data Broker Industry to be More Transparent and Give Consumers Greater Control Over Their Personal Information (FTC, May 27, 2014)"
+    url: "https://www.ftc.gov/news-events/news/press-releases/2014/05/ftc-recommends-congress-require-data-broker-industry-be-more-transparent-give-consumers-greater"
+  - title: "Who Is Collecting My Kid's Data, And What Are They Doing With It? (Common Sense Media)"
+    url: "https://www.commonsensemedia.org/articles/who-is-collecting-my-kids-data-and-what-are-they-doing-with-it"
+  - title: "What happens to the secrets you share with AI (Axios, August 17, 2026)"
+    url: "https://www.axios.com/2026/08/17/secrets-share-ai-openai-meta-google-anthropic"
+  - title: "Data Policy (Instagram Help Center)"
+    url: "https://help.instagram.com/155833707900388"
+  - title: "Be careful what you tell your AI chatbot (Stanford HAI, October 15, 2025)"
+    url: "https://hai.stanford.edu/news/be-careful-what-you-tell-your-ai-chatbot"
+---
+
+Your data takes a trip. Follow it through four stops.
+
+Collected. An app gathers data when you use it.
+
+Used. A company may use it to target ads or train AI.
+
+Shared. Some apps share data with partners and advertisers.
+
+Sold. A <Vocab term="data broker" /> is a company that collects information about people and sells it.
+
+<Figure pending alt={"Diagram of data moving from your phone to use, then sharing, then sale."} brief={"Four boxes in a row joined by arrows: a phone labeled Collected, a gear labeled Used, two overlapping circles labeled Shared, a price tag labeled Sold"} />
+
+<Callout kind="fact">
+As of 2026, AI companies handle data differently. Some train on what you share unless you opt out.
+</Callout>
+
+<Callout kind="think">
+Ask this each time: does the app need that data to work?
+</Callout>
+
+<Sort />

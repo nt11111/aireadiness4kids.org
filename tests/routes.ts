@@ -1,3 +1,5 @@
+import { readdirSync } from "node:fs";
+
 // Every page touched so far. Add new routes here as phases land.
 // Module pages mirror src/content/modules/<track>/<slug>/ (checked by a test in a11y.spec.ts).
 export const MODULES = [
@@ -24,6 +26,14 @@ export const MODULES = [
 export const BIAS_MODULE = "/courses/literate/bias-in-ai";
 export const BIAS_STEPS = ["what-is-bias", "where-it-comes-from", "scenario-hiring-bot", "check", "reflect", "recap"];
 
+/** A module's step slugs in order, read from its NN-slug.mdx files. */
+export const stepSlugs = (m: string) =>
+  readdirSync(`src/content/modules/${m}`).filter((f) => /^\d{2}-.+\.mdx$/.test(f)).sort().map((f) => f.slice(3, -4));
+
+// One whole module per course, screenshotted and checked step by step; every other module gets its overview, step 1, and guide.
+export const FULL_MODULES = ["aware/what-is-ai", "literate/deepfakes-and-misinformation", "fluent/ai-landscape-today"];
+const NEW_MODULES = MODULES.filter((m) => m !== "literate/bias-in-ai");
+
 /**
  * auth: sign in as this kind of account first (steps 2+ and account pages need a session).
  * progress: give that account saved progress first (3 steps, or all of them, and the pre-check of
@@ -48,9 +58,17 @@ export const ROUTES: Route[] = [
   { name: "course-fluent", path: "/courses/fluent" },
   ...MODULES.map((m) => ({ name: `module-${m.replace("/", "-")}`, path: `/courses/${m}` })),
   ...BIAS_STEPS.map((s, i): Route => ({ name: `step-${s}`, path: `${BIAS_MODULE}/${s}`, lesson: true, ...(i > 0 ? { auth: "learner" } : {}) })),
+  ...NEW_MODULES.flatMap((m) =>
+    stepSlugs(m)
+      .map((s, i): Route => ({ name: `step-${m.replace("/", "-")}-${i + 1}`, path: `/courses/${m}/${s}`, lesson: true, ...(i > 0 ? { auth: "learner" } : {}) }))
+      .filter((_r, i) => i === 0 || FULL_MODULES.includes(m)),
+  ),
+  // AI Fluent's fairness slider: a Try it with no AI tool and no warning.
+  { name: "step-fluent-algorithmic-bias-and-justice-4", path: `/courses/fluent/algorithmic-bias-and-justice/${stepSlugs("fluent/algorithmic-bias-and-justice")[3]}`, lesson: true, auth: "learner" },
   ...["1", "2", "3"].map((n) => ({ name: `dev-aware-preview-${n}`, path: `/dev/lesson-preview/${n}`, lesson: true })),
   { name: "educators", path: "/educators" },
   { name: "educators-guide-bias-in-ai", path: "/educators/literate/bias-in-ai" },
+  ...NEW_MODULES.map((m) => ({ name: `educators-guide-${m.replace("/", "-")}`, path: `/educators/${m}` })),
   { name: "signin", path: "/signin" },
   { name: "signup", path: "/signup" },
   { name: "reset-password", path: "/reset-password" },
