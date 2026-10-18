@@ -9,8 +9,8 @@ import { Badge } from "../../../../app/components/ui/badge";
 import { buttonVariants } from "../../../../app/components/ui/button";
 import { trackStyle, type TrackId } from "../../../../app/lib/tracks";
 import { cn } from "../../../../app/components/ui/utils";
-import { getCourses, getModuleSteps, moduleHref, moduleSlug, moduleTime, trackHref, type Course, type Module } from "../../../../lib/courses";
-import { ArrowLeft, ArrowRight, Check, Clock, ExternalLink, FileText, Layers } from "lucide-react";
+import { getCourses, getModuleSteps, metaDescription, moduleHref, moduleSlug, moduleTime, trackHref, type Course, type Module } from "../../../../lib/courses";
+import { ArrowLeft, ArrowRight, Check, Clock, ExternalLink, FileText, Layers, Lightbulb, Newspaper } from "lucide-react";
 export const prerender = true;
 
 export async function getStaticPaths() {
@@ -22,7 +22,10 @@ export async function getStaticPaths() {
 
 const { course, mod, index } = Astro.props as { course: Course; mod: Module; index: number };
 const { track, modules } = course;
-const { title, summary, topics, objectives, vocabulary, status, reviewers, slides_url, pre_check } = mod.data;
+const { title, summary, topics, objectives, vocabulary, status, reviewers, slides_url, pre_check, big_idea, hard_idea, recent_events } = mod.data;
+// AI Aware and AI Literate name a big idea; AI Fluent names a hard idea.
+const idea = hard_idea ? { label: "The hard idea", text: hard_idea } : big_idea ? { label: "The big idea", text: big_idea } : null;
+const checkedOn = recent_events && new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(recent_events.last_checked);
 const s = trackStyle(track.id);
 const steps = getModuleSteps(course, mod);
 // Islands get plain step info only, not the content entries.
@@ -35,7 +38,7 @@ const learn = objectives.length ? { heading: "What you'll learn", items: objecti
 ---
 
 <!-- With steps, this page joins the lesson's client-side navigation so in-memory progress carries over. -->
-<BaseLayout title={`${title} | ${track.data.title} | ARK`} description={summary} viewTransitions={steps.length > 0}>
+<BaseLayout title={`${title} · ${track.data.title} · ARK`} description={metaDescription(summary)} viewTransitions={steps.length > 0}>
   <section class="border-b border-line bg-surface-2 px-4 pb-10 pt-28 sm:px-6 lg:pb-12 lg:pt-36">
     <div class="mx-auto max-w-site">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Courses", href: "/courses" }, { label: track.data.title, href: trackHref(track) }, { label: title }]} class="text-ink-soft" />
@@ -45,6 +48,15 @@ const learn = objectives.length ? { heading: "What you'll learn", items: objecti
       </div>
       <h1 data-focus-on-nav tabindex="-1" class="mt-4 max-w-4xl text-display-lg text-ink focus:outline-none">{title}</h1>
       <p class="mt-4 max-w-reading text-lesson text-ink-soft">{summary}</p>
+      {idea && (
+        <div data-module-idea class="mt-6 flex max-w-reading gap-3 rounded-xl border border-line bg-surface p-4 shadow-1 sm:gap-4 sm:p-5">
+          <Lightbulb aria-hidden="true" className={cn("mt-1 size-5 shrink-0", s.ink)} />
+          <div>
+            <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{idea.label}</p>
+            <p class="mt-1 text-lesson text-ink">{idea.text}</p>
+          </div>
+        </div>
+      )}
       <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
         <span class="inline-flex items-center gap-2 text-ui font-bold text-ink"><Clock aria-hidden="true" className="size-5 text-ink-soft" />{moduleTime(mod, steps)}</span>
         {steps.length > 0 && <span class="inline-flex items-center gap-2 text-ui font-bold text-ink"><Layers aria-hidden="true" className="size-5 text-ink-soft" />{steps.length} steps</span>}
@@ -69,6 +81,18 @@ const learn = objectives.length ? { heading: "What you'll learn", items: objecti
             ))}
           </ul>
         </section>
+
+        {recent_events && (
+          <section aria-labelledby="events-h">
+            <h2 id="events-h" class="text-display-sm text-ink">Recent events in this module</h2>
+            <p class="mt-2 text-ui text-ink-soft">Last checked {checkedOn}.</p>
+            <ul class="mt-5 space-y-3">
+              {recent_events.items.map((item) => (
+                <li class="flex gap-3 text-lesson text-ink"><Newspaper aria-hidden="true" className="mt-1 size-5 shrink-0 text-ink-soft" />{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {vocabulary.length > 0 && (
           <section aria-labelledby="vocab-h">

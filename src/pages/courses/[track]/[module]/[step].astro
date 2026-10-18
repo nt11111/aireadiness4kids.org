@@ -5,7 +5,7 @@ import { render } from "astro:content";
 import LessonLayout from "../../../../layouts/LessonLayout.astro";
 import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
 import { lessonComponents } from "../../../../components/lesson";
-import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
+import { getCourses, getModuleSteps, metaDescription, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
 import { listLearners } from "../../../../lib/accounts";
 export const prerender = false;
 
@@ -40,13 +40,14 @@ const { Content } = await render(step.entry);
 const stepRefs = steps.map(({ entry: _entry, ...ref }) => ref);
 ---
 
-<LessonLayout title={`${step.title} | ${mod.data.title} | ARK`} description={mod.data.summary}>
+<LessonLayout title={`${step.title} · ${mod.data.title} · ARK`} description={metaDescription(mod.data.summary)}>
   <LessonPlayer
     track={{ id: course.track.id, title: course.track.data.title, href: trackHref(course.track) }}
     module={{ title: mod.data.title, href: moduleHref(mod), status: mod.data.status }}
     steps={stepRefs}
     index={index}
     signedIn={signedIn}
+    sources={step.entry.data.sources}
   >
     <Content components={lessonComponents} />
   </LessonPlayer>

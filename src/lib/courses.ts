@@ -82,6 +82,14 @@ export const moduleLite = (course: Course, m: Module) => ({
   steps: getModuleSteps(course, m).map((s) => ({ id: s.id, href: s.href, title: s.title })),
 });
 
+/** A meta description under 160 characters: the summary, cut at a word boundary with "…" when it runs long. */
+export function metaDescription(text: string, max = 159) {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:.]+$/, "")}…`;
+}
+
 /** Self-paced time: the step minutes once a module has steps, otherwise duration_minutes or the classroom range. */
 function minutesRange(m: Module, steps: StepRef[]) {
   if (steps.length) {

@@ -132,7 +132,7 @@ export function Check({ questions, stepId, mode = "lesson", onScore }: Props) {
                         {correct ? <CircleCheck aria-hidden="true" className="size-5 shrink-0 text-success" /> : <Lightbulb aria-hidden="true" className="size-5 shrink-0 text-warning" />}
                         {correct ? "That's it." : "Not quite. Here's the idea:"}
                       </p>
-                      <p className="mt-1.5 text-ui text-ink">{q.explanation}</p>
+                      {q.explanation && <p className="mt-1.5 text-ui text-ink">{q.explanation}</p>}
                       {!correct && (
                         <Button type="button" variant="outline" size="sm" className="mt-3 min-h-[var(--tap)]" onClick={() => { update(q.id, { checked: false, selected: null }); setFocusId(`${uid}-${q.id}-${q.options[0].id}`); }}>
                           Try again

@@ -10,6 +10,8 @@ import { LessonNav } from "../../app/components/lesson/LessonNav";
 import { trackStyle } from "../../app/lib/tracks";
 import { cn } from "../../app/components/ui/utils";
 import ReadAloud from "./ReadAloud.astro";
+import Sources from "./Sources.astro";
+import Breadcrumbs from "../Breadcrumbs.astro";
 import { STEP_LABEL, type StepRef } from "../../lib/lesson-types";
 
 interface Props {
@@ -21,9 +23,11 @@ interface Props {
   finishHref?: string;
   /** Signed-out visitors can do step 1; pressing Next there opens the sign-up panel. */
   signedIn?: boolean;
+  /** The step's "Sources" list (title and link), shown collapsed at the end of the step. */
+  sources?: { title: string; url: string }[];
 }
 
-const { track, module, steps, index, finishHref = `${Astro.props.module.href}/complete`, signedIn = true } = Astro.props;
+const { track, module, steps, index, finishHref = `${Astro.props.module.href}/complete`, signedIn = true, sources = [] } = Astro.props;
 const step = steps[index];
 const aware = track.id === "aware";
 const s = trackStyle(track.id);
@@ -70,6 +74,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         class={cn("mx-auto w-full flex-1 px-4 pb-16 pt-8 sm:px-6 lg:pt-12", aware ? "max-w-[60ch] text-lesson-aware" : "max-w-reading text-lesson")}
         transition:animate={fade({ duration: "0.2s" })}
       >
+        <Breadcrumbs items={[{ label: "Courses", href: "/courses" }, { label: track.title, href: track.href }, { label: module.title, href: module.href }]} class="mb-3 text-ink-soft" />
         <p class="flex flex-wrap items-center gap-x-2 text-small font-bold text-ink-soft">
           <span>Step {index + 1} of {steps.length}</span><span aria-hidden="true">·</span><span>{STEP_LABEL[step.type]}</span><span aria-hidden="true">·</span><span>{step.minutes} min</span>
           {module.status !== "reviewed" && <ReviewBadge status={module.status} className="ml-1 md:hidden" />}
@@ -79,6 +84,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         <div class="lesson-prose mt-6">
           <slot />
         </div>
+        <Sources sources={sources} />
         <div data-lesson-end aria-hidden="true" class="h-px"></div>
       </article>
       <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === 0 && steps.length > 1} />
