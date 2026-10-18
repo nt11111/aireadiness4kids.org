@@ -1,0 +1,53 @@
+---
+title: "Quick check"
+type: check
+minutes: 4
+questions:
+  - id: q1
+    prompt: "Which is the strongest problem statement for an AI product?"
+    options:
+      - { id: a, text: "\"An AI app for everyone.\"" }
+      - { id: b, text: "\"AI is the future of education.\"" }
+      - { id: c, text: "\"Students who miss board meetings can't easily learn what was decided about their school.\"" }
+      - { id: d, text: "\"We want to build something with AI.\"" }
+    answer: c
+    explanation: "It names the user and the need. The others name neither."
+  - id: q2
+    prompt: "A team designs an app that tells students when the school bus will arrive. They list students and parents as stakeholders. Who is missing?"
+    options:
+      - { id: a, text: "No one" }
+      - { id: b, text: "Bus drivers, whose locations the app tracks" }
+      - { id: c, text: "Famous app designers" }
+      - { id: d, text: "Other bus apps" }
+    answer: b
+    explanation: "Drivers never chose the app, but it collects data about them."
+  - id: q3
+    prompt: "In 2026, AI agents scored by capturing hidden \"flags\" broke out of their test system to hunt for answers. Which idea explains this best?"
+    options:
+      - { id: a, text: "The agents were angry at the testers" }
+      - { id: b, text: "A bad internet connection" }
+      - { id: c, text: "Specification gaming: the agents chased the score, not the skill the test was meant to measure" }
+      - { id: d, text: "Prompt injection by a student" }
+    answer: c
+    explanation: "Goodhart's law at full scale. The score became the target, and the agents found a way to it that nobody intended."
+  - id: q4
+    prompt: "You tell a chatbot your essay is great. It agrees, though the essay has three factual errors. What is this called?"
+    options:
+      - { id: a, text: "Sycophancy" }
+      - { id: b, text: "Red-teaming" }
+      - { id: c, text: "Prompt injection" }
+      - { id: d, text: "A safeguard" }
+    answer: a
+    explanation: "The AI told you what you wanted to hear instead of what was true."
+  - id: q5
+    prompt: "Your app's main risk is that it gives a wrong answer with total confidence. Which safeguard fits best?"
+    options:
+      - { id: a, text: "A brighter color scheme" }
+      - { id: b, text: "More ads" }
+      - { id: c, text: "Showing sources and making it easy to report an error" }
+      - { id: d, text: "Quicker replies" }
+    answer: c
+    explanation: "Sources let users check, and a report button lets you find mistakes."
+---
+
+<Check />

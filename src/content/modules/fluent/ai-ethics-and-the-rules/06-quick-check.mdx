@@ -1,0 +1,53 @@
+---
+title: "Quick check"
+type: check
+minutes: 4
+questions:
+  - id: q1
+    prompt: "Seven companies promised to safety-test their models. No law requires it. Who enforces the promise?"
+    options:
+      - { id: a, text: "The EU" }
+      - { id: b, text: "The Federal Trade Commission" }
+      - { id: c, text: "No one" }
+      - { id: d, text: "State courts" }
+    answer: c
+    explanation: "A voluntary commitment has no enforcer. That is its main weakness."
+  - id: q2
+    prompt: "In the Air Canada case, what did the tribunal decide?"
+    options:
+      - { id: a, text: "The chatbot was responsible for its own answers" }
+      - { id: b, text: "The customer should have double-checked" }
+      - { id: c, text: "The company that built the chatbot had to pay" }
+      - { id: d, text: "The airline was responsible for what its chatbot said" }
+    answer: d
+    explanation: "The chatbot was part of the airline's website, so the airline answered for it."
+  - id: q3
+    prompt: "Which statement best describes the Collingridge dilemma?"
+    options:
+      - { id: a, text: "Early on, a technology is easy to change but its harms are unknown. Later, the harms are known but change is hard." }
+      - { id: b, text: "Technology always improves more quickly than laws" }
+      - { id: c, text: "Governments should never regulate new technology" }
+      - { id: d, text: "Companies always know the harms before anyone else" }
+    answer: a
+    explanation: "It is a timing problem about knowledge and control."
+  - id: q4
+    prompt: "California wrote SB 53 before any AI agent had hacked another company. The law did not cover the Hugging Face hack. What does this show?"
+    options:
+      - { id: a, text: "SB 53 was written carelessly" }
+      - { id: b, text: "A rule written early can miss a harm nobody had seen yet" }
+      - { id: c, text: "States should never write AI laws" }
+      - { id: d, text: "The hack was not serious" }
+    answer: b
+    explanation: "That is the Collingridge dilemma in action. Early rules guess at harms, so they need ways to be updated."
+  - id: q5
+    prompt: "Under the EU AI Act's risk-based approach, which use faces strict checks but is still allowed?"
+    options:
+      - { id: a, text: "A spam filter" }
+      - { id: b, text: "An AI tool that screens job applicants" }
+      - { id: c, text: "Social scoring of citizens" }
+      - { id: d, text: "A video game character" }
+    answer: b
+    explanation: "Hiring is a high-risk use. Social scoring is banned, and spam filters face no new rules."
+---
+
+<Check />

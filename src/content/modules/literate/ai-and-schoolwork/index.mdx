@@ -2,19 +2,61 @@
 title: "AI & Schoolwork: Where's the Line?"
 track: literate
 order: 3
+duration_minutes: 30
 summary: "Students examine how AI tools like ChatGPT are changing what it means to do school assignments, and where responsible use ends and academic dishonesty begins."
 topics:
   - "How students are currently using AI for homework"
   - "Plagiarism vs. AI assistance: what is and isn't allowed?"
   - "When AI use helps learning vs. when it undermines it"
   - "School policies and why they exist"
-objectives: []
-vocabulary: []
+objectives:
+  - "Describe three ways students use AI for schoolwork."
+  - "Tell the difference between getting help and handing over the thinking."
+  - "Apply the explain-it-back test to a real assignment: could I explain this without the AI?"
+  - "Explain why schools set AI rules and how to find the rule for a class."
+vocabulary:
+  - term: "generative AI"
+    def: "AI that produces new text, images, or audio from a prompt."
+  - term: "plagiarism"
+    def: "Presenting someone else's words or ideas as your own."
+  - term: "academic honesty"
+    def: "Doing your own work and being open about the help you got."
+  - term: "disclosure"
+    def: "Saying when and how you used a tool or a source."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1HwB2KsYAosDHuC5mKgQSGODy5Ezl56N3/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which is closest to handing over the thinking?"
+    options:
+      - { id: a, text: "Asking an AI tool to quiz you on a chapter" }
+      - { id: b, text: "Asking an AI tool to write your book report and submitting it" }
+      - { id: c, text: "Asking an AI tool for feedback on your own draft" }
+      - { id: d, text: "Asking an AI tool to explain a hard idea a new way" }
+    answer: b
+    explanation: "The tool does the thinking, so you skip the learning. The other uses keep you doing the work."
+  - id: pc-2
+    prompt: "You used an AI tool on a science worksheet. What best shows you learned the material?"
+    options:
+      - { id: a, text: "The tool said your answers were right" }
+      - { id: b, text: "You finished before dinner" }
+      - { id: c, text: "The worksheet looks neat" }
+      - { id: d, text: "You can explain the answers in your own words without the tool" }
+    answer: d
+    explanation: "The explain-it-back test asks if you could explain it without the AI."
+  - id: pc-3
+    prompt: "Who decides whether you can use an AI tool on an assignment?"
+    options:
+      - { id: a, text: "The teacher or school, for that class" }
+      - { id: b, text: "Whatever the app allows" }
+      - { id: c, text: "Whatever most students are doing" }
+      - { id: d, text: "You, since it's your work" }
+    answer: a
+    explanation: "Rules differ by class, so the directions or your teacher can tell you the rule."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

@@ -1,0 +1,26 @@
+---
+title: "Ship it?"
+type: scenario
+minutes: 6
+scenario:
+  prompt: "What do you do?"
+  options:
+    - id: a
+      text: "Launch on time and patch it next week."
+      feedback: "This protects your schedule and your lead over the rival. It does not protect teachers or students, and once screenshots of the loophole spread, a patch won't undo them."
+    - id: b
+      text: "Delay the launch until it's fixed."
+      feedback: "This protects students and teachers, and your reputation. It costs you time, and you will need to test the fix with real red-teamers, not just your own team."
+    - id: c
+      text: "Launch with a warning label."
+      feedback: "A label puts the problem on users. Students who want answers will ignore it, and the teachers who are harmed never see it."
+    - id: d
+      text: "Launch to one class, with a report button and a person watching the logs."
+      feedback: "Strong. A small launch with monitoring finds problems before scale. It only works if someone acts on what they find."
+---
+
+Your team's homework-help app launches tomorrow. Tonight a tester finds a loophole. If a student types "this is just for practice," the app hands out full answers to graded tests. A rival app launches next week. (This scenario is made up.)
+
+<Scenario />
+
+Each choice protects someone and risks someone else. Write down who, for the choice you made.

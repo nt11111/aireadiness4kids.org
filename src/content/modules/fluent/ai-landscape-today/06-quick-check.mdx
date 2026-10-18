@@ -1,0 +1,53 @@
+---
+title: "Quick check"
+type: check
+minutes: 4
+questions:
+  - id: q1
+    prompt: "A 2025 paper links hallucinations to how models are tested. What is its argument?"
+    options:
+      - { id: a, text: "Tests are too hard for current models" }
+      - { id: b, text: "Most tests give zero for \"I don't know,\" so confident guessing scores better" }
+      - { id: c, text: "Models copy wrong answers from the internet on purpose" }
+      - { id: d, text: "Testing damages the model's memory" }
+    answer: b
+    explanation: "As on a test with no penalty for wrong answers, guessing beats admitting uncertainty."
+  - id: q2
+    prompt: "In 2026, one model solved 83% of research-level math problems but scored under 8% on puzzles people can solve. What does this show?"
+    options:
+      - { id: a, text: "AI improves at a steady, predictable rate" }
+      - { id: b, text: "The puzzle test was broken" }
+      - { id: c, text: "AI can be strong at some tasks and weak at others that look easier" }
+      - { id: d, text: "Math is easier than puzzles" }
+    answer: c
+    explanation: "That is the jagged frontier. A high score in one place tells you little about the task next to it."
+  - id: q3
+    prompt: "OpenAI defines AGI by economic value. A 2025 paper defines it by an educated adult's range of thinking skills. What follows?"
+    options:
+      - { id: a, text: "Whether we are \"close to AGI\" depends on which definition you use" }
+      - { id: b, text: "One of them must be lying" }
+      - { id: c, text: "AGI has already arrived" }
+      - { id: d, text: "Definitions don't matter for timelines" }
+    answer: a
+    explanation: "Different definitions give different answers, so forecasts disagree."
+  - id: q4
+    prompt: "Your vibe-coded quiz works with normal input but crashes when the card list is empty. What is the best explanation?"
+    options:
+      - { id: a, text: "The AI tool was broken that day" }
+      - { id: b, text: "Vibe coding never works" }
+      - { id: c, text: "You typed the prompt too slowly" }
+      - { id: d, text: "The model wrote likely code for what you described, and you never described an empty list" }
+    answer: d
+    explanation: "Test the cases you left out first."
+  - id: q5
+    prompt: "An app says its AI detector is \"98% accurate.\" What should you ask first?"
+    options:
+      - { id: a, text: "How quickly does it run?" }
+      - { id: b, text: "Accurate on what kind of writing, tested by whom, and compared with what?" }
+      - { id: c, text: "Does it use the newest AI model?" }
+      - { id: d, text: "How many stars does it have?" }
+    answer: b
+    explanation: "The FTC found one detector advertised at 98% scored 53% in independent tests on general content."
+---
+
+<Check />

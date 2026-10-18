@@ -2,19 +2,62 @@
 title: "Being a Smart AI User"
 track: aware
 order: 3
+duration_minutes: 40
 summary: "Students learn how to ask AI good questions, evaluate AI answers, and know when to ask a human instead."
+big_idea: "You are the boss of your own thinking. AI can help, but you check it and you decide."
 topics:
   - "What is a prompt? Giving AI good instructions"
   - "Checking AI answers: is it always right?"
   - "Asking a real person vs. asking AI"
   - "AI as a tool, not a replacement for thinking"
-objectives: []
-vocabulary: []
+objectives:
+  - "Say what a prompt is."
+  - "Give a clear instruction with details."
+  - "Check an AI answer against a second source."
+  - "Choose when to ask a person instead of an AI."
+vocabulary:
+  - term: "prompt"
+    def: "The words you give an AI to tell it what you want."
+  - term: "instruction"
+    def: "A step that tells someone, or something, what to do."
+  - term: "source"
+    def: "Where information comes from, like a book or a teacher."
+  - term: "tool"
+    def: "Something that helps you do a job."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/16AfnS-xr_hx022mmdIIYfSyM8rcmQee2/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is a prompt?"
+    options:
+      - { id: a, text: "The words you give an AI" }
+      - { id: b, text: "A computer part" }
+      - { id: c, text: "A game" }
+      - { id: d, text: "A robot's name" }
+    answer: a
+    explanation: "A prompt is how you tell an AI what you want."
+  - id: pc-2
+    prompt: "Which prompt is clearer?"
+    options:
+      - { id: a, text: "\"Animals.\"" }
+      - { id: b, text: "\"Tell me two facts about frogs for a kindergartner.\"" }
+      - { id: c, text: "\"Stuff.\"" }
+      - { id: d, text: "\"Go.\"" }
+    answer: b
+    explanation: "It says what, who, and how much."
+  - id: pc-3
+    prompt: "When should you ask a person instead of an AI?"
+    options:
+      - { id: a, text: "Never" }
+      - { id: b, text: "For questions about feelings or safety" }
+      - { id: c, text: "Only for spelling" }
+      - { id: d, text: "Only on Mondays" }
+    answer: b
+    explanation: "People come first for feelings and safety."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

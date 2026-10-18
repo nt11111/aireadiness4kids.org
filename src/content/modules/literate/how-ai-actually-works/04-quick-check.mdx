@@ -1,0 +1,53 @@
+---
+title: "Quick check"
+type: check
+minutes: 4
+questions:
+  - id: q1
+    prompt: "In machine learning, what is training data?"
+    options:
+      - { id: a, text: "The rules a programmer types in" }
+      - { id: b, text: "The examples a program learns patterns from" }
+      - { id: c, text: "The model's final answer" }
+      - { id: d, text: "The app's settings" }
+    answer: b
+    explanation: "Training data is the set of examples the program learns from."
+  - id: q2
+    prompt: "A recommender says you're 90% likely to watch a video. What is that?"
+    options:
+      - { id: a, text: "Training data" }
+      - { id: b, text: "An algorithm" }
+      - { id: c, text: "A prediction" }
+      - { id: d, text: "A feedback loop" }
+    answer: c
+    explanation: "It's the model's output for a new input: a prediction."
+  - id: q3
+    prompt: "Which statement is most accurate?"
+    options:
+      - { id: a, text: "A model knows what its words mean" }
+      - { id: b, text: "A model finds patterns in data and uses them to guess" }
+      - { id: c, text: "A model follows only rules a person wrote" }
+      - { id: d, text: "A model can't be wrong if it has enough data" }
+    answer: b
+    explanation: "Models find patterns. They don't know meaning, and they can still be wrong."
+  - id: q4
+    prompt: "You mark a recommended video \"not interested.\" Which part of the loop is that?"
+    options:
+      - { id: a, text: "Training" }
+      - { id: b, text: "Prediction" }
+      - { id: c, text: "Feedback" }
+      - { id: d, text: "Input" }
+    answer: c
+    explanation: "Your response goes back in as new data."
+  - id: q5
+    prompt: "Which one is machine learning, not just \"an algorithm\" in general?"
+    options:
+      - { id: a, text: "A recipe that lists steps in order" }
+      - { id: b, text: "A program that learns patterns from examples instead of following rules a person wrote" }
+      - { id: c, text: "A set of directions for solving a math problem" }
+      - { id: d, text: "Any list of instructions a computer follows" }
+    answer: b
+    explanation: "Machine learning is one way to build AI: it learns patterns from examples. The others are just algorithms."
+---
+
+<Check />

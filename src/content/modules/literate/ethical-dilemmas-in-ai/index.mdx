@@ -2,6 +2,7 @@
 title: "Ethical Dilemmas in AI"
 track: literate
 order: 6
+duration_minutes: 30
 summary: "Students debate real-world AI ethics scenarios, applying a structured decision-making framework."
 topics:
   - "Introduction to AI ethics: fairness, accountability, transparency"
@@ -9,13 +10,54 @@ topics:
   - "Scenario 2: AI content moderation on social media"
   - "Scenario 3: AI-powered surveillance in public spaces"
   - "How to reason through ethical trade-offs"
-objectives: []
-vocabulary: []
+objectives:
+  - "Define fairness, accountability, and transparency for AI."
+  - "Work through a case with four questions: who is affected, what could go wrong, who is responsible, and what would make it fairer."
+  - "Argue both sides of an AI case."
+  - "Defend a position with reasons."
+  - "Spot the trade-off in an AI decision."
+vocabulary:
+  - term: "ethics"
+    def: "Thinking carefully about what is right, fair, and good."
+  - term: "fairness"
+    def: "Treating people in an equal and reasonable way."
+  - term: "accountability"
+    def: "Someone is answerable when things go wrong."
+  - term: "transparency"
+    def: "People can find out how a decision was made."
+  - term: "trade-off"
+    def: "Getting more of one thing by giving up some of another."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1wVYqADZR6dqTZkCmpR_KptBGwf4p8TDL/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which sentence shows accountability?"
+    options:
+      - { id: a, text: "\"The app glitched and nobody knows why.\"" }
+      - { id: b, text: "\"The tool is kept secret.\"" }
+      - { id: c, text: "\"The tool made an error, and the company will answer for it and fix it.\"" }
+      - { id: d, text: "\"Nobody uses the tool.\"" }
+    answer: c
+  - id: pc-2
+    prompt: "You hear about a new AI tool at your school. Which question do you ask first?"
+    options:
+      - { id: a, text: "Who is affected?" }
+      - { id: b, text: "What could go wrong?" }
+      - { id: c, text: "Who is responsible?" }
+      - { id: d, text: "What would make it fairer?" }
+    answer: a
+  - id: pc-3
+    prompt: "Which is an example of a trade-off?"
+    options:
+      - { id: a, text: "A free game with no ads" }
+      - { id: b, text: "Getting a faster line by giving up some privacy" }
+      - { id: c, text: "A tool that always works" }
+      - { id: d, text: "A rule everyone follows" }
+    answer: b
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

@@ -2,19 +2,71 @@
 title: "AI & the Future of Work"
 track: fluent
 order: 4
+duration_minutes: 47
 summary: "Students examine how AI is changing job markets and what skills will matter in an AI-saturated economy."
+hard_idea: "Tasks, not jobs, and the apprenticeship problem. AI changes tasks before it changes whole jobs. The tasks it handles first are often the beginner tasks people learn on, which raises a hard question about how anyone becomes an expert."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "Stanford's August 2026 payroll study"
+    - "Anthropic's March 2026 labor study and January 2026 coding-skills experiment"
+    - "2026 job cuts credited to AI"
+    - "the June 2026 SAG-AFTRA contract"
 topics:
   - "Jobs AI is automating vs. jobs it's augmenting"
   - "Skills that remain distinctly human: creativity, judgment, empathy"
   - "AI and economic inequality: who benefits, who is displaced?"
   - "Career planning in an AI-transformed world"
-objectives: []
-vocabulary: []
+objectives:
+  - "Distinguish automating a task from automating a whole job, using a job they know."
+  - "Evaluate a forecast about AI and jobs by its source, method, and time frame."
+  - "Explain the apprenticeship problem and why entry-level work matters for building expertise."
+  - "Plan one skill to build that complements AI, and say who gains and who loses as work changes."
+vocabulary:
+  - term: "automation"
+    def: "A machine doing a task that a person used to do."
+  - term: "augmentation"
+    def: "A tool that makes a person more effective at a task."
+  - term: "exposure"
+    def: "How much of a job's tasks an AI system could affect. Exposure is not the same as job loss."
+  - term: "displacement"
+    def: "When workers lose jobs or hours to a change in technology."
+  - term: "reskilling"
+    def: "Learning new skills to move into different work."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1zfsrItHexjCnuXBPWfEfaLmq7IwV6hnd/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is the difference between automation and augmentation?"
+    options:
+      - { id: a, text: "There is no difference" }
+      - { id: b, text: "Automation means a machine does a task. Augmentation means a tool makes a person better at it." }
+      - { id: c, text: "Augmentation replaces whole jobs" }
+      - { id: d, text: "Automation only happens in factories" }
+    answer: b
+    explanation: "Most jobs will see some of each."
+  - id: pc-2
+    prompt: "Which is the best first question to ask about any forecast of AI and jobs?"
+    options:
+      - { id: a, text: "What did they measure, and over what time frame?" }
+      - { id: b, text: "Is it from this year?" }
+      - { id: c, text: "Is the number scary?" }
+      - { id: d, text: "How many people shared it?" }
+    answer: a
+    explanation: "A forecast of exposure, an employer survey, and labor data answer different questions."
+  - id: pc-3
+    prompt: "Which skill complements AI the most?"
+    options:
+      - { id: a, text: "Doing tasks exactly the way AI does them" }
+      - { id: b, text: "Avoiding AI completely" }
+      - { id: c, text: "Judging AI output and knowing when it is wrong" }
+      - { id: d, text: "Typing prompts quickly" }
+    answer: c
+    explanation: "Judgment is what turns AI output into good work."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

@@ -2,19 +2,70 @@
 title: "Algorithmic Bias & Systemic Justice"
 track: fluent
 order: 3
+duration_minutes: 45
 summary: "Students apply a social justice lens to AI, examining how algorithmic systems can reinforce or amplify existing inequities."
+hard_idea: "Fairness definitions conflict. When groups have different base rates, no risk score can meet every common definition of fairness at once. Choosing one is a choice about values, not math."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "Amsterdam's \"Smart Check\" welfare pilot (reported June 2025)"
+    - "AI resume-screening studies from 2024 and 2025"
+    - "Mobley v. Workday (rulings in 2025 and 2026)"
 topics:
   - "How historical inequity gets encoded in training data"
   - "Case studies: criminal justice, healthcare, education, housing"
   - "Intersectionality and compound algorithmic harm"
   - "Auditing AI systems: how researchers and journalists hold AI accountable"
-objectives: []
-vocabulary: []
+objectives:
+  - "Explain how past inequity can enter a system through its data, its target, and where it is used."
+  - "Analyze a documented case: who built the system, what data it used, who was affected, and what happened next."
+  - "Explain why two reasonable definitions of fairness can't both be met when groups have different base rates."
+  - "Describe how an algorithmic audit works, and why it must check overlapping groups, not just averages."
+vocabulary:
+  - term: "disparate impact"
+    def: "When a rule that looks neutral harms one group more than others."
+  - term: "proxy variable"
+    def: "A data point that stands in for a protected trait, such as a zip code standing in for race."
+  - term: "base rate"
+    def: "How common an outcome is in a group before any prediction is made."
+  - term: "intersectionality"
+    def: "How overlapping identities, such as race and gender together, shape what a person experiences."
+  - term: "algorithmic audit"
+    def: "An independent test of a system for unequal outcomes."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/109I2XQqV-OwA-yE9ZhgmLd1G-2Q6xF8E/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is a proxy variable?"
+    options:
+      - { id: a, text: "A backup copy of a dataset" }
+      - { id: b, text: "A data point that stands in for a protected trait, such as zip code for race" }
+      - { id: c, text: "A variable that has no effect" }
+      - { id: d, text: "A rule against bias" }
+    answer: b
+    explanation: "Proxies can carry bias into a model even after the protected trait is removed."
+  - id: pc-2
+    prompt: "A rule treats everyone the same on paper but harms one group more. What is this called?"
+    options:
+      - { id: a, text: "Disparate impact" }
+      - { id: b, text: "A base rate" }
+      - { id: c, text: "Calibration" }
+      - { id: d, text: "An audit" }
+    answer: a
+    explanation: "Disparate impact is about outcomes, not intentions."
+  - id: pc-3
+    prompt: "What does an algorithmic audit check?"
+    options:
+      - { id: a, text: "Whether the code compiles" }
+      - { id: b, text: "Whether the company is profitable" }
+      - { id: c, text: "Whether the system's outcomes are unequal across groups, including overlapping ones" }
+      - { id: d, text: "Whether users like the system" }
+    answer: c
+    explanation: "Audits test outcomes for different groups, not just the average."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

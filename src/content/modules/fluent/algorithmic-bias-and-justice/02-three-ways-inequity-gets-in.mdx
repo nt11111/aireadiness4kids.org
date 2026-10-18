@@ -1,0 +1,53 @@
+---
+title: "Three ways inequity gets in"
+type: explainer
+minutes: 7
+sort:
+  prompt: "Where did the bias get in?"
+  buckets:
+    - { id: the-data, label: "The data" }
+    - { id: the-target, label: "The target" }
+    - { id: where-it-is-used, label: "Where it is used" }
+  items:
+    - id: i1
+      text: "A hiring tool learns from ten years of mostly male resumes"
+      bucket: the-data
+      why: "It copied who got hired before."
+    - id: i2
+      text: "A health tool predicts spending instead of illness"
+      bucket: the-target
+      why: "Some groups get less care, so spending understates their need."
+    - id: i3
+      text: "A grading formula leans on each school's past results"
+      bucket: where-it-is-used
+      why: "Grades tracked the school's history, not just the student."
+    - id: i4
+      text: "A loan model drops race but keeps zip code"
+      bucket: the-data
+      why: "Zip code can act as a proxy for race."
+sources:
+  - title: "Amazon hiring tool (Reuters, October 2018)"
+    url: "https://www.businessinsurance.com/amazon-scraps-secret-artificial-intelligence-recruiting-tool-showed-bias-against/"
+  - title: "AI resume screening and names (Wilson and Caliskan, University of Washington, October 2024)"
+    url: "https://www.washington.edu/news/2024/10/31/ai-bias-resume-screening-race-gender/"
+  - title: "Health cost algorithm (Obermeyer et al., Science, 2019)"
+    url: "https://www.ftc.gov/system/files/documents/public_events/1548288/privacycon-2020-ziad_obermeyer.pdf"
+  - title: "England's 2020 grading formula"
+    url: "https://www.engadget.com/uk-algorithm-a-levels-gcse-results-143503870.html"
+  - title: "Reversal on August 17, 2020"
+    url: "https://amp.cnn.com/cnn/2020/08/17/europe/uk-school-exams-coronavirus-gbr-intl"
+  - title: "US v. Meta housing ads settlement (June 2022)"
+    url: "https://www.justice.gov/opa/pr/justice-department-secures-groundbreaking-settlement-agreement-meta-platforms-formerly-known"
+---
+
+This module builds on Bias in AI from the AI Literate course. Researchers look for bias at three points.
+
+**The data.** A system learns from past decisions and from text people wrote. In 2018, Reuters reported that Amazon dropped a hiring tool that penalized resumes containing the word "women's." In 2024, University of Washington researchers ran identical resumes through AI models with different names attached. The models favored white-associated names 85% of the time.
+
+**The target.** Builders choose what to predict, and that choice can carry bias on its own. A 2019 study in Science examined a health tool that predicted future medical costs as a stand-in for need. Less money is spent on Black patients with the same need, so the tool underrated how sick they were. Fixing the target would have raised the share of Black patients flagged for extra help from 17.7% to 46.5%.
+
+**Where it is used.** In 2020, England replaced cancelled exams with a formula that leaned on each school's past results. It lowered 35.6% of grades by one level, and students at larger state schools were hit harder. After protests, regulators dropped it on August 17, 2020.
+
+A <Vocab term="proxy variable" /> lets bias in even after a protected trait is removed. In 2022, the US Justice Department settled with Meta over housing ads. It alleged that the ad delivery system relied in part on race, national origin, and sex to decide who saw each ad.
+
+<Sort />

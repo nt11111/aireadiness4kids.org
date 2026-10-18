@@ -2,19 +2,72 @@
 title: "AI Ethics & Who Makes the Rules"
 track: fluent
 order: 2
+duration_minutes: 47
 summary: "Students examine the policy landscape around AI: who is regulating it, what frameworks exist, and where the gaps are."
+hard_idea: "The Collingridge dilemma. Early on, a technology is easy to change, but nobody knows its harms yet. Once the harms are clear, it is built into everything and hard to change."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "California's SB 53 and the Hugging Face hack"
+    - "the AI Kill Switch Act (H.R. 9917)"
+    - "the EU's delay of high-risk rules to December 2027"
+    - "the Justice Department's task force against state AI laws"
+    - "New York's RAISE Act"
 topics:
   - "Major AI ethics frameworks: EU AI Act, US executive orders, voluntary commitments"
   - "Who has power over AI development: companies, governments, researchers"
   - "The accountability gap: when AI causes harm, who is responsible?"
   - "Student role in shaping norms and policy"
-objectives: []
-vocabulary: []
+objectives:
+  - "Compare binding law, government policy, and voluntary commitments, with one strength and one weakness of each."
+  - "Explain the accountability gap using a real case."
+  - "Use the Collingridge dilemma to argue when and how a new use of AI should be regulated."
+  - "Propose one way students can shape AI rules, and name the person or body that can act on it."
+vocabulary:
+  - term: "accountability gap"
+    def: "When harm happens and no one is clearly answerable for it."
+  - term: "liability"
+    def: "Legal responsibility for harm."
+  - term: "risk-based approach"
+    def: "Rules that get stricter as the potential for harm rises."
+  - term: "voluntary commitment"
+    def: "A promise a company makes that no law requires."
+  - term: "Collingridge dilemma"
+    def: "The problem that a technology is easiest to change before its harms are known, and hardest to change after."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1850j2UeY50boTWGTijsjcUDeMePcOudO/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "What is the main difference between a law and a voluntary commitment?"
+    options:
+      - { id: a, text: "A law has an enforcer and penalties. A voluntary commitment does not." }
+      - { id: b, text: "A voluntary commitment is stricter" }
+      - { id: c, text: "Only laws apply to AI companies" }
+      - { id: d, text: "There is no difference" }
+    answer: a
+    explanation: "Laws are enforced. Voluntary commitments rely on the company keeping its word."
+  - id: pc-2
+    prompt: "What is the accountability gap?"
+    options:
+      - { id: a, text: "The time between a law passing and taking effect" }
+      - { id: b, text: "The difference between what AI can and can't do" }
+      - { id: c, text: "When harm happens and no one is clearly answerable for it" }
+      - { id: d, text: "The gap between rich and poor countries' AI rules" }
+    answer: c
+    explanation: "It is the space where harm goes unanswered."
+  - id: pc-3
+    prompt: "Anyone can submit a public comment on a proposed US federal rule. What makes a comment count most?"
+    options:
+      - { id: a, text: "Getting the most people to send the same message" }
+      - { id: b, text: "Clear reasoning and evidence" }
+      - { id: c, text: "Using strong language" }
+      - { id: d, text: "Being an adult" }
+    answer: b
+    explanation: "Public comment is not a vote. Agencies must respond to relevant, significant comments, and reasoned ones with evidence carry the most weight."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

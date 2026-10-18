@@ -2,19 +2,62 @@
 title: "What Is AI?"
 track: aware
 order: 1
+duration_minutes: 40
 summary: "Students discover what artificial intelligence is through familiar examples from everyday life: voice assistants, recommendation engines, and spell-checkers."
+big_idea: "AI learns from examples. It only knows what its examples showed it."
 topics:
   - "What makes something \"intelligent\""
   - "Examples of AI kids already use (Siri, Netflix, autocorrect)"
   - "AI vs. robots vs. computers: what's the difference?"
   - "How AI learns from examples (simple intro to training data)"
-objectives: []
-vocabulary: []
+objectives:
+  - "Say what AI is in their own words."
+  - "Name three AI tools people use every day."
+  - "Tell the difference between AI, a robot, and a regular computer program."
+  - "Explain that AI learns from examples, and can be fooled by something its examples never showed it."
+vocabulary:
+  - term: "artificial intelligence (AI)"
+    def: "A computer program that learns from examples and then makes a guess or a choice."
+  - term: "pattern"
+    def: "Something that repeats, like stripes on a shirt."
+  - term: "training data"
+    def: "The big pile of examples an AI learns from."
+  - term: "robot"
+    def: "A machine that can move and do jobs. Some robots use AI. Many do not."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1Zsk14_M7XfqQ_FAu7MNALF4LoUIJoYjM/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Which of these learns from examples?"
+    options:
+      - { id: a, text: "A light switch" }
+      - { id: b, text: "A calculator" }
+      - { id: c, text: "An AI program" }
+      - { id: d, text: "A pencil" }
+    answer: c
+    explanation: "AI programs learn from examples. The others do not learn."
+  - id: pc-2
+    prompt: "Can AI make mistakes?"
+    options:
+      - { id: a, text: "No, never" }
+      - { id: b, text: "Yes, its guesses can be wrong" }
+      - { id: c, text: "Only when it is turned off" }
+      - { id: d, text: "Only robots make mistakes" }
+    answer: b
+    explanation: "AI makes guesses, and a guess can be wrong."
+  - id: pc-3
+    prompt: "What do we call the examples an AI learns from?"
+    options:
+      - { id: a, text: "Training data" }
+      - { id: b, text: "Homework" }
+      - { id: c, text: "Batteries" }
+      - { id: d, text: "Robots" }
+    answer: a
+    explanation: "Training data is the pile of examples an AI learns from."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

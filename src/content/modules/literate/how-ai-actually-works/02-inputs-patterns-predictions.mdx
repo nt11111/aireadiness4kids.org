@@ -1,0 +1,58 @@
+---
+title: "Inputs, patterns, predictions"
+type: explainer
+minutes: 7
+sort:
+  prompt: "Which part of the loop is it?"
+  buckets:
+    - { id: training-data, label: "Training data" }
+    - { id: model, label: "Model" }
+    - { id: prediction, label: "Prediction" }
+    - { id: feedback, label: "Feedback" }
+  items:
+    - id: i1
+      text: "Millions of videos labeled by how long people watched them"
+      bucket: training-data
+      why: "These are the examples the program learns from."
+    - id: i2
+      text: "The trained program inside Instagram that ranks your feed"
+      bucket: model
+      why: "It's what training produced."
+    - id: i3
+      text: "\"You'll probably watch this one all the way through\""
+      bucket: prediction
+      why: "It's the model's best guess for a new input."
+    - id: i4
+      text: "You tap \"not interested\" on a video"
+      bucket: feedback
+      why: "Your tap becomes new data."
+sources:
+  - title: "Instagram Ranking Explained (Adam Mosseri, Instagram, May 31, 2023)"
+    url: "https://about.instagram.com/blog/announcements/instagram-ranking-explained"
+  - title: "Learning and Optimization of Implicit Negative Feedback for Industrial Short-video Recommender System (Pan et al., CIKM 2023)"
+    url: "https://arxiv.org/abs/2308.13249"
+  - title: "algorithm (Merriam-Webster)"
+    url: "https://www.merriam-webster.com/dictionary/algorithm"
+  - title: "Machine learning, explained (Sara Brown, MIT Sloan, April 21, 2021)"
+    url: "https://mitsloan.mit.edu/ideas-made-to-matter/machine-learning-explained"
+---
+
+Here's a simple way to think about machine learning. It has four parts.
+
+Training data. People collect huge numbers of examples. For a recommender like Instagram, that means videos people watched, skipped, liked, or saved. This is the <Vocab term="training data" />.
+
+Training. An <Vocab term="algorithm" /> goes through the examples and adjusts itself to find patterns. It might notice that people who finish cooking videos often watch more of them.
+
+The model. After training, you have a <Vocab term="model" />. Give it a new video and a viewer, the input. It gives back a prediction: how likely you are to watch, like, or save it.
+
+Feedback. When you tap "not interested" or watch something all the way through, that becomes new data. This is a <Vocab term="feedback loop" />.
+
+<Figure pending alt={"Diagram of data flowing into training, producing a model that makes predictions, with feedback returning as new data."} brief={"A loop diagram: training data, then training, then model, then prediction, with feedback flowing back into training data"} />
+
+An algorithm is step-by-step instructions, like a recipe. Machine learning is one way to build AI: it learns patterns from examples instead of following typed-in rules. AI is the bigger category: systems built to do tasks that usually need human thinking.
+
+<Callout kind="fact">
+A model finds patterns. It doesn't know what a video actually is.
+</Callout>
+
+<Sort />

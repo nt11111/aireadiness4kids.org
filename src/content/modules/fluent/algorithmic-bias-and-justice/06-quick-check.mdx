@@ -1,0 +1,53 @@
+---
+title: "Quick check"
+type: check
+minutes: 4
+questions:
+  - id: q1
+    prompt: "A lending model removes race from its inputs but keeps zip code. Why might it still treat groups unequally?"
+    options:
+      - { id: a, text: "Zip codes are random" }
+      - { id: b, text: "Zip code can act as a proxy for race" }
+      - { id: c, text: "Removing race always fixes bias" }
+      - { id: d, text: "Lending models can't use location" }
+    answer: b
+    explanation: "If where people live tracks race, zip code can carry the same pattern."
+  - id: q2
+    prompt: "A health tool predicted medical costs as a stand-in for need. Why did that underrate Black patients?"
+    options:
+      - { id: a, text: "The tool used race as an input" }
+      - { id: b, text: "Black patients visited doctors more often" }
+      - { id: c, text: "Less money is spent on Black patients with the same need, so cost understated their need" }
+      - { id: d, text: "The data was too small" }
+    answer: c
+    explanation: "The target, cost, was a biased stand-in for the thing that mattered, need."
+  - id: q3
+    prompt: "Two groups have different base rates. What can a risk score NOT do?"
+    options:
+      - { id: a, text: "Make a label mean the same thing in both groups and give both groups the same rate of wrongful flags" }
+      - { id: b, text: "Make any predictions at all" }
+      - { id: c, text: "Use a cutoff" }
+      - { id: d, text: "Be checked by an auditor" }
+    answer: a
+    explanation: "Unless base rates match or predictions are perfect, those two kinds of fairness conflict."
+  - id: q4
+    prompt: "Amsterdam's welfare model left out nationality, gender, and age. In a live pilot, its errors shifted onto Dutch nationals and women. What does this show?"
+    options:
+      - { id: a, text: "The city made a simple coding mistake" }
+      - { id: b, text: "Welfare offices can never use data" }
+      - { id: c, text: "Removing traits and fixing one measure can move the harm instead of ending it" }
+      - { id: d, text: "The model was fair, and the pilot was unlucky" }
+    answer: c
+    explanation: "Fixing a model on one test does not settle which errors it makes, or who carries them."
+  - id: q5
+    prompt: "An audit finds a hiring model scores women higher than men on average. What should the auditor check next?"
+    options:
+      - { id: a, text: "Nothing. Women are doing fine." }
+      - { id: b, text: "Results for overlapping groups, such as Black men and Black women" }
+      - { id: c, text: "Whether the tool is popular" }
+      - { id: d, text: "The price" }
+    answer: b
+    explanation: "A 2025 study found exactly this pattern: women scored higher overall, while Black men scored lower."
+---
+
+<Check />

@@ -2,19 +2,72 @@
 title: "Building Responsibly: Design Thinking with AI"
 track: fluent
 order: 5
+duration_minutes: 49
 summary: "Students take on the role of AI designers and work through the ethical decisions involved in building a real AI product."
+hard_idea: "Goodhart's law. When a measure becomes a target, it stops being a good measure. An AI system pursues the number you give it, not the goal you meant."
+recent_events:
+  last_checked: 2026-10-14
+  items:
+    - "the July 2026 Hugging Face incident"
+    - "METR's 2025 reward hacking tests"
+    - "a 2025 Stanford study of sycophancy across 11 AI models"
 topics:
   - "Product design principles: who is this for? who could it harm?"
   - "Stakeholder mapping and unintended consequences"
   - "Red-teaming: how do we stress-test an AI system for misuse?"
   - "Student project: design a responsible AI product for a real community need"
-objectives: []
-vocabulary: []
+objectives:
+  - "Write a problem statement for an AI product that names the user and the community need."
+  - "Map stakeholders, including people who never use the product but are affected by it."
+  - "Explain Goodhart's law and spot where a product's success measure could drift from its real goal."
+  - "Red-team a design and revise it with at least two safeguards."
+vocabulary:
+  - term: "stakeholder"
+    def: "Anyone affected by a product, whether or not they use it."
+  - term: "sycophancy"
+    def: "When an AI tells you what you want to hear, agreeing with you or flattering you, instead of what is true or helpful."
+  - term: "Goodhart's law"
+    def: "When a measure becomes a target, it stops being a good measure."
+  - term: "specification gaming"
+    def: "When a system meets the letter of its goal while missing the point."
+  - term: "red-teaming"
+    def: "Trying on purpose to break or misuse a system, to find problems before release."
+  - term: "safeguard"
+    def: "A feature or rule that reduces a risk."
 status: draft
 reviewers: []
 slides_url: "https://drive.google.com/file/d/1ns4kiAX4oADhTY2KF2Wzbau_MNAMRPcY/view"
-pre_check: []
-post_check: []
+# The same questions open the module ("See what you already know") and close it.
+# post_check reuses pre_check with a YAML alias (*checks); edit the questions once, under pre_check.
+pre_check: &checks
+  - id: pc-1
+    prompt: "Who counts as a stakeholder of a product?"
+    options:
+      - { id: a, text: "Only the people who pay for it" }
+      - { id: b, text: "Only the people who use it" }
+      - { id: c, text: "Anyone affected by it, whether or not they use it" }
+      - { id: d, text: "Only the company's investors" }
+    answer: c
+    explanation: "Bystanders and operators count too."
+  - id: pc-2
+    prompt: "What is red-teaming for?"
+    options:
+      - { id: a, text: "Finding problems and misuse before release" }
+      - { id: b, text: "Making the product look better" }
+      - { id: c, text: "Marketing the product" }
+      - { id: d, text: "Speeding up launch" }
+    answer: a
+    explanation: "It means trying on purpose to break a system, so others don't do it first."
+  - id: pc-3
+    prompt: "Which is an example of a safeguard?"
+    options:
+      - { id: a, text: "A bigger launch event" }
+      - { id: b, text: "A report button and human review of flagged answers" }
+      - { id: c, text: "A new logo" }
+      - { id: d, text: "Removing all testing" }
+    answer: b
+    explanation: "A safeguard is a feature or rule that reduces a risk."
+post_check: *checks
 ---
 
-Content coming soon.
+Content for this module is in the numbered step files next to this one. The facilitator guide is guide.mdx.

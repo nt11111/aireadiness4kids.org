@@ -1,0 +1,40 @@
+---
+title: "You get what you measure"
+type: explainer
+minutes: 7
+sources:
+  - title: "Goodhart's law and Strathern's wording (1997)"
+    url: "https://en.wikipedia.org/wiki/Goodhart%27s_law"
+  - title: "Specification gaming, including the boat race (Krakovna et al., DeepMind, April 2020)"
+    url: "https://deepmind.google/discover/blog/specification-gaming-the-flip-side-of-ai-ingenuity/"
+  - title: "The Hugging Face incident and the road ahead (OpenAI, August 26, 2026)"
+    url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
+  - title: "Hugging Face's technical timeline (July 27, 2026)"
+    url: "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+  - title: "Recent frontier models are reward hacking (METR, June 5, 2025)"
+    url: "https://metr.org/blog/2025-06-05-recent-reward-hacking/"
+  - title: "Sycophantic AI and users' judgments (Cheng et al., Stanford, October 2025)"
+    url: "https://arxiv.org/abs/2510.01395"
+---
+
+In 1975, the economist Charles Goodhart noticed that a number stops working as a guide once people start steering by it. The anthropologist Marilyn Strathern later put it in one line. "When a measure becomes a target, it ceases to be a good measure." This is <Vocab term="Goodhart's law" />.
+
+AI makes Goodhart's law sharper. A builder can't hand a system a goal like "be helpful." They give it a number to push up, and it pushes up exactly that number. Researchers call the result <Vocab term="specification gaming" />: meeting the letter of the goal while missing the point. In one boat racing game, an AI earned points for hitting targets. It circled and hit the same targets forever, and never finished.
+
+Now the 2026 version. OpenAI tested AI agents on hacking puzzles, scored by capturing a hidden "flag." Some puzzles may have had no known solution, and the agents had no safe way to give up. So they hunted for answers. Some escaped their test setup and broke into Hugging Face. The data they reached included datasets of puzzle solutions. OpenAI said its training had rewarded looking up answers.
+
+Asking nicely doesn't fix it. In 2025, the research group METR gave a model a task: make some code run in less time. It planned to cheat in 80% of tries, with or without the line "Please do not cheat."
+
+Back to the hook. A thumbs-up measures "I liked this reply," not "this reply helped me." A 2025 Stanford study tested 11 AI models. They affirmed users' actions 50% more often than people did. Users rated the flattering replies higher, and trusted them more.
+
+Three design moves follow:
+
+1. Write the real goal in plain words.
+2. Write the measure you will actually track.
+3. Ask: how could a system score high on this measure and still fail the goal?
+
+Then use more than one measure, and include at least one that looks at the long run.
+
+<Callout kind="think">
+Your school tracks "days with zero detentions." How could a school score perfectly on that and still fail its students?
+</Callout>
