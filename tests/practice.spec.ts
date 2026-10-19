@@ -72,14 +72,17 @@ test("30 messages an hour per person, then a friendly 429", async () => {
   expect((await call("/api/practice", { cookie: b.cookie, body: say("Hi") })).status).toBe(200);
 });
 
-test("Try it links to the tool when the step has one; AI Fluent 1's app-building Try it doesn't", async () => {
+test("Try it links to the tool when the step has one; the fairness slider's Try it doesn't", async () => {
   const a = await account("learner");
   const studybuddy = await call(`/courses/${STUDYBUDDY}`, { method: "GET", cookie: a.cookie });
   expect(studybuddy.text).toMatch(new RegExp(`<a href="/practice\\?step=${STUDYBUDDY}" target="_blank" rel="noopener" data-practice-link`));
   expect(studybuddy.text).toContain("(opens in a new tab)");
   const app = await call(`/courses/fluent/ai-landscape-today/${stepSlugs("fluent/ai-landscape-today")[3]}`, { method: "GET", cookie: a.cookie });
-  expect(app.text).toContain("data-try-it");
-  expect(app.text).not.toContain("data-practice-link");
+  expect(app.text).toContain("data-practice-link");
+  expect(app.text).not.toContain("once it launches");
+  const slider = await call(`/courses/fluent/algorithmic-bias-and-justice/${stepSlugs("fluent/algorithmic-bias-and-justice")[3]}`, { method: "GET", cookie: a.cookie });
+  expect(slider.text).toContain("data-try-it");
+  expect(slider.text).not.toContain("data-practice-link");
 });
 
 test("the page starts with the activity's prompt, and only for a real practice step", async () => {
@@ -87,7 +90,7 @@ test("the page starts with the activity's prompt, and only for a real practice s
   const page = await call(`/practice?step=${STUDYBUDDY}`, { method: "GET", cookie: a.cookie });
   expect(page.text).toContain(`href="/courses/${STUDYBUDDY}"`);
   expect(page.text).toContain(SETUP);
-  for (const step of ["fluent/ai-landscape-today/" + stepSlugs("fluent/ai-landscape-today")[3], "fluent/nope/nope", "../../etc", "x".repeat(300)]) {
+  for (const step of ["fluent/algorithmic-bias-and-justice/" + stepSlugs("fluent/algorithmic-bias-and-justice")[3], "fluent/nope/nope", "../../etc", "x".repeat(300)]) {
     const other = await call(`/practice?step=${encodeURIComponent(step)}`, { method: "GET", cookie: a.cookie });
     expect(other.status, step).toBe(200);
     expect(other.text, step).toContain("A chat for the Try it activities in AI Fluent.");
