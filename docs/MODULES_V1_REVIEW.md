@@ -13,31 +13,34 @@ The 16 draft modules are on the `modules-v1` branch, built from `docs/source/mod
 | AI Aware 3 · Being a Smart AI User | 7 | 40 | 3 + 3 | 1 | 0 | 0 |
 | AI Aware 4 · Kindness, Feelings & AI | 7 | 40 | 3 + 3 | 1 | 1 | 0 |
 | AI Aware 5 · My Digital Footprint | 7 | 40 | 3 + 3 | 3 | 0 | 0 |
-| AI Literate 1 · How AI Actually Works | 6 | 30 | 5 + 3 | 7 | 1 | 1 |
+| AI Literate 1 · How AI Actually Works | 6 | 30 | 5 + 3 | 7 | 0 | 1 |
 | AI Literate 3 · AI & Schoolwork: Where's the Line? | 6 | 30 | 4 + 3 | 0 | 0 | 0 |
-| AI Literate 4 · Deepfakes & Misinformation | 8 | 44 | 4 + 3 | 19 | 1 | 0 |
-| AI Literate 5 · Privacy & Your Data | 8 | 44 | 5 + 3 | 13 | 1 | 0 |
+| AI Literate 4 · Deepfakes & Misinformation | 8 | 44 | 4 + 3 | 19 | 0 | 0 |
+| AI Literate 5 · Privacy & Your Data | 8 | 44 | 5 + 3 | 13 | 0 | 0 |
 | AI Literate 6 · Ethical Dilemmas in AI | 6 | 30 | 5 + 3 | 0 | 0 | 0 |
-| AI Fluent 1 · The AI Landscape Today | 8 | 49 | 5 + 3 | 19 | 1 | 0 |
-| AI Fluent 2 · AI Ethics & Who Makes the Rules | 8 | 47 | 5 + 3 | 19 | 1 | 0 |
-| AI Fluent 3 · Algorithmic Bias & Systemic Justice | 8 | 45 | 5 + 3 | 19 | 1 | 0 |
-| AI Fluent 4 · AI & the Future of Work | 8 | 47 | 5 + 3 | 11 | 1 | 0 |
-| AI Fluent 5 · Building Responsibly: Design Thinking with AI | 8 | 49 | 5 + 3 | 11 | 1 | 0 |
+| AI Fluent 1 · The AI Landscape Today | 8 | 49 | 5 + 3 | 19 | 0 | 0 |
+| AI Fluent 2 · AI Ethics & Who Makes the Rules | 8 | 47 | 5 + 3 | 19 | 0 | 0 |
+| AI Fluent 3 · Algorithmic Bias & Systemic Justice | 8 | 45 | 5 + 3 | 19 | 0 | 0 |
+| AI Fluent 4 · AI & the Future of Work | 8 | 47 | 5 + 3 | 11 | 0 | 0 |
+| AI Fluent 5 · Building Responsibly: Design Thinking with AI | 8 | 49 | 5 + 3 | 11 | 0 | 0 |
 | AI Fluent 6 · Advocacy & Action | 8 | 47 | 4 + 3 | 10 | 0 | 0 |
 
-## Pending figures (alt text shown in a "Picture coming soon" placeholder)
+## Figures
 
-- AI Aware 4, step 2: Two pictures, one drawn by a person and one made by AI, with a question mark asking which is which.
-- AI Literate 1, step 2: Diagram of data flowing into training, producing a model that makes predictions, with feedback returning as new data.
-- AI Literate 4, step 4: Diagram of three steps in order: stop, check the source, find a second source.
-- AI Literate 5, step 2: Diagram of data moving from your phone to use, then sharing, then sale.
-- AI Fluent 1, step 2: Diagram of the three stages of building a chatbot.
-- AI Fluent 2, step 2: Diagram of four groups with influence over AI, with arrows showing how each checks the others.
-- AI Fluent 3, step 3: Two groups of 100 people (the base-rate dot grids).
-- AI Fluent 4, step 2: The routine/non-routine, digital/physical task map.
-- AI Fluent 5, step 2: Four nested stakeholder rings.
+Eight diagrams are drawn as SVGs in `public/lessons/<track>/<module>/`, in the style of Bias in AI's diagram, from each `<Figure>` brief. The alt text is the writers'. Please check that each one shows what you meant:
 
-The illustrator's full description is in each `<Figure brief="...">`.
+- AI Literate 1, step 2: `training-loop.svg`. The short lines under each box ("Lots of examples", "An algorithm finds patterns", "Gets a new input", "How likely you are to watch it") are new; they come from the step's text.
+- AI Literate 4, step 4: `three-moves.svg`.
+- AI Literate 5, step 2: `where-data-goes.svg`.
+- AI Fluent 1, step 2: `three-stages.svg`. The short lines "People rank the answers" and "Scored on a benchmark" are new, from the step's text.
+- AI Fluent 2, step 2: `influence-map.svg`. The brief didn't say who checks whom. The map shows three checks: governments on companies, researchers and journalists on companies, and the public on governments.
+- AI Fluent 3, step 3: `base-rates.svg`, drawn from the step's made-up numbers (Group A: 45 of 75 high-risk reoffend, 5 of 25 low-risk; Group B: 15 of 25 and 15 of 75).
+- AI Fluent 4, step 2: `task-map.svg`.
+- AI Fluent 5, step 2: `stakeholder-rings.svg`, with a key below the rings.
+
+One is still a placeholder ("Picture coming soon" with its alt text):
+
+- AI Aware 4, step 2: Two pictures, one drawn by a person and one made by AI, with a question mark asking which is which. This needs a real drawing by a person and a real AI-made picture; a drawing made for the site would make both AI-made. The illustrator's description is in the `<Figure brief="...">`.
 
 ## Source needed
 

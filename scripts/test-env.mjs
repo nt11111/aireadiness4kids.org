@@ -19,6 +19,8 @@ export const SERVER_ENV = {
   HOST: "127.0.0.1",
   PORT: String(TEST_PORT),
   ARK_EMULATORS: "true",
+  // The practice tool answers with a canned reply on the emulators; tests never call Anthropic (src/lib/practice.ts).
+  ANTHROPIC_API_KEY: "fake",
   FIREBASE_AUTH_EMULATOR_HOST: EMULATORS.auth,
   FIRESTORE_EMULATOR_HOST: EMULATORS.firestore,
   GCLOUD_PROJECT: "demo-ark",

@@ -75,10 +75,13 @@ test("ARK's view, Try it, pending figures, and step sources render as built", as
   expect(tryIt).toContain("Never type your name, school, or anything personal into an AI tool.");
   // The fairness slider doesn't exist yet: its paper version shows.
   expect(await page("fluent/algorithmic-bias-and-justice", 4)).toContain("No slider?");
-  // A figure that isn't drawn yet shows its alt text in a placeholder.
-  const figure = await page("literate/deepfakes-and-misinformation", 4);
-  expect(figure).toContain("data-figure-pending");
-  expect(figure).toContain("Picture coming soon");
+  // A figure that isn't made yet shows its alt text in a placeholder; a drawn one is an image with the writers' alt text.
+  const pending = await page("aware/kindness-feelings-and-ai", 2);
+  expect(pending).toContain("data-figure-pending");
+  expect(pending).toContain("Picture coming soon");
+  const drawn = await page("literate/deepfakes-and-misinformation", 4);
+  expect(drawn).not.toContain("data-figure-pending");
+  expect(drawn).toContain('src="/lessons/literate/deepfakes-and-misinformation/three-moves.svg" alt="Diagram of three steps in order: stop, check the source, find a second source."');
   // Sources sit at the bottom of the step, collapsed, with working links.
   const sources = await page("fluent/ai-landscape-today", 1);
   expect(sources).toMatch(/<details data-step-sources[\s\S]*href="https:\/\/www\.ftc\.gov\/node\/88167"/);

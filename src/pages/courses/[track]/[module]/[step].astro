@@ -7,6 +7,7 @@ import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
 import { lessonComponents } from "../../../../components/lesson";
 import { getCourses, getModuleSteps, metaDescription, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
 import { listLearners } from "../../../../lib/accounts";
+import { practiceAvailable } from "../../../../lib/practice";
 export const prerender = false;
 
 const courses = await getCourses();
@@ -34,6 +35,7 @@ Astro.locals.lesson = {
   questions: step.entry.data.questions,
   scenario: step.entry.data.scenario,
   sort: step.entry.data.sort,
+  practiceHref: step.entry.data.practice && practiceAvailable() ? `/practice?step=${mod.id}/${step.slug}` : undefined,
 };
 const { Content } = await render(step.entry);
 // Islands get plain step info only, not the whole content entry.

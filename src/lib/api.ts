@@ -40,11 +40,11 @@ export async function assertAppCheck(request: Request) {
   }
 }
 
-async function readJson(request: Request): Promise<unknown> {
+async function readJson(request: Request, maxBytes = MAX_BODY_BYTES): Promise<unknown> {
   const type = (request.headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
   if (type !== "application/json") throw new HttpError(415, "json-only");
   const text = await request.text();
-  if (text.length > MAX_BODY_BYTES) throw new HttpError(413, "too-large");
+  if (text.length > maxBytes) throw new HttpError(413, "too-large");
   try {
     return JSON.parse(text || "{}");
   } catch {
@@ -66,6 +66,8 @@ type PostOptions<S extends z.ZodType> = {
   schema: S;
   /** Signing out skips App Check so it always works; everything that creates or changes data requires it. */
   appCheck?: boolean;
+  /** Bodies are capped at 16 KB; a route that takes more (the practice tool's conversation) says so. */
+  maxBytes?: number;
 };
 
 /** A POST-only JSON endpoint with the CSRF, App Check, and validation guards applied. */
@@ -74,7 +76,7 @@ export function postRoute<S extends z.ZodType>(opts: PostOptions<S>, handler: (c
     try {
       assertSameOrigin(context.request, context.url);
       if (opts.appCheck !== false) await assertAppCheck(context.request);
-      const body = opts.schema.parse(await readJson(context.request));
+      const body = opts.schema.parse(await readJson(context.request, opts.maxBytes));
       const result = await handler(context, body);
       return result instanceof Response ? result : json(200, result);
     } catch (error) {

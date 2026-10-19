@@ -1,14 +1,17 @@
 ---
 // <TryIt offline="No AI tool? ..." warning="...">: a hands-on task (the curriculum guide's [TRY] tag).
 // The slot holds the task and what to look for. `offline` is the version that works without an AI tool,
-// and it always shows, since the site has no practice tool yet; its opening question ("No AI tool?") is
-// set in bold. `warning` is the writer's personal-information line. Never link to or name an AI product.
-import { FlaskConical, NotebookPen } from "lucide-react";
+// and it always shows; its opening question ("No AI tool?") is set in bold. `warning` is the writer's
+// personal-information line. Never link to or name an AI product. When the step's frontmatter has
+// `practice:` and the tool is switched on, a link opens the ARK practice tool (src/lib/practice.ts).
+import { ArrowUpRight, FlaskConical, NotebookPen } from "lucide-react";
 import Callout from "./Callout.astro";
+import { buttonVariants } from "../../app/components/ui/button";
 
 interface Props { title?: string; offline?: string; warning?: string }
 const { title = "Try it", offline, warning } = Astro.props;
 const lead = offline?.match(/^(No [^?]+\?)\s*(.*)$/s);
+const practiceHref = Astro.locals.lesson?.practiceHref;
 ---
 
 <section aria-label={title} data-try-it class="lesson-block overflow-hidden rounded-xl border border-line bg-surface shadow-1">
@@ -17,6 +20,15 @@ const lead = offline?.match(/^(No [^?]+\?)\s*(.*)$/s);
     <div class="min-w-0 [&>*+*]:mt-3 [&_li+li]:mt-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
       <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{title}</p>
       <slot />
+      {practiceHref && (
+        <p class="pt-1">
+          <a href={practiceHref} target="_blank" rel="noopener" data-practice-link class={buttonVariants({ variant: "default" })}>
+            Open the ARK practice tool
+            <ArrowUpRight aria-hidden="true" className="size-4" />
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        </p>
+      )}
     </div>
   </div>
   {offline && (

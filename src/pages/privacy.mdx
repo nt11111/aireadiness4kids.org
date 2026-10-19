@@ -101,6 +101,7 @@ We use a few service providers. They handle data for us, under their own privacy
 - **Google Firebase** (Authentication and Cloud Firestore) holds sign-in records and account data. Our database is stored in the United States.
 - **Google reCAPTCHA Enterprise**, through Firebase App Check, checks that requests to save data come from a real browser and not a script. It looks at signals from your browser and device when a page saves something.
 - **Netlify** hosts the website. Like most web hosts, its servers record technical details of each request, such as the IP address and browser type. <ReviewNote>confirm Netlify's log retention.</ReviewNote>
+- **Anthropic** answers messages in the ARK practice tool, which only learner accounts (13 and older) can use. What a learner types there is sent to Anthropic to get a reply. ARK doesn't save those conversations. <ReviewNote>confirm Anthropic's API data-retention terms, and whether the parent notice needs a line about the practice tool.</ReviewNote>
 - **Google Drive** hosts some slide decks. If you open one, Google's privacy policy applies.
 - **Analytics:** none are switched on today. If we add them, we will use a tool that sets no cookies and never receives names, emails, IDs, or anything you write. <ReviewNote>update when the team picks a provider (Umami or Cloudflare Web Analytics).</ReviewNote>
 
