@@ -2,14 +2,14 @@
 
 The six AI Fluent "Try it" activities say "Use an AI tool your school allows, or the ARK practice tool once it launches." This plan builds that tool: a chat page on the site, answered by Claude through ARK's server.
 
-**Status: built** on the `diagrams-and-practice-tool` branch. It stays off until `ANTHROPIC_API_KEY` is set (see For you to do). Two changes from the plan while building:
+**Status: live** on aireadiness4kids.org since October 18, 2026, with `ANTHROPIC_API_KEY` set for Production only. The five Try it steps that link to it say "or the ARK practice tool" (no longer "once it launches"). Notes:
 
-- Four Try it activities link to the tool, not five. AI Fluent 1's asks the AI to build a flashcard app and then break it by using it, which a chat can't do: there's no app to run. Its "No AI tool?" version still works.
-- Only two activities have a prompt to start with (StudyBuddy and the skeptical board member), because they're the only ones that quote one. The other two open the tool with an empty box.
+- AI Fluent 1's Try it asks the AI to build a flashcard app and then break it by using it. The chat can write the app's code but can't run it, so students there may need a tool their school allows, or the "No AI tool?" version. It links to the tool anyway, since its text names it.
+- Only two activities have a prompt to start with (StudyBuddy and the skeptical board member), because they're the only ones that quote one. The other three open the tool with an empty box.
 
 ## What students get
 
-- A page at `/practice`, linked from 4 of the 6 AI Fluent Try it activities (AI Fluent 2, 4, 5, and 6; the fairness slider is a different tool, and AI Fluent 1 needs an app the chat can't run). The link opens in a new tab and fills the message box with that activity's prompt, such as the StudyBuddy setup. The student can edit it before sending.
+- A page at `/practice`, linked from 5 of the 6 AI Fluent Try it activities (AI Fluent 1, 2, 4, 5, and 6; the fairness slider is a different tool). The link opens in a new tab and fills the message box with that activity's prompt, such as the StudyBuddy setup. The student can edit it before sending.
 - A plain chat: a labeled message box, Send, and the replies. It is keyboard-only friendly and announces replies to screen readers. Start over clears it.
 - Always on screen: "You are talking to an AI, not a person. It can be wrong." and the Try it's warning: "Never type your name, school, or anything personal into an AI tool."
 - The "No AI tool?" paper version stays on every Try it, unchanged.
@@ -50,9 +50,9 @@ Anthropic allows its API in products for under-18s if the organization adds its 
 - No CSP change: the browser talks only to ARK's server.
 - Tests on the emulators with a fake reply (test runs never call Anthropic): signed-out redirect, under-13 and parent-profile refusal, rate limits, the daily cap, input limits, "not available" with no key, plus a11y, keyboard, and visual checks at 375/768/1280.
 
-## For you to do
+## For you to do (1, 2, and 4 are done)
 
 1. Create an API key in the Anthropic Console (console.anthropic.com) for ARK's organization, and set a monthly spending limit there.
 2. Add it to Netlify as `ANTHROPIC_API_KEY` (Site configuration → Environment variables), scoped to Functions. Never paste the key into chat or a file in the repo.
 3. Ask the lawyer to add Anthropic to the privacy page and the parent notice.
-4. Decide whether your AI Fluent line "or the ARK practice tool once it launches" should drop "once it launches" when the tool goes live. The plan leaves the wording as it is.
+4. Done: "once it launches" was dropped from the five linked Try it steps once the tool was live.
