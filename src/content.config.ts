@@ -126,6 +126,9 @@ const steps = defineCollection({
       scenario: scenario.optional(),
       sort: sort.optional(),
       sources: z.array(source).default([]),
+      // A Try it that can use the ARK practice tool: its <TryIt> links to /practice, which starts the
+      // message box with `prompt` (the activity's own words). See src/lib/practice.ts.
+      practice: z.object({ prompt: z.string().min(1).max(2000).optional() }).optional(),
     })
     .superRefine((s, ctx) => {
       if (s.type === "check" && s.questions.length === 0) ctx.addIssue({ code: "custom", path: ["questions"], message: "A check step needs 1 to 5 questions" });

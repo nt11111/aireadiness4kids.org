@@ -28,6 +28,8 @@ export type LessonContext = {
   questions: Question[];
   scenario?: ScenarioData;
   sort?: SortData;
+  /** Link to the ARK practice tool for this step's <TryIt>, when the step has one and the tool is on. */
+  practiceHref?: string;
 };
 
 export const STEP_LABEL: Record<StepType, string> = {

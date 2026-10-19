@@ -10,7 +10,7 @@ export const prerender = false;
 const PRODUCTION_HOSTS = new Set(["aireadiness4kids.org", "www.aireadiness4kids.org"]);
 
 // Signed-in and API routes. They already redirect or refuse signed-out visitors; this just saves crawlers the trip.
-const PRIVATE = ["/api/", "/account", "/my-learning", "/admin", "/present", "/certificates/", "/auth/", "/dev/", "/forbidden"];
+const PRIVATE = ["/api/", "/account", "/my-learning", "/practice", "/admin", "/present", "/certificates/", "/auth/", "/dev/", "/forbidden"];
 
 export const GET: APIRoute = ({ url, site }) => {
   const body = PRODUCTION_HOSTS.has(url.hostname)

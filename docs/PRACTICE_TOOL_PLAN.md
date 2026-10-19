@@ -1,10 +1,15 @@
 # ARK practice tool: plan
 
-The six AI Fluent "Try it" activities say "Use an AI tool your school allows, or the ARK practice tool once it launches." This plan builds that tool: a chat page on the site, answered by Claude through ARK's server. Nothing here is built yet.
+The six AI Fluent "Try it" activities say "Use an AI tool your school allows, or the ARK practice tool once it launches." This plan builds that tool: a chat page on the site, answered by Claude through ARK's server.
+
+**Status: built** on the `diagrams-and-practice-tool` branch. It stays off until `ANTHROPIC_API_KEY` is set (see For you to do). Two changes from the plan while building:
+
+- Four Try it activities link to the tool, not five. AI Fluent 1's asks the AI to build a flashcard app and then break it by using it, which a chat can't do: there's no app to run. Its "No AI tool?" version still works.
+- Only two activities have a prompt to start with (StudyBuddy and the skeptical board member), because they're the only ones that quote one. The other two open the tool with an empty box.
 
 ## What students get
 
-- A page at `/practice`, linked from each AI Fluent Try it that uses an AI tool (5 of the 6; the fairness slider is a different tool). The link opens in a new tab and fills the message box with that activity's prompt, such as the StudyBuddy setup. The student can edit it before sending.
+- A page at `/practice`, linked from 4 of the 6 AI Fluent Try it activities (AI Fluent 2, 4, 5, and 6; the fairness slider is a different tool, and AI Fluent 1 needs an app the chat can't run). The link opens in a new tab and fills the message box with that activity's prompt, such as the StudyBuddy setup. The student can edit it before sending.
 - A plain chat: a labeled message box, Send, and the replies. It is keyboard-only friendly and announces replies to screen readers. Start over clears it.
 - Always on screen: "You are talking to an AI, not a person. It can be wrong." and the Try it's warning: "Never type your name, school, or anything personal into an AI tool."
 - The "No AI tool?" paper version stays on every Try it, unchanged.
@@ -41,7 +46,7 @@ Anthropic allows its API in products for under-18s if the organization adds its 
 - `src/pages/api/practice.ts`: `postRoute` (POST only, Origin check, App Check, zod), `requireUser`, the 13+ check, the rate limits, then one call to Anthropic's Messages API with `fetch`. No new dependency (no SDK).
 - `ANTHROPIC_API_KEY`: a new server-only secret in `astro.config.mjs` `env.schema`, set in Netlify's environment variables. While it's unset, the page says the tool isn't available yet and the Try it links stay hidden. The build's bundle-secrets check keeps it out of browser code.
 - `src/pages/practice.astro` (server-rendered, gated, `noindex`) and a React island for the chat, using `SubmitButton` and `useEarlyInput` as other forms do.
-- `<TryIt practice="...">`: a new optional prop holding the prompt to prefill, copied word for word from the activity. The link passes the step's id, and the page looks the prompt up on the server, so prompts never travel in the URL.
+- `practice:` in a step's frontmatter (with an optional `prompt`, copied word for word from the activity) makes its `<TryIt>` link to the tool. The link passes the step's address, and the page looks the prompt up on the server, so prompts never travel in the URL.
 - No CSP change: the browser talks only to ARK's server.
 - Tests on the emulators with a fake reply (test runs never call Anthropic): signed-out redirect, under-13 and parent-profile refusal, rate limits, the daily cap, input limits, "not available" with no key, plus a11y, keyboard, and visual checks at 375/768/1280.
 

@@ -143,9 +143,11 @@ Netlify > your site > **Site configuration > Environment variables**. Everything
 | `FIREBASE_PRIVATE_KEY` | step 7 | **SECRET** | Functions only |
 | `NODE_ENV` = `production` | (type it) | public | Branch deploys and Deploy Previews now; Production at the cutover (see below) |
 | `PUBLIC_UMAMI_ID` (optional) | Umami, see below | public | Builds, Functions |
+| `ANTHROPIC_API_KEY` (optional) | Anthropic Console, see `docs/PRACTICE_TOOL_PLAN.md` | **SECRET** | Functions only |
 
 - `PUBLIC_` variables are built into the site's JavaScript, so anyone can see them. That's fine.
-- The two secrets are only read by ARK's server code at runtime. The build fails if a private key ever shows up in the browser's JavaScript.
+- The secrets are only read by ARK's server code at runtime. The build fails if a private key or the Anthropic key ever shows up in the browser's JavaScript.
+- `ANTHROPIC_API_KEY` switches on the ARK practice tool (`/practice`). Without it the tool says it isn't available yet, and the Try it activities show no link to it. Set a monthly spending limit on the key in the Anthropic Console.
 - `NODE_ENV=production` makes the server use React's fast production build. Without it pages still work, just slower. On the free plan it can't be limited to Functions, so it also reaches the build, where it makes Netlify skip dev dependencies. That used to fail the build ("Cannot find module '@astrojs/node'"); since Phase 6, `astro.config.mjs` loads that test-only adapter only for test builds (`ARK_ADAPTER=node`), so the build doesn't need any dev dependency. Set it with **Different value for each deploy context**: `production` for Deploy Previews and Branch deploys now, and for Production at the cutover (`DEPLOY.md`). Until then Production builds the old site from `main`, which needs its dev dependencies.
 - **Never** set `ARK_EMULATORS`, `FIREBASE_AUTH_EMULATOR_HOST`, or `FIRESTORE_EMULATOR_HOST` in Netlify. They're for local tests only, and the site refuses to start if it sees them next to a real project.
 
@@ -205,4 +207,5 @@ To click around locally with sign-in: `npm run build:test`, then `npm run emulat
 | "Sign-in isn't set up for this address yet" | The domain isn't in **Authorized domains** (step 3) or the API key's website list (step 9). |
 | "We couldn't confirm this request came from the ARK site" | App Check isn't set up (step 8), or the reCAPTCHA key doesn't list this domain. |
 | An `/api` request returns `503` | `FIREBASE_CLIENT_EMAIL` or `FIREBASE_PRIVATE_KEY` is missing or pasted wrong. |
+| The practice tool says it isn't available or is busy | `ANTHROPIC_API_KEY` is missing or wrong, or the key hit its spending limit in the Anthropic Console. The function log shows `[practice] Anthropic answered <status>`. |
 | Google sign-in pop-up opens and closes | Pop-ups or third-party cookies are blocked. Try email sign-in, or allow pop-ups for the site. |

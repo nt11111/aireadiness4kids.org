@@ -65,6 +65,10 @@ export const ROUTES: Route[] = [
   ),
   // AI Fluent's fairness slider: a Try it with no AI tool and no warning.
   { name: "step-fluent-algorithmic-bias-and-justice-4", path: `/courses/fluent/algorithmic-bias-and-justice/${stepSlugs("fluent/algorithmic-bias-and-justice")[3]}`, lesson: true, auth: "learner" },
+  // A Try it that links to the ARK practice tool, and the tool itself (for a learner, and closed for a parent).
+  { name: "step-fluent-building-responsibly-4", path: `/courses/fluent/building-responsibly/${stepSlugs("fluent/building-responsibly")[3]}`, lesson: true, auth: "learner" },
+  { name: "practice", path: `/practice?step=fluent/building-responsibly/${stepSlugs("fluent/building-responsibly")[3]}`, auth: "learner" },
+  { name: "practice-parent", path: "/practice", auth: "parent" },
   ...["1", "2", "3"].map((n) => ({ name: `dev-aware-preview-${n}`, path: `/dev/lesson-preview/${n}`, lesson: true })),
   { name: "educators", path: "/educators" },
   { name: "educators-guide-bias-in-ai", path: "/educators/literate/bias-in-ai" },

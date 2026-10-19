@@ -87,7 +87,7 @@ if (!existsSync(join(DIST, "_headers")) || !readFileSync(join(DIST, "_headers"),
 }
 
 // Anything that would mean a server secret reached the browser.
-const SECRET_PATTERNS = [/private_key/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /FIREBASE_PRIVATE_KEY/, /FIREBASE_CLIENT_EMAIL/, /iam\.gserviceaccount\.com/];
+const SECRET_PATTERNS = [/private_key/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /FIREBASE_PRIVATE_KEY/, /FIREBASE_CLIENT_EMAIL/, /iam\.gserviceaccount\.com/, /ANTHROPIC_API_KEY/, /sk-ant-/];
 for (const js of files.filter((f) => f.endsWith(".js") && f.includes("/_astro/"))) {
   const text = readFileSync(js, "utf8");
   const hit = SECRET_PATTERNS.find((p) => p.test(text));

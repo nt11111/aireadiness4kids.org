@@ -83,6 +83,8 @@ export default defineConfig({
       PUBLIC_FIREBASE_AUTH_EMULATOR_URL: envField.string({ context: "client", access: "public", optional: true }),
       FIREBASE_CLIENT_EMAIL: envField.string({ context: "server", access: "secret", optional: true }),
       FIREBASE_PRIVATE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      // The practice tool (src/lib/practice.ts). Unset: the tool says it isn't available and Try it shows no link.
+      ANTHROPIC_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       // Test runs only: talk to the local emulators and skip App Check. Refuses to run with a real project.
       ARK_EMULATORS: envField.boolean({ context: "server", access: "secret", default: false }),
     },

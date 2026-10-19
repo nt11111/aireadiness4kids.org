@@ -16,7 +16,7 @@ test("robots.txt on aireadiness4kids.org lists the sitemap and keeps crawlers ou
   const res = await request.get("/robots.txt", { headers: { host: "aireadiness4kids.org" } });
   const body = await res.text();
   expect(body).not.toMatch(/^Disallow: \/$/m);
-  for (const p of ["/api/", "/account", "/my-learning", "/admin", "/present", "/certificates/"]) expect(body).toContain(`Disallow: ${p}`);
+  for (const p of ["/api/", "/account", "/my-learning", "/practice", "/admin", "/present", "/certificates/"]) expect(body).toContain(`Disallow: ${p}`);
   expect(body).toContain("Sitemap: https://aireadiness4kids.org/sitemap.xml");
 });
 
@@ -31,7 +31,7 @@ test("every sitemap address answers 200 directly, with public pages only", async
   expect(paths).toContain("/privacy/");
   expect(paths.filter((p) => /^\/courses\/[^/]+\/[^/]+\/$/.test(p))).toHaveLength(17); // every module page
   for (const p of paths) {
-    expect(p, "no signed-in or developer pages").not.toMatch(/^\/(api|account|my-learning|admin|present|certificates|dev|check)\b/);
+    expect(p, "no signed-in or developer pages").not.toMatch(/^\/(api|account|my-learning|practice|admin|present|certificates|dev|check)\b/);
     expect(p, "no second step (they need an account)").not.toMatch(/\/where-it-comes-from$/);
   }
   for (const p of paths) {

@@ -1,0 +1,63 @@
+---
+// /practice: the ARK practice tool (src/lib/practice.ts, docs/PRACTICE_TOOL_PLAN.md). Server-rendered and
+// gated in middleware; checked again here. ?step=<track>/<module>/<step slug> is the Try it it came from,
+// looked up on the server, which starts the message box with that activity's prompt.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { PracticeChat } from "../app/components/practice/PracticeChat";
+import { getProfile } from "../lib/accounts";
+import { practiceAvailable, practiceStep } from "../lib/practice";
+import { ArrowLeft, Bot, TriangleAlert } from "lucide-react";
+export const prerender = false;
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname + Astro.url.search)}`, 302);
+const profile = await getProfile(user.uid);
+if (!profile) return Astro.redirect("/signup", 302);
+const learner = profile.accountType === "learner";
+const available = practiceAvailable();
+const step = await practiceStep(Astro.url.searchParams.get("step"));
+const box = "rounded-xl border p-4 sm:p-5";
+---
+
+<BaseLayout title="Practice tool | ARK · AI Readiness for Kids" noindex>
+  <div class="bg-surface-2 px-4 pb-20 pt-28 sm:px-6 lg:pt-36">
+    <div class="mx-auto grid max-w-3xl gap-6">
+      <div>
+        {step && (
+          <a href={step.href} class="inline-flex items-center gap-1.5 rounded-sm text-ui font-bold text-brand underline underline-offset-4">
+            <ArrowLeft aria-hidden="true" className="size-4" />
+            Back to the activity
+          </a>
+        )}
+        <h1 class="mt-3 text-display-lg text-ink">ARK practice tool</h1>
+        <p class="mt-2 text-lesson text-ink-soft">
+          {step ? <>For <strong class="font-bold text-ink">{step.moduleTitle}</strong>, step {step.n}: {step.title}.</> : "A chat for the Try it activities in AI Fluent."}
+        </p>
+      </div>
+
+      <div role="note" aria-label="About this tool" class={`${box} grid gap-3 border-line bg-surface shadow-1`}>
+        <p class="flex gap-3 text-ui text-ink">
+          <Bot aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand" />
+          <span><strong class="font-bold">You're talking to an AI, not a person.</strong> It can be wrong, so check what it tells you.</span>
+        </p>
+        <p class="flex gap-3 text-ui text-ink">
+          <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-warning" />
+          <span><strong class="font-bold">Never type your name, school, or anything personal into an AI tool.</strong></span>
+        </p>
+        <p class="text-small text-ink-soft">
+          What you type is sent to Anthropic, the company that makes the Claude AI model, to get a reply. ARK doesn't save your conversation: it's gone when you close this tab. Something wrong? <a href="/contact" class="font-bold text-brand underline underline-offset-4">Report a problem</a>.
+        </p>
+      </div>
+
+      <section aria-label="Chat" class={`${box} border-line bg-surface shadow-1 sm:p-6`} data-practice>
+        {!learner ? (
+          <p class="text-ui text-ink" data-practice-closed="learners-only">The practice tool is for learner accounts, ages 13 and up. Family accounts and the learner profiles under them can't use it.</p>
+        ) : !available ? (
+          <p class="text-ui text-ink" data-practice-closed="off">The practice tool isn't switched on yet. Use the "No AI tool?" version of the activity instead.</p>
+        ) : (
+          <PracticeChat client:load initialPrompt={step?.prompt ?? ""} />
+        )}
+      </section>
+    </div>
+  </div>
+</BaseLayout>
