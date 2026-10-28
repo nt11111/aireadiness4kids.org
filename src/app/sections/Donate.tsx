@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Heart, ShieldCheck } from "lucide-react";
+import { Heart, Info } from "lucide-react";
 import { ORG } from "../lib/content";
 import { Card, CardTitle, Btn } from "../components/site/Primitives";
 import { buttonVariants } from "../components/ui/button";
@@ -42,7 +42,7 @@ export function DonatePanel() {
           Donate {value ? `$${value}` : ""}
         </a>
         <p className="mt-3 text-center text-small text-ink-soft">This opens an email to our team. We will reply with how to give.</p>
-        <p className="mt-4 flex items-start justify-center gap-2 text-small text-ink-soft"><ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" /> 501(c)(3) nonprofit. Gifts are tax-deductible to the extent allowed by law.</p>
+        <p className="mt-4 flex items-start justify-center gap-2 text-small text-ink-soft"><Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" /> ARK is not a registered nonprofit, so gifts are not tax-deductible.</p>
       </Card>
 
       <div className="grid gap-5">

@@ -20,7 +20,7 @@ export function Footer() {
               <Logo />
             </a>
             <p className="mt-4 max-w-sm text-ui text-ink-soft">
-              A 501(c)(3) nonprofit helping K-12 students, teachers, and parents understand AI and use it well. Every course is free.
+              Helping K-12 students, teachers, and parents understand AI and use it well. Every course is free.
             </p>
             <a href={`mailto:${ORG.email}`} className="mt-3 inline-block py-2 text-ui font-bold text-brand underline underline-offset-4">{ORG.email}</a>
           </div>
@@ -43,7 +43,7 @@ export function Footer() {
         </p>
 
         <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="text-small text-ink-soft">© {new Date().getFullYear()} ARK · AI Readiness Kollective · 501(c)(3) nonprofit</p>
+          <p className="text-small text-ink-soft">© {new Date().getFullYear()} ARK · AI Readiness Kollective</p>
           <nav aria-label="Legal">
             <ul className="flex flex-wrap gap-x-5">
               {legal.map(([label, href]) => (

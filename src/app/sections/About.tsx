@@ -17,8 +17,8 @@ type ReviewerEntry = Reviewer & { modules: { title: string; href: string }[] };
 export default function About({ reviewers }: { reviewers: ReviewerEntry[] }) {
   return (
     <>
-      <PageHero crumb="About" eyebrow="Who we are" title="A nonprofit built with parents, teachers, and students, not just for them."
-        lead="ARK (AI Readiness Kollective) is a 501(c)(3) nonprofit. We believe every child deserves to understand the AI tools shaping their world, and the confidence to use them with intention and integrity." />
+      <PageHero crumb="About" eyebrow="Who we are" title="Built with parents, teachers, and students, not just for them."
+        lead="ARK (AI Readiness Kollective) makes free AI lessons for grades K-12. We believe every child deserves to understand the AI tools shaping their world, and the confidence to use them with intention and integrity." />
 
       <Section className="!pb-0" labelledBy="mission-h">
         <h2 id="mission-h" className="sr-only">Mission and vision</h2>
