@@ -49,6 +49,27 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
     return () => io.disconnect();
   }, [step.id]);
 
+  // Keep whatever gets focus clear of the sticky top bar and this bar (WCAG 2.4.11). Browsers only scroll
+  // a focused element that's fully out of view, so a tall field half under a bar would otherwise stay there.
+  useEffect(() => {
+    const GAP = 16;
+    const onFocus = (e: FocusEvent) => {
+      const el = e.target;
+      if (!(el instanceof HTMLElement) || el.closest("[data-sticky], [data-lesson-root] > header")) return;
+      const r = el.getBoundingClientRect();
+      const topEdge = document.querySelector("[data-lesson-root] > header")?.getBoundingClientRect().bottom ?? 0;
+      const bottomEdge = document.querySelector("[data-sticky]")?.getBoundingClientRect().top ?? innerHeight;
+      if (r.bottom > bottomEdge - GAP && r.top < bottomEdge) {
+        // Scroll it up, but never so far that its top goes under the top bar.
+        window.scrollBy({ top: Math.max(0, Math.min(r.bottom - bottomEdge + GAP, r.top - topEdge - GAP)) });
+      } else if (r.top < topEdge + GAP && r.bottom > topEdge) {
+        window.scrollBy({ top: r.top - topEdge - GAP });
+      }
+    };
+    document.addEventListener("focusin", onFocus);
+    return () => document.removeEventListener("focusin", onFocus);
+  }, []);
+
   const markComplete = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!completed.has(step.id)) trackEvent({ name: "step_complete", props: { type: step.type } });
     progress.complete(step.id);

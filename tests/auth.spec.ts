@@ -46,7 +46,7 @@ test("13+ sign-up with email: age screen, confirm email, sign in, and land on th
   await confirmEmail(page, email, next);
   await signInWithForm(page, email);
   await expect(page).toHaveURL(next);
-  await expect(page.getByRole("heading", { level: 1, name: "Where does bias come from?" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Quick check" })).toBeVisible();
 
   // Stored: the age band only, never a birth date.
   const uid = (await adminAuth.getUserByEmail(email)).uid;
