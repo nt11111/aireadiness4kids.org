@@ -7,6 +7,6 @@ export const prerender = true;
 const tracks = (await getCourses()).map(({ track, modules }) => ({ id: track.id, title: track.data.title, grades: track.data.grades, modules: modules.length }));
 ---
 
-<BaseLayout title="Workshops and programs | ARK · AI Readiness for Kids" description="Book a free ARK workshop for your school or group, and see all six ways ARK brings responsible AI to kids, families, and educators.">
+<BaseLayout title="Workshops and programs | ARK · AI Readiness Kollective" description="Book a free ARK workshop for your school or group, and see all six ways ARK brings responsible AI to kids, families, and educators.">
   <Workshops tracks={tracks} />
 </BaseLayout>

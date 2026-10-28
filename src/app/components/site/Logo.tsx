@@ -17,7 +17,7 @@ export function ARKMark({ size = 28, decorative = false, className, style }: { s
 }
 
 /**
- * ARK wordmark: "ARK" in Fraunces with "AIReadiness4Kids" in small caps beneath.
+ * ARK wordmark: "ARK" in Fraunces with "AI Readiness Kollective" in small caps beneath.
  * The single place to swap the logo (brief section 3).
  * fluid: sized in em, so it scales with its parent's font size (the certificate sets that in
  * container units, so the wordmark keeps its place on a phone and on paper).
@@ -30,7 +30,7 @@ export function Logo({ tone = "dark", showMark = true, fluid = false, className 
       <span className="flex flex-col leading-none">
         <span className={cn("font-display font-semibold tracking-tight", fluid ? "text-[1.625em]" : "text-[1.625rem]", light ? "text-white" : "text-ink")}>ARK</span>
         <span className={cn("font-bold tracking-[0.04em] [font-variant-caps:small-caps]", fluid ? "mt-[0.125em] text-[0.8125em]" : "mt-0.5 text-[0.8125rem]", light ? "text-glow" : "text-brand")}>
-          AIReadiness4Kids
+          AI Readiness Kollective
         </span>
       </span>
     </span>

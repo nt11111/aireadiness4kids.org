@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "ARK (AI Readiness for Kids): free K-12 AI literacy course platform",
+  "description": "ARK (AI Readiness Kollective): free K-12 AI literacy course platform",
   "engines": {
     "node": ">=22.12.0"
   },

@@ -17,7 +17,7 @@ export function Footer() {
       <div className="relative mx-auto max-w-[calc(var(--container)+3rem)] px-4 pb-10 pt-16 sm:px-6">
         <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div>
-            <a href="/" aria-label="ARK AIReadiness4Kids, home" className="inline-block rounded-md">
+            <a href="/" aria-label="ARK, AI Readiness Kollective, home" className="inline-block rounded-md">
               <Logo tone="light" />
             </a>
             <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/80">
@@ -48,7 +48,7 @@ export function Footer() {
         </p>
 
         <div className="mt-8 flex flex-col gap-4 border-t border-white/15 pt-7 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-white/75">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
+          <p className="text-xs text-white/75">© {new Date().getFullYear()} ARK · AI Readiness Kollective · 501(c)(3) nonprofit</p>
           <nav aria-label="Legal">
             <ul className="flex flex-wrap gap-x-5 gap-y-1">
               {legal.map(([label, href]) => (

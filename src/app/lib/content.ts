@@ -4,7 +4,7 @@
 
 export const ORG = {
   name: "ARK",
-  fullName: "AI Readiness for Kids",
+  fullName: "AI Readiness Kollective",
   tagline: "Think. Prompt. Responsibly.",
   email: "contact@aireadiness4kids.org",
   mission:

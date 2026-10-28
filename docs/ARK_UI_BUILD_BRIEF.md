@@ -106,7 +106,7 @@ Update the existing variable names in `src/styles/theme.css` (`--background`, `-
 - Base size is 18px for lesson body text and 16px for UI. The AI Aware (K-5) lesson body is 20px with 1.6 line height.
 
 ### Logo
-The current logo is over-designed. For V1, use a **text wordmark** ("ARK" in Fraunces, with "AIReadiness4Kids" in small caps beneath) and the existing mark at small sizes only. Build it as a single `<Logo />` component so it can be replaced in one place.
+The current logo is over-designed. For V1, use a **text wordmark** ("ARK" in Fraunces, with "AI Readiness Kollective" in small caps beneath) and the existing mark at small sizes only. Build it as a single `<Logo />` component so it can be replaced in one place.
 
 ---
 

@@ -15,7 +15,7 @@ const { frontmatter: fm, headings = [] } = Astro.props;
 const toc = fm.toc ? headings.filter((h) => h.depth === 2) : [];
 ---
 
-<BaseLayout title={`${fm.title} | ARK · AI Readiness for Kids`} description={fm.description}>
+<BaseLayout title={`${fm.title} | ARK · AI Readiness Kollective`} description={fm.description}>
   <header class="border-b border-line bg-surface-2 px-4 pb-10 pt-28 sm:px-6 lg:pb-14 lg:pt-36">
     <div class="mx-auto max-w-site">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: fm.title }]} class="mb-6 text-ink-soft" />

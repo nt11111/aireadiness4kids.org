@@ -85,7 +85,7 @@ export function Nav({ pathname, initialMe }: { pathname: string; initialMe?: Me 
     // for the fixed #mobile-menu, which then shrinks to the header's height instead of filling the screen.
     <header className={cn("fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/95 shadow-1 print:hidden", !open && "backdrop-blur-xl")}>
       <div className="mx-auto flex h-[72px] max-w-[calc(var(--container)+3rem)] items-center justify-between gap-6 px-4 sm:px-6">
-        <a href="/" aria-label="ARK AIReadiness4Kids, home" className="rounded-md">
+        <a href="/" aria-label="ARK, AI Readiness Kollective, home" className="rounded-md">
           <Logo />
         </a>
 
