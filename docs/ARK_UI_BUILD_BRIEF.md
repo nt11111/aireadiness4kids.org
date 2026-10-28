@@ -14,7 +14,7 @@ We're turning the current 5-page marketing site into a **free course platform wi
 ARK runs the program. Founders and ambassadors lead workshops, then send people to the site to keep going. Teachers are welcome to use it in class, but nothing in the product requires them.
 
 ### Non-negotiables
-1. **Soft gate.** Anyone can browse the home page, catalog, course pages, module overviews, and **the first step of every module** without signing in. Continuing past step 1, saving progress, and earning certificates require an account. Educator guides stay open. Workshop QR knowledge checks stay open (learners in a room shouldn't have to sign up mid-session).
+1. **Soft gate.** Anyone can browse the home page, catalog, course pages, module overviews, and **the first three steps of every module** (`OPEN_STEPS`; changed from one step in October 2026) without signing in. Continuing past step 3, saving progress, and earning certificates require an account. Educator guides stay open. Workshop QR knowledge checks stay open (learners in a room shouldn't have to sign up mid-session).
 2. **Secure and minimal by design.** We use a managed auth provider and never write our own password handling. We collect the least data possible. Kids under 13 never give us an email; a parent account holds it. Analytics use no cookies. Full detail is in section 8.
 3. **Accessible.** WCAG 2.2 AA, keyboard-navigable, screen-reader friendly, and it respects reduced motion. Lighthouse Accessibility score ≥ 95 on every page type.
 4. **Quick on a school Chromebook.** Static pages, minimal JS, and LCP under 2.5s on a mid-range device.
@@ -250,7 +250,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 - **Mobile:** the outline becomes a bottom sheet opened from a "Step 3 of 6" button.
 - A sticky bottom bar holds **Back** and **Next**. Next becomes "Mark complete & continue" on the last scroll position. Keyboard shortcuts: ← →.
 - A step counts as complete when the learner hits Next, or answers a Check or Scenario.
-- **The gate:** a signed-out visitor can do step 1 fully. Pressing Next on step 1 opens a friendly sign-up panel (not a hard redirect): "Keep going for free: create an account to save your progress and earn a certificate." It offers "Continue with Google", "Sign up with email", and "Already have an account? Sign in". Steps 2+ also check the session **on the server** and redirect to `/signin?next=<step>` if it's missing. Hiding them only in the UI doesn't count as a gate.
+- **The gate:** a signed-out visitor can do steps 1 to 3 fully. Pressing Next on step 3 opens a calm sign-up panel (not a hard redirect): "You finished 3 of 7 steps. Save your place to keep going." It explains the under-13 path (a grown-up sets it up, nickname only) and the 13+ path, then offers "Make a free account" (which starts at the neutral age screen) and "Already have an account? Sign in". Steps 4+ also check the session **on the server** and redirect to `/signin?next=<step>` if it's missing. Hiding them only in the UI doesn't count as a gate.
 - Smooth page transitions via Astro View Transitions. The outline sidebar keeps its state between steps.
 - **AI Aware (K-5) variant:** larger type, read-aloud visible, more illustration space, shorter paragraphs, and bigger tap targets (48px).
 

@@ -16,7 +16,7 @@ type Props = {
   moduleTitle: string;
   prevHref: string;
   nextHref: string;
-  /** Signed out on step 1: Next opens the sign-up panel instead of going to step 2. */
+  /** Signed out on the last open step: Next opens the sign-up panel instead of going on. */
   gated?: boolean;
 };
 
@@ -116,7 +116,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </nav>
         </SheetContent>
       </Sheet>
-      {gated && <GatePanel open={gateOpen} onOpenChange={setGateOpen} next={nextHref} />}
+      {gated && <GatePanel open={gateOpen} onOpenChange={setGateOpen} next={nextHref} done={index + 1} total={steps.length} />}
     </div>
   );
 }

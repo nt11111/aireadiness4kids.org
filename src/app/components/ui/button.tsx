@@ -8,29 +8,29 @@ import { cn } from "./utils";
 // Focus styling comes from the global :focus-visible rule in theme.css.
 // Hover states darken rather than fade, so label contrast never drops.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold cursor-pointer select-none transition-[background-color,border-color,color,box-shadow,transform] duration-[var(--dur)] ease-out active-state:translate-y-px active-state:shadow-none disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[1.1em]",
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap border-2 border-transparent font-display font-bold tracking-[0.01em] cursor-pointer select-none transition-[background-color,border-color,color,transform] duration-[var(--dur-fast)] ease-out active-state:translate-y-[2px] disabled:pointer-events-none disabled:border-line disabled:bg-surface disabled:text-ink-soft aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[1.1em]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-1 hover-state:bg-[color-mix(in_srgb,var(--primary)_86%,black)]",
-        accent: "bg-accent text-accent-foreground shadow-1 hover-state:bg-[color-mix(in_srgb,var(--accent)_88%,black)]",
-        secondary: "bg-secondary text-secondary-foreground hover-state:bg-[color-mix(in_srgb,var(--secondary)_82%,var(--brand))]",
-        outline: "border-[1.5px] border-input bg-surface text-ink hover-state:border-ink-soft hover-state:bg-surface-2",
-        ghost: "text-ink hover-state:bg-secondary",
-        link: "rounded-sm text-brand underline decoration-2 underline-offset-4 hover-state:decoration-[3px]",
-        destructive: "bg-destructive text-destructive-foreground shadow-1 hover-state:bg-[color-mix(in_srgb,var(--destructive)_86%,black)]",
-        ink: "bg-ink text-white shadow-1 hover-state:bg-[color-mix(in_srgb,var(--ink)_82%,white)]",
-        light: "bg-surface text-ink shadow-1 hover-state:bg-surface-2",
-        "outline-light": "border-[1.5px] border-white/70 text-white hover-state:border-white hover-state:bg-white/10",
+        default: "border-primary bg-primary text-primary-foreground hover-state:border-black hover-state:bg-black",
+        accent: "border-accent bg-accent text-ink hover-state:border-white hover-state:bg-white",
+        secondary: "border-ink bg-surface-2 text-ink hover-state:bg-line",
+        outline: "border-ink bg-surface text-ink hover-state:bg-surface-2",
+        ghost: "text-ink hover-state:bg-surface-2",
+        link: "border-0 text-brand underline decoration-2 underline-offset-4 hover-state:decoration-[3px]",
+        destructive: "border-destructive bg-destructive text-destructive-foreground hover-state:bg-[color-mix(in_srgb,var(--destructive)_86%,black)]",
+        ink: "border-ink bg-ink text-white hover-state:border-black hover-state:bg-black",
+        light: "border-white bg-white text-ink hover-state:bg-surface-2",
+        "outline-light": "border-white text-white hover-state:bg-white hover-state:text-ink",
       },
       size: {
-        sm: "h-9 px-4 text-small",
-        default: "h-11 px-6 text-ui",
-        lg: "h-12 px-8 text-[1.0625rem]",
-        icon: "size-11",
+        sm: "min-h-11 px-4 text-small",
+        default: "min-h-12 px-5 text-ui",
+        lg: "min-h-13 px-6 text-[1.0625rem]",
+        icon: "size-12",
       },
     },
-    compoundVariants: [{ variant: "link", className: "h-auto px-0" }],
+    compoundVariants: [{ variant: "link", className: "min-h-0 px-0" }],
     defaultVariants: { variant: "default", size: "default" },
   },
 );

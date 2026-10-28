@@ -1,6 +1,6 @@
 ---
-// Lesson player page for one step (brief section 7). Server-rendered: step 1 of every module is open
-// to everyone; steps 2+ need a session, checked on the server in src/middleware.ts and again below.
+// Lesson player page for one step (brief section 7). Server-rendered: the first OPEN_STEPS steps of every
+// module are open to everyone; later steps need a session, checked in src/middleware.ts and again below.
 import { render } from "astro:content";
 import LessonLayout from "../../../../layouts/LessonLayout.astro";
 import LessonPlayer from "../../../../components/lesson/LessonPlayer.astro";
@@ -8,6 +8,7 @@ import { lessonComponents } from "../../../../components/lesson";
 import { getCourses, getModuleSteps, metaDescription, moduleHref, moduleSlug, trackHref } from "../../../../lib/courses";
 import { listLearners } from "../../../../lib/accounts";
 import { practiceAvailable } from "../../../../lib/practice";
+import { OPEN_STEPS } from "../../../../lib/lesson-types";
 export const prerender = false;
 
 const courses = await getCourses();
@@ -23,8 +24,8 @@ if (index < 0 && unnumbered !== Astro.params.step && steps.some((s) => s.slug ==
 if (!course || !mod || index < 0) return new Response(null, { status: 404 }); // src/middleware.ts fills in the 404 page
 
 const signedIn = Boolean(Astro.locals.user);
-// Defense in depth: the middleware already redirected signed-out requests for steps 2+.
-if (index > 0 && !signedIn) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
+// Defense in depth: the middleware already redirected signed-out requests for the gated steps.
+if (index >= OPEN_STEPS && !signedIn) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pathname)}`, 302);
 // A parent with no learner profile yet would have nowhere to save progress: add one first, then come back.
 if (Astro.locals.user && (await listLearners(Astro.locals.user.uid)).length === 0) {
   return Astro.redirect(`/account/add-learner?next=${encodeURIComponent(Astro.url.pathname)}`, 302);

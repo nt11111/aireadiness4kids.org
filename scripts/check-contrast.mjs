@@ -20,9 +20,9 @@ const LIGHT = ["bg", "surface", "surface-2"];
 const pairs = [
   ...["ink", "ink-soft", "ink-faint", "brand", "success", "warning", "danger"].flatMap((fg) => LIGHT.map((bg) => [fg, bg, TEXT, "text"])),
   ["ink", "brand-soft", TEXT, "text on brand tint"], ["brand", "brand-soft", TEXT, "brand text on tint"],
-  ["brand-ink", "brand", TEXT, "primary button label"], ["glow", "brand", TEXT, "emphasis on dark brand"], ["glow", "ink", TEXT, "emphasis on ink"],
+  ["white", "ink", TEXT, "primary button label"], ["brand-ink", "brand", TEXT, "label on blue"], ["glow", "brand", TEXT, "emphasis on dark brand"], ["glow", "ink", TEXT, "emphasis on ink"],
   ["ink", "accent", TEXT, "text on marigold"], ["white", "danger", TEXT, "destructive button"], ["white", "success", TEXT, "success fill"], ["white", "warning", TEXT, "warning fill"],
-  ["warning", "warning-soft", TEXT, "draft badge"], ["ink-soft", "surface-2", TEXT, "in-review badge"], ["brand", "brand-soft", TEXT, "reviewed badge"], ["success", "brand-soft", TEXT, "correct answer on tint"], ["warning", "surface-2", UI, "hint icon"],
+  ["warning", "warning-soft", TEXT, "draft badge"], ["ink-soft", "surface-2", TEXT, "in-review badge"], ["brand", "brand-soft", TEXT, "reviewed badge"], ["success", "brand-soft", TEXT, "correct answer on tint"], ["success", "success-soft", TEXT, "correct feedback bar"], ["warning", "warning-soft", TEXT, "try-again feedback bar"], ["warning", "surface-2", UI, "hint icon"],
   ...LIGHT.map((bg) => ["accent-strong", bg, UI, "progress fill"]),
   ...LIGHT.map((bg) => ["line-strong", bg, UI, "control border"]),
   ...LIGHT.map((bg) => ["brand", bg, UI, "focus ring"]),

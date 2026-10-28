@@ -18,7 +18,7 @@ async function axe(page: Page, label: string) {
 }
 
 test("13+ sign-up with email: age screen, confirm email, sign in, and land on the step you wanted", async ({ page }) => {
-  const next = `${BIAS_MODULE}/${BIAS_STEPS[1]}`;
+  const next = `${BIAS_MODULE}/${BIAS_STEPS[3]}`;
   await page.goto(`/signup?next=${encodeURIComponent(next)}`);
   await expect(page.getByRole("heading", { name: "How old are you?" })).toBeVisible();
   await shot(page, "01-age-screen");
@@ -131,7 +131,7 @@ test("header shows sign-in when signed out and an account menu when signed in; s
   await page.goto("/");
   const header = page.getByRole("banner");
   await expect(header.getByRole("link", { name: "Sign in" })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Create free account" })).toBeVisible();
+  await expect(header.getByRole("link", { name: "Become an ambassador" })).toBeVisible();
 
   await signInBrowser(page.context(), await account("learner", { name: "Alex" }));
   await page.goto("/", { waitUntil: "networkidle" });

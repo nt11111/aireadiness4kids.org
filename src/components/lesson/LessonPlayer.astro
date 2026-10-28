@@ -12,7 +12,7 @@ import { cn } from "../../app/components/ui/utils";
 import ReadAloud from "./ReadAloud.astro";
 import Sources from "./Sources.astro";
 import Breadcrumbs from "../Breadcrumbs.astro";
-import { STEP_LABEL, type StepRef } from "../../lib/lesson-types";
+import { OPEN_STEPS, STEP_LABEL, type StepRef } from "../../lib/lesson-types";
 
 interface Props {
   track: { id: string; title: string; href: string };
@@ -21,7 +21,7 @@ interface Props {
   index: number;
   /** Where Next goes from the last step: the module's completion page, unless a preview says otherwise. */
   finishHref?: string;
-  /** Signed-out visitors can do step 1; pressing Next there opens the sign-up panel. */
+  /** Signed-out visitors can do the first OPEN_STEPS steps; pressing Next on the last of them opens the sign-up panel. */
   signedIn?: boolean;
   /** The step's "Sources" list (title and link), shown collapsed at the end of the step. */
   sources?: { title: string; url: string }[];
@@ -40,7 +40,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
   <header class="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur" transition:name="lesson-top" transition:animate="none">
     <div class="flex h-14 items-center gap-3 px-3 sm:px-4">
       <a href="/" class="grid size-11 shrink-0 place-items-center rounded-full" aria-label="ARK home">
-        <ARKMark size={30} decorative />
+        <ARKMark size={32} small decorative />
       </a>
       <!-- One link to the module overview (two small stacked links would be too-small tap targets). -->
       <a href={module.href} class="group min-w-0 flex-1 rounded-md py-1 leading-tight">
@@ -87,7 +87,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         <Sources sources={sources} />
         <div data-lesson-end aria-hidden="true" class="h-px"></div>
       </article>
-      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === 0 && steps.length > 1} />
+      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === OPEN_STEPS - 1 && steps.length > OPEN_STEPS} />
     </main>
   </div>
 </div>

@@ -1,18 +1,19 @@
 /**
- * Which routes need what (brief section 8.1): lesson steps 2+, completion pages, /my-learning,
+ * Which routes need what (brief section 8.1): lesson steps after the first OPEN_STEPS, completion pages, /my-learning,
  * /account, /certificates, /practice, and the progress, certificate, and practice APIs need a signed-in user; /present needs the facilitator (or admin) role; /admin needs admin.
  */
 import { getCourses } from "./courses";
+import { OPEN_STEPS } from "./lesson-types";
 
 export type Gate = "open" | "user" | "facilitator" | "admin";
 
 let lockedSteps: Promise<Set<string>> | undefined;
 
-/** URL paths of every lesson step after the first in its module. */
+/** URL paths of every lesson step after the first OPEN_STEPS in its module. */
 function lockedStepPaths() {
   lockedSteps ??= getCourses().then((courses) => {
     const paths = new Set<string>();
-    for (const course of courses) for (const steps of course.steps.values()) for (const step of steps.slice(1)) paths.add(step.href);
+    for (const course of courses) for (const steps of course.steps.values()) for (const step of steps.slice(OPEN_STEPS)) paths.add(step.href);
     return paths;
   });
   return lockedSteps;

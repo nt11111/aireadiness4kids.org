@@ -89,19 +89,17 @@ test("axe: mobile menu open", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
 });
 
-test("keyboard: nav dropdown opens, is reachable, closes on Escape", async ({ page }) => {
+test("keyboard: the header's links are reachable in order and show where you are", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/about", { waitUntil: "networkidle" });
-  const toggle = page.getByRole("button", { name: "Our Work menu" });
-  await toggle.focus();
-  await page.keyboard.press("Enter");
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await page.keyboard.press("Tab");
-  await expect(page.locator("#nav-our-work").getByRole("link", { name: /^Workshops & programs/ })).toBeFocused();
-  await axe(page, "nav-dropdown-open");
-  await page.keyboard.press("Escape");
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await expect(toggle).toBeFocused();
+  const nav = page.getByRole("navigation", { name: "Main" });
+  await expect(nav.getByRole("link", { name: "About" })).toHaveAttribute("aria-current", "page");
+  await nav.getByRole("link", { name: "Courses" }).focus();
+  for (const name of ["Parents", "Teachers", "About"]) {
+    await page.keyboard.press("Tab");
+    await expect(nav.getByRole("link", { name })).toBeFocused();
+  }
+  await axe(page, "header");
 });
 
 test("keyboard: syllabus rows open and close with Enter", async ({ page }) => {

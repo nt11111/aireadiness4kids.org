@@ -16,51 +16,53 @@
    reads the hex values in this :root block. Keep them as hex.
    ============================================================ */
 :root {
-  /* Surfaces and ink */
-  --bg: #FBF8F3;
+  /* Surfaces and ink: white and a cool light gray, never beige. */
+  --bg: #FFFFFF;
   --surface: #FFFFFF;
-  --surface-2: #F4EFE6;
-  --ink: #1C2430;
-  --ink-soft: #4A5563;
-  --ink-faint: #646C78;         /* brief #6B7480: 4.47:1 on --bg, darkened to pass AA */
-  --line: #E6DFD2;              /* decorative dividers and card edges only */
-  --line-strong: #908776;       /* form-control borders, which need 3:1 */
+  --surface-2: #F3F5F8;
+  --ink: #111827;
+  --ink-soft: #4B5563;
+  --ink-faint: #5F6672;
+  --line: #E5E7EB;              /* decorative dividers only */
+  --line-strong: #6B7280;       /* form-control borders, which need 3:1 */
 
-  /* Brand */
-  --brand: #1F6F5C;
+  /* Brand: the Hull's top bar. Links, focus, and the reviewed state. Buttons are ink (--primary). */
+  --brand: #2348C8;
   --brand-ink: #FFFFFF;
-  --brand-soft: #E3F1EC;
+  --brand-soft: #E8EDFB;
 
-  /* Marigold. White text on it fails (2.0:1), so its foreground is --ink. */
-  --accent: #F2A93B;
-  --accent-strong: #BF780D;     /* progress fills and strokes on light surfaces (3:1) */
-  --glow: #FADDB1;              /* emphasis text on dark brand or ink sections */
+  /* The Hull's yellow bar. Fills only: never text or thin lines on white (1.9:1). Its foreground is --ink. */
+  --accent: #F2B21B;
+  --accent-strong: #946A00;     /* progress fills and strokes on light surfaces (3:1) */
+  --glow: #FFD666;              /* emphasis text on ink or blue sections */
 
-  /* Tracks: fill (headers, chip backgrounds), -on (text on the fill),
+  /* Tracks are the Hull's three bars: fill (headers, chip backgrounds), -on (text on the fill),
      -ink (text and strokes on light surfaces), -soft (tint backgrounds) */
-  --track-aware: #E08A1E;
-  --track-aware-on: #1C2430;
-  --track-aware-ink: #995E15;
-  --track-aware-soft: #FBEEDE;
-  --track-literate: #C74D37;       /* brief #C9503A: white text was 4.48:1 */
-  --track-literate-on: #FFFFFF;
-  --track-literate-ink: #B74732;
-  --track-literate-soft: #FAEDEB;
-  --track-fluent: #3D4FA8;
+  --track-aware: #F2B21B;
+  --track-aware-on: #111827;
+  --track-aware-ink: #7A5700;
+  --track-aware-soft: #FDF4DC;
+  --track-literate: #E2512C;
+  --track-literate-on: #111827;
+  --track-literate-ink: #B83A1B;
+  --track-literate-soft: #FCEBE6;
+  --track-fluent: #2348C8;
   --track-fluent-on: #FFFFFF;
-  --track-fluent-ink: #3D4FA8;
-  --track-fluent-soft: #DADEF2;
+  --track-fluent-ink: #2348C8;
+  --track-fluent-soft: #E8EDFB;
 
   /* Status */
-  --success: #2D794D;           /* brief #2E7D4F: 4.40:1 on --surface-2, darkened to pass AA */
-  --warning: #936119;           /* brief #B7791F: 3.44:1 as text, darkened to pass AA */
-  --warning-soft: #FBF1DF;      /* draft review badge tint */
+  --success: #1B7A43;
+  --success-soft: #E3F3E8;
+  --warning: #8A5A00;
+  --warning-soft: #FDF2D9;      /* draft review badge tint */
   --danger: #B42318;
 
   /* Elevation, layout, motion */
-  --shadow-1: 0 1px 2px rgba(28, 36, 48, .06), 0 1px 3px rgba(28, 36, 48, .08);
-  --shadow-2: 0 6px 20px rgba(28, 36, 48, .08);
-  --container: 1180px;
+  /* Flat by design: edges come from 1px rules and 2px ink borders, not soft shadows. */
+  --shadow-1: none;
+  --shadow-2: none;
+  --container: 1200px;
   --reading: 68ch;
   --dur-fast: 150ms;
   --dur: 200ms;
@@ -75,8 +77,8 @@
   --card-foreground: var(--ink);
   --popover: var(--surface);
   --popover-foreground: var(--ink);
-  --primary: var(--brand);
-  --primary-foreground: var(--brand-ink);
+  --primary: var(--ink);
+  --primary-foreground: #FFFFFF;
   --secondary: var(--brand-soft);
   --secondary-foreground: var(--ink);
   --muted: var(--surface-2);
@@ -89,7 +91,7 @@
   --input-background: var(--surface);
   --switch-background: var(--line-strong);
   --ring: var(--brand);
-  --radius: 14px;
+  --radius: 0px;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --sidebar: var(--surface);
@@ -163,33 +165,45 @@
   --color-track-fluent-ink: var(--track-fluent-ink);
   --color-track-fluent-soft: var(--track-fluent-soft);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-danger: var(--danger);
 
-  /* Brief radii: sm 8, default 14, lg 20 (Tailwind rounded-sm / rounded-lg / rounded-xl) */
-  --radius-sm: 8px;
-  --radius-md: 10px;
-  --radius-lg: var(--radius);
-  --radius-xl: 20px;
+  /* Square corners everywhere (the base layer also flattens rounded-full). */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
 
   --shadow-1: var(--shadow-1);
   --shadow-2: var(--shadow-2);
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
 
   --container-site: var(--container);
   --container-reading: var(--reading);
 
-  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-display: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
   --font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Type scale. Headings use Fraunces 500-600; lesson body 18px; UI 16px; AI Aware lessons 20px/1.6. */
-  --text-display-xl: 3.5rem;
-  --text-display-xl--line-height: 1.05;
-  --text-display-lg: 2.75rem;
-  --text-display-lg--line-height: 1.1;
+  /* Type scale. Headings use Archivo 700; lesson body 18px; UI 16px; AI Aware lessons 20px/1.6. */
+  --text-display-xl: 3rem;
+  --text-display-xl--line-height: 1.12;
+  --text-display-lg: 2.5rem;
+  --text-display-lg--line-height: 1.15;
   --text-display-md: 2.125rem;
-  --text-display-md--line-height: 1.15;
+  --text-display-md--line-height: 1.2;
   --text-display-sm: 1.625rem;
   --text-display-sm--line-height: 1.2;
   --text-title: 1.25rem;
@@ -212,6 +226,10 @@
   * {
     @apply border-border;
   }
+  /* Straight lines only: no rounded corners anywhere, including rounded-full. */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+  }
   html {
     font-size: var(--font-size);
     -webkit-text-size-adjust: 100%;
@@ -226,8 +244,9 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
   }
   ::selection {
     background: color-mix(in srgb, var(--brand) 22%, transparent);
@@ -237,7 +256,6 @@
   [data-demo~="focus"] {
     outline: 3px solid var(--ring);
     outline-offset: 3px;
-    border-radius: 6px;
   }
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior: smooth; }

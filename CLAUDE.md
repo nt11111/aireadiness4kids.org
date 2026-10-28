@@ -21,7 +21,7 @@ This repo is being rebuilt from a marketing site into ARK's free course platform
 ## Rules
 1. **Work on the `platform-v1` branch. Never push or merge to `main`** unless the user explicitly says to do the cutover.
 2. Build one phase at a time (brief section 10). Stop and report after each phase.
-3. **Soft gate:** catalog, course pages, module overviews, step 1 of every module, educator guides, and workshop checks are open. Everything else requires sign-in, checked on the server.
+3. **Soft gate:** catalog, course pages, module overviews, the first 3 steps of every module (`OPEN_STEPS` in `src/lib/lesson-types.ts`), educator guides, and workshop checks are open. Everything else requires sign-in, checked on the server.
 4. **Security** (brief section 8):
    - Use Firebase Auth with httpOnly session cookies.
    - The browser never talks to Firestore directly; its rules deny all client access.

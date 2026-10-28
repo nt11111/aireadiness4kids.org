@@ -286,18 +286,18 @@ test.describe("AI Aware (K-5) variant", () => {
 });
 
 test.describe("signed out", () => {
-  test("step 1 is open; Next opens the sign-up panel instead of step 2", async ({ page }) => {
+  test("steps 1 to 3 are open; Next on step 3 opens the sign-up panel instead of step 4", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[0]}`, { waitUntil: "networkidle" });
+    await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[2]}`, { waitUntil: "networkidle" });
     await hydrated(page);
-    await expect(page.getByRole("heading", { level: 1, name: "What is bias?" })).toBeVisible();
-    await page.keyboard.press("ArrowRight");
-    const panel = page.getByRole("dialog", { name: "Keep going for free" });
+    await expect(page.getByRole("heading", { level: 1, name: "Scenario: the summer jobs bot" })).toBeVisible();
+    await page.locator("[data-lesson-next]").click();
+    const panel = page.getByRole("dialog", { name: "Save your place to keep going." });
     await expect(panel).toBeVisible();
-    await expect(page).toHaveURL(new RegExp(`${BIAS_STEPS[0]}$`));
-    const next = encodeURIComponent(`${BIAS_MODULE}/${BIAS_STEPS[1]}`);
-    await expect(panel.getByRole("link", { name: /Continue with Google/ })).toHaveAttribute("href", `/signup?method=google&next=${next}`);
-    await expect(panel.getByRole("link", { name: "Sign up with email" })).toHaveAttribute("href", `/signup?next=${next}`);
+    await expect(panel.getByText("You finished 3 of 6 steps")).toBeVisible();
+    await expect(page).toHaveURL(new RegExp(`${BIAS_STEPS[2]}$`));
+    const next = encodeURIComponent(`${BIAS_MODULE}/${BIAS_STEPS[3]}`);
+    await expect(panel.getByRole("link", { name: "Make a free account" })).toHaveAttribute("href", `/signup?next=${next}`);
     await expect(panel.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", `/signin?next=${next}`);
     await page.screenshot({ path: `screenshots/${PHASE}/gate-panel-375.png` });
     await axe(page, "gate panel");
@@ -306,9 +306,9 @@ test.describe("signed out", () => {
     await expect(page.locator("[data-lesson-next]")).toBeFocused();
   });
 
-  test("going straight to step 2 lands on sign-in with a return path", async ({ page }) => {
-    await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[1]}`);
-    await expect(page).toHaveURL(`/signin?next=${encodeURIComponent(`${BIAS_MODULE}/${BIAS_STEPS[1]}`)}`);
+  test("going straight to step 4 lands on sign-in with a return path", async ({ page }) => {
+    await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[3]}`);
+    await expect(page).toHaveURL(`/signin?next=${encodeURIComponent(`${BIAS_MODULE}/${BIAS_STEPS[3]}`)}`);
     await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
   });
 });
