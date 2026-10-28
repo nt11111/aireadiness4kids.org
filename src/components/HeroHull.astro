@@ -1,0 +1,49 @@
+---
+// The home page's picture: the Hull logo drawn large, sailing on straight-line water. Code-drawn, no
+// image file. The bars slide in once on load, the flag moves a little, and the water drifts slowly;
+// all of it stops for people who ask for reduced motion (theme.css turns animations off).
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 480 440" class:list={["hero-hull block h-auto w-full", className]} aria-hidden="true" focusable="false">
+  <g class="hh-flag">
+    <path d="M247 34 L338 72 L247 110 Z" fill="var(--ink)" />
+  </g>
+  <rect x="233" y="24" width="14" height="190" fill="var(--ink)" />
+  <rect class="hh-bar" style="--d: 0ms" x="10" y="214" width="460" height="46" fill="var(--track-fluent)" />
+  <rect class="hh-bar" style="--d: 110ms" x="62" y="272" width="356" height="46" fill="var(--track-literate)" />
+  <rect class="hh-bar" style="--d: 220ms" x="114" y="330" width="252" height="46" fill="var(--track-aware)" />
+  <g class="hh-water" stroke="var(--ink)" stroke-width="3">
+    <path d="M0 398 H120 M152 398 H318 M350 398 H480" />
+    <path d="M36 416 H206 M238 416 H404" stroke="var(--line-strong)" />
+    <path d="M96 434 H178 M210 434 H300 M332 434 H380" stroke="var(--line)" />
+  </g>
+</svg>
+
+<style>
+  /* Position only, never opacity: if the animation is paused or skipped, the bars still show. */
+  .hh-bar {
+    animation: hh-in 560ms var(--ease-out) var(--d) backwards;
+  }
+  .hh-flag {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: hh-flag 2.6s ease-in-out 600ms infinite alternate;
+  }
+  .hh-water {
+    animation: hh-drift 7s ease-in-out infinite alternate;
+  }
+  @keyframes hh-in {
+    from { transform: translateX(56px); }
+    to { transform: none; }
+  }
+  @keyframes hh-flag {
+    from { transform: skewY(0deg) scaleX(1); }
+    to { transform: skewY(-5deg) scaleX(0.94); }
+  }
+  @keyframes hh-drift {
+    from { transform: translateX(-10px); }
+    to { transform: translateX(10px); }
+  }
+</style>

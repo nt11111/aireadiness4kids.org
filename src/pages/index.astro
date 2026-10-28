@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SectionHead from "../components/SectionHead.astro";
+import HeroHull from "../components/HeroHull.astro";
 import CredibilityStrip from "../components/CredibilityStrip.astro";
 import ImpactNumbers from "../components/ImpactNumbers.astro";
 import { buttonVariants } from "../app/components/ui/button";
@@ -39,14 +40,17 @@ const ambassador = [
 
 <BaseLayout title="ARK | Free AI lessons for K-12 learners" description="Short, free AI lessons for grades K-12 from ARK (AI Readiness Kollective), a nonprofit. Three courses for grades K-5, 6-8, and 9-12. Always free.">
   <section aria-labelledby="hero-h" class="px-4 pb-16 pt-28 sm:px-6 sm:pb-20 lg:pb-24 lg:pt-36">
-    <div class="mx-auto max-w-site">
-      <h1 id="hero-h" class="max-w-[22ch] text-[clamp(1.875rem,4vw,2.875rem)] leading-[1.15] text-ink">Help kids understand the AI they already use.</h1>
-      <p class="mt-4 max-w-[36em] text-[1.125rem] text-ink-soft sm:text-[1.25rem]">Short, free lessons for grades K-12, reviewed by an educator and an AI professional. No account needed for the first steps.</p>
-      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-        <a href="/courses" class={cn(buttonVariants({ size: "lg" }), "justify-between gap-6")}>See the courses <span aria-hidden="true">→</span></a>
-        {sample && <a href="#sample" class={buttonVariants({ variant: "outline", size: "lg" })}>Try a sample question</a>}
+    <div class="mx-auto grid max-w-site items-center gap-10 lg:grid-cols-12 lg:gap-6">
+      <div class="lg:col-span-7">
+        <h1 id="hero-h" class="max-w-[22ch] text-[clamp(1.875rem,4vw,2.875rem)] leading-[1.15] text-ink">Help kids understand the AI they already use.</h1>
+        <p class="mt-4 max-w-[36em] text-[1.125rem] text-ink-soft sm:text-[1.25rem]">Short, free lessons for grades K-12, reviewed by an educator and an AI professional. No account needed for the first steps.</p>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          <a href="/courses" class={cn(buttonVariants({ size: "lg" }), "justify-between gap-6")}>See the courses <span aria-hidden="true">→</span></a>
+          {sample && <a href="#sample" class={buttonVariants({ variant: "outline", size: "lg" })}>Try a sample question</a>}
+        </div>
+        <p class="mt-5 text-ui text-ink-soft">Grown-ups: <a href="/parents" class="font-bold text-ink underline underline-offset-4">for parents</a> · <a href="/educators" class="font-bold text-ink underline underline-offset-4">for teachers</a></p>
       </div>
-      <p class="mt-5 text-ui text-ink-soft">Grown-ups: <a href="/parents" class="font-bold text-ink underline underline-offset-4">for parents</a> · <a href="/educators" class="font-bold text-ink underline underline-offset-4">for teachers</a></p>
+      <HeroHull class="mx-auto max-w-[280px] sm:max-w-[360px] lg:col-span-5 lg:col-start-8 lg:max-w-[460px]" />
     </div>
   </section>
 
