@@ -3,6 +3,7 @@ title: "AI Fluent"
 grades: "9-12"
 color: track-fluent
 tagline: "Agency, Policy & Action"
+hook: "Who makes the rules for AI, and how to change them."
 summary: "The AI Fluent course is designed for students ready to think seriously about AI's role in society, and their own role in shaping it. Modules move from understanding to agency and action."
 order: 3
 outcomes:

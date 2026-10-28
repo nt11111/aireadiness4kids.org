@@ -25,7 +25,7 @@ export function DonatePanel() {
             const selected = amt === a && !custom;
             return (
               <button key={a} type="button" aria-pressed={selected} onClick={() => { setAmt(a); setCustom(""); }}
-                className={cn("min-h-12 rounded-lg border-[1.5px] py-3 font-display text-title font-semibold transition-colors duration-[var(--dur)]", selected ? "border-brand bg-brand text-brand-ink" : "border-input bg-surface text-ink hover:border-brand hover:bg-brand-soft")}>
+                className={cn("min-h-12 rounded-lg border-[1.5px] py-3 font-display text-title font-bold transition-colors duration-[var(--dur)]", selected ? "border-brand bg-brand text-brand-ink" : "border-input bg-surface text-ink hover:border-brand hover:bg-brand-soft")}>
                 ${a}
               </button>
             );
@@ -50,7 +50,7 @@ export function DonatePanel() {
           <CardTitle>Where the money goes</CardTitle>
           <dl className="mt-4 grid gap-3">
             {[["50%", "Programs: curriculum, workshops, facilitator training"], ["25%", "Operations: staffing, technology, compliance"], ["15%", "Marketing: content, social, event outreach"], ["10%", "Reserve: emergency and growth fund"]].map(([p, d]) => (
-              <div key={p} className="flex items-baseline gap-4"><dt className="w-12 shrink-0 font-display text-title font-semibold text-brand">{p}</dt><dd className="text-ui text-ink-soft">{d}</dd></div>
+              <div key={p} className="flex items-baseline gap-4"><dt className="w-12 shrink-0 font-display text-title font-bold text-brand">{p}</dt><dd className="text-ui text-ink-soft">{d}</dd></div>
             ))}
           </dl>
         </Card>

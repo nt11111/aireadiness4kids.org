@@ -8,7 +8,7 @@ export type Reviewer = { name: string; credentials?: string };
 const REVIEW_PAGE = "/about#reviewers";
 
 const COPY = {
-  draft: { Icon: PencilLine, short: "Draft", full: "Draft: under expert review" },
+  draft: { Icon: PencilLine, short: "Being checked", full: "Being checked by experts" },
   "in-review": { Icon: Hourglass, short: "In review", full: "In review with an expert" },
   reviewed: { Icon: BadgeCheck, short: "Reviewed", full: "Reviewed" },
 } as const;
@@ -72,7 +72,7 @@ export function ReviewBadge({ status, reviewers = [], size = "compact", classNam
         {full}
       </Badge>
       <a href={REVIEW_PAGE} className="rounded-sm text-small font-bold text-brand underline decoration-1 underline-offset-4 hover:decoration-2">
-        How we review modules
+        How we check lessons
       </a>
     </span>
   );

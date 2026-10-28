@@ -18,7 +18,7 @@ const practiceHref = Astro.locals.lesson?.practiceHref;
   <div class="flex gap-3 p-4 sm:gap-4 sm:p-5">
     <FlaskConical aria-hidden="true" className="mt-1 size-5 shrink-0 text-brand" />
     <div class="min-w-0 [&>*+*]:mt-3 [&_li+li]:mt-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6">
-      <p class="text-small font-bold uppercase tracking-[0.1em] text-ink">{title}</p>
+      <p class="font-display text-small font-bold text-ink">{title}</p>
       <slot />
       {practiceHref && (
         <p class="pt-1">

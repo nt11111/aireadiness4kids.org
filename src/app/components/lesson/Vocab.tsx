@@ -16,7 +16,7 @@ export function Vocab({ term, def, label }: Props) {
         <span className="sr-only"> (show definition)</span>
       </PopoverTrigger>
       <PopoverContent aria-labelledby={`${id}-term`} className="w-72 max-w-[calc(100vw-2rem)] rounded-lg border-line bg-surface p-4 shadow-2" collisionPadding={16}>
-        <p id={`${id}-term`} className="font-display text-title font-semibold text-ink">{term}</p>
+        <p id={`${id}-term`} className="font-display text-title font-bold text-ink">{term}</p>
         <p className="mt-1 text-ui text-ink">{def}</p>
       </PopoverContent>
     </Popover>

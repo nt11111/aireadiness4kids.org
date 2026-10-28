@@ -73,7 +73,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
   const counter = `Step ${step.n} of ${steps.length}`;
 
   return (
-    <div data-sticky className="sticky bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
+    <div data-sticky className="sticky bottom-0 z-30 border-t-2 border-ink bg-surface">
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <nav aria-label="Lesson" className="mx-auto flex max-w-[calc(var(--reading)+3rem)] items-center justify-between gap-2 px-4 py-3 sm:px-6">
           <a href={prevHref} data-lesson-prev className={cn(buttonVariants({ variant: "ghost" }), tap, "px-3 sm:px-4")} aria-label={isFirst ? "Back to module overview" : undefined}>
@@ -87,7 +87,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
             <span><span className="sr-only sm:not-sr-only">Step </span>{step.n} of {steps.length}</span>
             <span className="sr-only">: open the list of steps</span>
           </SheetTrigger>
-          <p className="hidden text-small font-bold text-ink-soft lg:block" aria-hidden="true">{counter}</p>
+          <p className="hidden font-display text-small font-bold text-ink-soft lg:block" aria-hidden="true">{counter}</p>
 
           <a href={nextHref} data-lesson-next onClick={markComplete} aria-busy={leaving || undefined} className={cn(buttonVariants(), tap, "px-4 sm:px-6")}>
             {isLast ? (
@@ -104,7 +104,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </a>
         </nav>
 
-        <SheetContent side="bottom" className="max-h-[85dvh] rounded-t-xl pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
+        <SheetContent side="bottom" className="max-h-[85dvh] border-t-2 border-ink pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
           <SheetHeader className="px-5 pb-0 pr-16 pt-5">
             <SheetTitle className="font-display text-title">{moduleTitle}</SheetTitle>
             <SheetDescription className="text-small text-ink-soft">

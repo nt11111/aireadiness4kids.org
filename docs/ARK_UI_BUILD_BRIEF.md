@@ -256,7 +256,7 @@ Build each one as its own component with an example in `/dev/components` (a hidd
 
 ### Completion `/…/complete`
 - A calm celebration (confetti only if motion is allowed), a summary of what they learned, and the **post-check** (same questions as the pre-check, optional).
-- If they did both checks, show "You improved from 1/3 to 3/3."
+- If they did both checks and the score went up, show "You beat your starting score: 1/3 at the start, 3/3 now."
 - **Certificate:** issued from the account. Show the module or course, the date, the ARK wordmark, and the learner's display name.
   - **13+ learners:** the certificate gets an unguessable ID and a "Verify at aireadiness4kids.org/verify/…" line. This is useful on LinkedIn and college applications.
   - **Under-13 learner profiles:** printable only, with no public verify page. The certificate shows the nickname the parent chose.

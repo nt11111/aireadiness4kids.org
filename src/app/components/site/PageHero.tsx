@@ -2,10 +2,10 @@ import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { Eyebrow } from "./Primitives";
 
-/** Page header for the organization pages: the same warm band as /educators and the course pages. */
+/** Page header for the organization pages: white, closed by a 1px ink rule, like the course pages. */
 export function PageHero({ crumb, eyebrow, title, lead, actions }: { crumb: string; eyebrow: string; title: ReactNode; lead: ReactNode; actions?: ReactNode }) {
   return (
-    <header className="border-b border-line bg-surface-2 px-4 pb-12 pt-28 sm:px-6 lg:pb-16 lg:pt-36">
+    <header className="border-b border-ink px-4 pb-12 pt-28 sm:px-6 lg:pb-16 lg:pt-36">
       <div className="mx-auto max-w-site">
         <nav aria-label="Breadcrumb" className="mb-6 text-small text-ink-soft">
           <ol className="flex flex-wrap items-center gap-1.5">
@@ -14,8 +14,8 @@ export function PageHero({ crumb, eyebrow, title, lead, actions }: { crumb: stri
           </ol>
         </nav>
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="mt-2 max-w-4xl text-display-md text-ink sm:text-display-lg">{title}</h1>
-        <p className="mt-4 max-w-reading text-lesson text-ink-soft">{lead}</p>
+        <h1 className="mt-3 max-w-4xl text-[clamp(2.25rem,5vw,3.5rem)] leading-[1.1] text-ink">{title}</h1>
+        <p className="mt-4 max-w-[34em] text-[1.125rem] text-ink-soft sm:text-[1.25rem]">{lead}</p>
         {actions && <div className="mt-8 flex flex-col gap-3 sm:flex-row">{actions}</div>}
       </div>
     </header>

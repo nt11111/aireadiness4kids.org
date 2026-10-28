@@ -4,8 +4,8 @@ import { buttonVariants } from "../ui/button";
 import { cn } from "../ui/utils";
 
 /* Building blocks for the organization pages (About, Workshops, Get involved, Donate, Contact).
-   Same look as the course pages: paper background, Fraunces headings at 600, flat cards with a
-   hairline border and the lightest shadow, and one clear action per section. */
+   Same look as the home and course pages: white and cool gray, Archivo headings, square corners,
+   content blocks marked by a 2px ink rule instead of boxes and shadows, and one clear action per section. */
 
 /* ---------- layout ---------- */
 export const Section = ({ children, className = "", id, tint = false, labelledBy }: { children: ReactNode; className?: string; id?: string; tint?: boolean; labelledBy?: string }) => (
@@ -15,15 +15,15 @@ export const Section = ({ children, className = "", id, tint = false, labelledBy
 );
 
 export const Eyebrow = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <p className={cn("text-small font-bold uppercase tracking-[0.14em] text-brand", className)}>{children}</p>
+  <p className={cn("font-display text-small font-bold text-ink-soft", className)}>{children}</p>
 );
 
 export const H2 = ({ children, id, className = "" }: { children: ReactNode; id?: string; className?: string }) => (
-  <h2 id={id} className={cn("mt-2 text-display-md text-ink", className)}>{children}</h2>
+  <h2 id={id} className={cn("mt-2 text-[clamp(1.625rem,3vw,2.25rem)] leading-tight text-ink", className)}>{children}</h2>
 );
 
 export const Lead = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <p className={cn("mt-4 max-w-reading text-lesson text-ink-soft", className)}>{children}</p>
+  <p className={cn("mt-4 max-w-[36em] text-lesson text-ink-soft", className)}>{children}</p>
 );
 
 export const SectionHead = ({ eyebrow, title, lead, id, center = false }: { eyebrow?: string; title: ReactNode; lead?: ReactNode; id?: string; center?: boolean }) => (
@@ -45,25 +45,25 @@ export const Btn = ({ to, children, variant = "primary", size = "md", arrow = fa
 
 /* ---------- card ---------- */
 export const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={cn("rounded-xl border border-line bg-surface p-6 shadow-1 sm:p-8", className)}>{children}</div>
+  <div className={cn("border-t-2 border-ink pb-2 pt-5", className)}>{children}</div>
 );
 
-/** A small icon in a soft green circle, above a card's heading. */
+/** A small icon on a gray square, above a card's heading. */
 export const IconBox = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={cn("mb-4 grid size-11 place-items-center rounded-full bg-brand-soft text-brand [&_svg]:size-5", className)}>{children}</div>
+  <div className={cn("mb-4 grid size-11 place-items-center bg-surface-2 text-ink [&_svg]:size-5", className)}>{children}</div>
 );
 
-/** A card heading (Fraunces, title size). */
+/** A card heading (Archivo, title size). */
 export const CardTitle = ({ children, as: Tag = "h3", className = "" }: { children: ReactNode; as?: "h2" | "h3" | "h4"; className?: string }) => (
-  <Tag className={cn("font-display text-title font-semibold text-ink", className)}>{children}</Tag>
+  <Tag className={cn("font-display text-title font-bold text-ink", className)}>{children}</Tag>
 );
 
-/* ---------- closing call to action: the same soft green band as the home page ---------- */
+/* ---------- closing call to action: a gray band under a 2px ink rule ---------- */
 export const CTABand = ({ title, lead, primary, secondary }: { title: ReactNode; lead: ReactNode; primary: { label: string; to: string }; secondary?: { label: string; to: string } }) => (
-  <section aria-labelledby="cta-h" className="px-4 py-16 sm:px-6 lg:py-24">
-    <div className="mx-auto flex max-w-site flex-col gap-8 rounded-xl bg-brand-soft px-6 py-10 sm:px-10 sm:py-12 lg:flex-row lg:items-center lg:justify-between lg:px-14">
+  <section aria-labelledby="cta-h" className="border-t-2 border-ink bg-surface-2 px-4 py-14 sm:px-6 lg:py-20">
+    <div className="mx-auto flex max-w-site flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
       <div className="max-w-2xl">
-        <h2 id="cta-h" className="text-display-md text-ink">{title}</h2>
+        <h2 id="cta-h" className="text-[clamp(1.625rem,3vw,2.25rem)] leading-tight text-ink">{title}</h2>
         <p className="mt-3 text-lesson text-ink">{lead}</p>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row lg:shrink-0">
@@ -78,7 +78,7 @@ export const CTABand = ({ title, lead, primary, secondary }: { title: ReactNode;
 export const Ticks = ({ items, icon, className = "" }: { items: string[]; icon: ReactNode; className?: string }) => (
   <ul className={cn("grid gap-2.5", className)}>
     {items.map((x) => (
-      <li key={x} className="flex gap-3 text-ui text-ink"><span aria-hidden="true" className="mt-0.5 shrink-0 text-brand [&_svg]:size-[1.125rem]">{icon}</span>{x}</li>
+      <li key={x} className="flex gap-3 text-ui text-ink"><span aria-hidden="true" className="mt-0.5 shrink-0 text-ink [&_svg]:size-[1.125rem]">{icon}</span>{x}</li>
     ))}
   </ul>
 );

@@ -278,7 +278,7 @@ function ParentNotice({ consent, setConsent, error }: { consent: boolean; setCon
     <div className="grid gap-4">
       <p className="text-lesson text-ink">Your child gets a profile inside your account. You'll add their nickname and grade next. They never need an email.</p>
       <section aria-labelledby="parent-notice-h" className="rounded-xl border border-line bg-surface-2 p-4 sm:p-5">
-        <p className="text-small font-bold uppercase tracking-[0.1em] text-warning">{LEGAL_DRAFT}</p>
+        <p className="font-display text-small font-bold text-warning">{LEGAL_DRAFT}</p>
         <h2 id="parent-notice-h" className="mt-1 font-sans text-ui font-bold text-ink">Notice for parents and guardians</h2>
         <ul className="mt-2 list-disc space-y-1.5 pl-5 text-small text-ink">
           {PARENT_NOTICE.map((item) => <li key={item}>{item}</li>)}

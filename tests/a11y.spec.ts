@@ -179,6 +179,6 @@ test("every module folder has a page in the route list, and every stub is marked
   expect(folders).toHaveLength(17);
   for (const m of MODULES) {
     await page.goto(`/courses/${m}`, { waitUntil: "domcontentloaded" });
-    await expect(page.getByText("Draft: under expert review")).toBeVisible();
+    await expect(page.getByText("Being checked by experts")).toBeVisible();
   }
 });

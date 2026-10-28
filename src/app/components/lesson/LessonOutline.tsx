@@ -27,7 +27,7 @@ export function LessonOutline({ steps, currentId, track, moduleTitle, moduleHref
       <div className={cn("flex items-start gap-2 border-b border-line p-3", collapsed ? "justify-center" : "justify-between pl-5")}>
         {!collapsed && (
           <div className="min-w-0 pt-1.5">
-            <p className="text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Module outline</p>
+            <p className="font-display text-small font-bold text-ink-soft">Module outline</p>
             <p className="mt-1 text-small text-ink-soft">
               <a href={moduleHref} className="rounded-sm font-bold text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:decoration-2">{moduleTitle}</a>
               <span className="block">{done} of {steps.length} steps done</span>

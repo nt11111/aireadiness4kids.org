@@ -5,7 +5,7 @@ import { ORG } from "../../lib/content";
 const cols = [
   { heading: "Learn", links: [["AI Aware (K-5)", "/courses/aware"], ["AI Literate (6-8)", "/courses/literate"], ["AI Fluent (9-12)", "/courses/fluent"], ["All courses", "/courses"]] },
   { heading: "Get involved", links: [["Become an ambassador", AMBASSADOR_HREF], ["Parents", "/parents"], ["Teachers", "/educators"], ["Workshops", "/workshops"], ["Donate", "/donate"]] },
-  { heading: "About", links: [["About ARK", "/about"], ["How we review lessons", "/about#reviewers"], ["Contact", "/contact"]] },
+  { heading: "About", links: [["About ARK", "/about"], ["How we check lessons", "/about#reviewers"], ["Contact", "/contact"]] },
 ];
 
 const legal = [["Privacy", "/privacy"], ["Terms", "/terms"], ["Accessibility", "/accessibility"]];

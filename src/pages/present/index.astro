@@ -27,7 +27,7 @@ const ready = (await getCourses()).flatMap((course) =>
           <li class="flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 sm:flex-row sm:items-center">
             <div class="min-w-0 flex-1">
               <Badge variant={course.track.id as TrackId}>{course.track.data.title}</Badge>
-              <p class="mt-2 font-display text-title font-semibold text-ink">{mod.data.title}</p>
+              <p class="mt-2 font-display text-title font-bold text-ink">{mod.data.title}</p>
               <p class="text-small text-ink-soft">{steps} steps</p>
             </div>
             <a href={`/present/${course.track.id}/${moduleSlug(mod)}`} class={buttonVariants()}><Presentation aria-hidden="true" />Present<span class="sr-only"> {mod.data.title}</span></a>

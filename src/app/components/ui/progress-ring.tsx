@@ -2,17 +2,17 @@ import { cn } from "./utils";
 
 type Track = "aware" | "literate" | "fluent" | "brand";
 
-// Strokes use the text-safe "-ink" shades so the ring meets 3:1 on light surfaces.
-const STROKE: Record<Track, string> = {
-  aware: "var(--track-aware-ink)",
-  literate: "var(--track-literate-ink)",
-  fluent: "var(--track-fluent-ink)",
+// Fills use the course colors (the Hull's bars); the empty part is a 3:1 gray so the meter reads on white.
+const FILL: Record<Track, string> = {
+  aware: "var(--track-aware)",
+  literate: "var(--track-literate)",
+  fluent: "var(--track-fluent)",
   brand: "var(--accent-strong)",
 };
 const SIZE = {
-  sm: { px: 40, stroke: 4, text: "text-[0.75rem]" },
-  md: { px: 64, stroke: 6, text: "text-small" },
-  lg: { px: 96, stroke: 8, text: "text-ui" },
+  sm: { px: 40, bar: 6, text: "text-[0.75rem]" },
+  md: { px: 64, bar: 8, text: "text-small" },
+  lg: { px: 96, bar: 12, text: "text-ui" },
 } as const;
 
 type Props = {
@@ -26,13 +26,15 @@ type Props = {
   className?: string;
 };
 
-/** Circular progress for course headers and module rows (brief section 3). */
+/**
+ * Progress for course headers and module rows (brief section 3). Square, like everything else: an ink
+ * frame with the count inside and a bar along the bottom that fills in the course color.
+ * (Still called a ring for its callers; it was a circle before the October 2026 redesign.)
+ */
 export function ProgressRing({ done, total, label, track = "brand", size = "md", showValue = true, className }: Props) {
   const clamped = Math.max(0, Math.min(done, total));
   const pct = total > 0 ? clamped / total : 0;
-  const { px, stroke, text } = SIZE[size];
-  const r = (px - stroke) / 2;
-  const c = 2 * Math.PI * r;
+  const { px, bar, text } = SIZE[size];
   return (
     <div
       role="progressbar"
@@ -41,29 +43,15 @@ export function ProgressRing({ done, total, label, track = "brand", size = "md",
       aria-valuemax={total}
       aria-valuenow={clamped}
       aria-valuetext={`${clamped} of ${total} complete`}
-      className={cn("relative inline-grid shrink-0 place-items-center", className)}
+      className={cn("relative inline-flex shrink-0 flex-col border-2 border-ink bg-surface", className)}
       style={{ width: px, height: px }}
     >
-      <svg width={px} height={px} viewBox={`0 0 ${px} ${px}`} aria-hidden="true" className="-rotate-90">
-        <circle cx={px / 2} cy={px / 2} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={stroke} />
-        <circle
-          cx={px / 2}
-          cy={px / 2}
-          r={r}
-          fill="none"
-          stroke={STROKE[track]}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - pct)}
-          className="transition-[stroke-dashoffset] duration-[var(--dur-slow)] ease-out"
-        />
-      </svg>
-      {showValue && (
-        <span aria-hidden="true" className={cn("absolute font-bold tabular-nums text-ink", text)}>
-          {clamped}/{total}
-        </span>
-      )}
+      <span aria-hidden="true" className={cn("grid flex-1 place-items-center font-display font-bold tabular-nums text-ink", text)}>
+        {showValue ? `${clamped}/${total}` : ""}
+      </span>
+      <span aria-hidden="true" className="block border-t-2 border-ink bg-line-strong/40" style={{ height: bar }}>
+        <span className="block h-full transition-[width] duration-[var(--dur-slow)] ease-out" style={{ width: `${pct * 100}%`, background: FILL[track] }} />
+      </span>
     </div>
   );
 }

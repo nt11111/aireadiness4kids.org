@@ -3,6 +3,7 @@ title: "AI Literate"
 grades: "6-8"
 color: track-literate
 tagline: "Critical Thinking & Ethics"
+hook: "How AI learns, and where it gets unfair."
 summary: "The AI Literate course goes deeper: how does AI actually work, what are its real-world consequences, and what does responsible use look like in school and daily life?"
 order: 2
 outcomes:

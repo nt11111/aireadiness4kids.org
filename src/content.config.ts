@@ -15,6 +15,8 @@ const tracks = defineCollection({
     grades: z.string().regex(/^(K|\d{1,2})-\d{1,2}$/, 'Use a grade range like "K-5" or "9-12"'),
     color: z.enum(["track-aware", "track-literate", "track-fluent"]),
     tagline: z.string().min(1),
+    // One plain sentence in the learners' own voice, for the home page's course list.
+    hook: z.string().min(1).max(80).optional(),
     summary: z.string().min(1),
     order: z.number().int().positive(),
     // "What you'll learn" on the course page (brief section 7: 4-6 bullets).

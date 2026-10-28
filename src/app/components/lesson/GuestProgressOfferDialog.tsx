@@ -44,7 +44,7 @@ export function Offer() {
   return (
     <Dialog open={offer && !closed} onOpenChange={later}>
       <DialogContent className="max-w-[min(28rem,calc(100%-2rem))] gap-0 p-6 sm:max-w-md sm:p-8">
-        <DialogTitle className="pr-10 font-display text-display-sm font-semibold text-ink">Progress found on this device</DialogTitle>
+        <DialogTitle className="pr-10 font-display text-display-sm font-bold text-ink">Progress found on this device</DialogTitle>
         <DialogDescription className="mt-2 text-ui text-ink-soft">
           We found progress on this device from before you signed in. Add it to {into}?
         </DialogDescription>

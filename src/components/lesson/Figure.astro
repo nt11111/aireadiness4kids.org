@@ -15,7 +15,7 @@ if (!pending && !src) throw new Error(`<Figure alt="${alt}">: add src="...", or 
   <figure class="lesson-block mx-auto" data-figure-pending>
     <div class="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-line-strong bg-surface-2 px-5 py-8 text-center sm:px-8 sm:py-10">
       <ImageIcon aria-hidden="true" className="size-8 text-ink-soft" />
-      <p class="text-small font-bold uppercase tracking-[0.1em] text-ink-soft">Picture coming soon</p>
+      <p class="font-display text-small font-bold text-ink-soft">Picture coming soon</p>
       <p class="max-w-[48ch] text-ui text-ink">{alt}</p>
     </div>
     {caption && <figcaption class="mt-2 text-small text-ink-soft">{caption}</figcaption>}

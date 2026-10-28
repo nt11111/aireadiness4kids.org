@@ -58,7 +58,7 @@ export function CourseStart({ modules, trackId, variant }: { modules: ModuleLite
         {done > 0 ? "Resume" : "Start course"} <ArrowRight aria-hidden="true" />
       </a>
       {done > 0 && total > 0 && (
-        <div className="flex items-center gap-3 rounded-full bg-surface py-1.5 pl-1.5 pr-5 text-ink shadow-1">
+        <div className="flex items-center gap-3 text-ink">
           <ProgressRing done={done} total={total} label="Your progress in this course" track={trackId} size="sm" showValue={false} />
           <p className="text-small font-bold">
             {done} of {total} lesson steps done{finished > 0 ? ` · ${finished} ${finished === 1 ? "module" : "modules"} finished` : ""}
@@ -94,13 +94,13 @@ export function ContinueCard({ modules }: { modules: ModuleLite[] }) {
   const n = mod.steps.indexOf(step) + 1;
   return (
     <section aria-labelledby="continue-h" className="px-4 pb-12 sm:px-6">
-      <div className="mx-auto flex max-w-site flex-col gap-5 rounded-xl border border-line bg-surface p-6 shadow-1 sm:flex-row sm:items-center sm:p-8">
+      <div className="mx-auto flex max-w-site flex-col gap-5 border-2 border-ink bg-surface p-5 sm:flex-row sm:items-center sm:p-6">
         <ProgressRing done={done} total={mod.steps.length} label={`${mod.title}: your progress`} track={mod.track as TrackId} />
         <div className="min-w-0 flex-1">
-          <h2 id="continue-h" className="font-sans text-small font-bold uppercase tracking-[0.12em] text-ink-soft">
+          <h2 id="continue-h" className="font-display text-small font-bold text-ink-soft">
             Continue where you left off{state.learner && state.accountType === "parent" ? ` · ${state.learner.nickname}` : ""}
           </h2>
-          <p className="mt-1 font-display text-title font-semibold text-ink">{mod.title}</p>
+          <p className="mt-1 font-display text-title font-bold text-ink">{mod.title}</p>
           <p className="mt-1 text-ui text-ink-soft">
             {mod.trackTitle ? `${mod.trackTitle} · ` : ""}Step {n} of {mod.steps.length}{step.title ? `: ${step.title}` : ""}
           </p>

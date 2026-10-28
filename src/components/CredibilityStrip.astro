@@ -12,7 +12,7 @@ const heading = reviewers.length && partners.length ? "Reviewed and supported by
 {(reviewers.length > 0 || partners.length > 0) && (
   <section aria-labelledby="credibility-h" data-credibility class="border-y border-line bg-surface px-4 py-12 sm:px-6">
     <div class="mx-auto max-w-site text-center">
-      <h2 id="credibility-h" class="font-sans text-eyebrow font-bold uppercase tracking-[0.14em] text-ink-soft">{heading}</h2>
+      <h2 id="credibility-h" class="font-display text-eyebrow font-bold text-ink-soft">{heading}</h2>
       {reviewers.length > 0 && (
         <ul class="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
           {reviewers.map((r) => (
@@ -28,7 +28,7 @@ const heading = reviewers.length && partners.length ? "Reviewed and supported by
           {partners.map((p) => {
             const mark = p.logo
               ? <img src={p.logo} alt={p.name} class="h-10 w-auto max-w-[180px] object-contain" loading="lazy" />
-              : <span class="font-display text-title font-semibold text-ink">{p.name}</span>;
+              : <span class="font-display text-title font-bold text-ink">{p.name}</span>;
             return <li>{p.url ? <a href={p.url} class="block rounded-sm">{mark}</a> : mark}</li>;
           })}
         </ul>
