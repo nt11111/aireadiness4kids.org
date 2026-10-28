@@ -23,7 +23,7 @@ const modIndex = course ? course.modules.findIndex((m) => moduleSlug(m) === Astr
 const mod = course?.modules[modIndex];
 const steps = course && mod ? getModuleSteps(course, mod) : [];
 // Stub modules have no steps, so there is nothing to finish yet.
-if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // src/middleware.ts fills in the 404 page
 
 const here = Astro.url.pathname;
 const user = Astro.locals.user;

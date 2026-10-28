@@ -15,7 +15,12 @@ const course = courses.find((c) => c.track.id === Astro.params.track);
 const mod = course?.modules.find((m) => moduleSlug(m) === Astro.params.module);
 const steps = course && mod ? getModuleSteps(course, mod) : [];
 const index = steps.findIndex((s) => s.slug === Astro.params.step);
-if (!course || !mod || index < 0) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+// Step files are named "02-how-ai-learns.mdx", so people guess or share that as the URL: send them to the real one.
+const unnumbered = Astro.params.step?.replace(/^\d{2}-/, "");
+if (index < 0 && unnumbered !== Astro.params.step && steps.some((s) => s.slug === unnumbered)) {
+  return Astro.redirect(`${moduleHref(mod!)}/${unnumbered}`, 301);
+}
+if (!course || !mod || index < 0) return new Response(null, { status: 404 }); // src/middleware.ts fills in the 404 page
 
 const signedIn = Boolean(Astro.locals.user);
 // Defense in depth: the middleware already redirected signed-out requests for steps 2+.

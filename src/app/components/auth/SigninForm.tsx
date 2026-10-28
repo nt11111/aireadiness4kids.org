@@ -4,7 +4,8 @@ import { firebaseConfigured } from "../../../lib/firebase-client";
 import { safeNext } from "../../../lib/safe-next";
 import { authErrorMessage, resumeRedirect, sendVerification, signInWithEmail, signInWithGoogle, startSession } from "../../auth/firebase-auth";
 import { apiErrorMessage } from "../../auth/api";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import { cn } from "../ui/utils";
 import { Divider, Field, GoogleButton, Notice, SubmitButton } from "./Field";
 
 type Message = { kind: "error" | "info" | "success"; text: string; action?: "resend" | "signup" } | null;
@@ -13,6 +14,8 @@ type Message = { kind: "error" | "info" | "success"; text: string; action?: "res
 export function SigninForm() {
   const [next, setNext] = useState("/my-learning");
   const [banner, setBanner] = useState<string | null>(null);
+  // Sent here from a lesson step (the soft gate): most of these visitors are new, not returning.
+  const [fromLesson, setFromLesson] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState<"google" | "email" | null>(null);
@@ -25,6 +28,7 @@ export function SigninForm() {
     setNext(safeNext(params.get("next")));
     if (params.get("verified")) setBanner("Your email is confirmed. Sign in to continue.");
     else if (params.get("reauth")) setBanner("For your security, please sign in again.");
+    else if (safeNext(params.get("next")).startsWith("/courses/")) setFromLesson(true);
     if (!firebaseConfigured) return;
     resumeRedirect()
       .then((r) => r && finish(r.user))
@@ -98,6 +102,13 @@ export function SigninForm() {
   return (
     <div className="grid gap-5">
       {banner && <Notice kind="success">{banner}</Notice>}
+      {fromLesson && (
+        <Notice>
+          <p className="font-bold">New to ARK? Make a free account to keep going.</p>
+          <p className="mt-1">We save your place in the lesson. Kids under 13: ask a grown-up to make the account.</p>
+          <a href={signupHref} className={cn(buttonVariants({ size: "lg" }), "mt-3 w-full")}>Create a free account</a>
+        </Notice>
+      )}
       {message && (
         <div ref={messageRef} tabIndex={-1} className="focus:outline-none">
           <Notice kind={message.kind}>

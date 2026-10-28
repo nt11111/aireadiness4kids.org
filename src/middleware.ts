@@ -13,6 +13,21 @@ function forbidden(context: Parameters<Parameters<typeof defineMiddleware>[0]>[0
   return context.rewrite(new Request(new URL("/forbidden", context.url), { headers: context.request.headers }));
 }
 
+/**
+ * Server pages answer an unknown id with an empty 404 (`Astro.rewrite("/404")` can't reach the
+ * prerendered 404 page), and the Netlify adapter sends that empty body as-is: a blank white page.
+ * Fill in the prerendered page's HTML so a broken link always lands somewhere with a way back.
+ */
+async function notFoundPage(url: URL): Promise<Response> {
+  try {
+    const page = await fetch(new URL("/404.html", url));
+    if (page.ok) return new Response(page.body, { status: 404, headers: { "Content-Type": "text/html; charset=utf-8" } });
+  } catch {
+    // Fall through to the plain-text answer.
+  }
+  return new Response("Page not found. Go to https://aireadiness4kids.org/courses to find a lesson.", { status: 404, headers: { "Content-Type": "text/plain; charset=utf-8" } });
+}
+
 export const onRequest = defineMiddleware(async (context, next) => {
   if (context.isPrerendered) return next();
 
@@ -33,6 +48,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     response = await forbidden(context);
   } else {
     response = await next();
+  }
+  if (response.status === 404 && !url.pathname.startsWith("/api/") && !(response.headers.get("Content-Type") ?? "").includes("text/html")) {
+    response = await notFoundPage(url);
   }
 
   // Responses can't be modified after the fact on every runtime, so copy into a new one.

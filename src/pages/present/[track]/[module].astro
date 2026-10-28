@@ -23,7 +23,7 @@ const courses = await getCourses();
 const course = courses.find((c) => c.track.id === Astro.params.track);
 const mod = course?.modules.find((m) => moduleSlug(m) === Astro.params.module);
 const steps = course && mod ? getModuleSteps(course, mod) : [];
-if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+if (!course || !mod || !steps.length) return new Response(null, { status: 404 }); // src/middleware.ts fills in the 404 page
 
 // The workshop tag goes into every QR code. Same format the rest of the site accepts (guest.ts).
 const rawSrc = (Astro.url.searchParams.get("src") ?? "").trim().toLowerCase();

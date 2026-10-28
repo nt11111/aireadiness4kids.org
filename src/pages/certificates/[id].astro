@@ -16,7 +16,7 @@ if (!user) return Astro.redirect(`/signin?next=${encodeURIComponent(Astro.url.pa
 const cert = await ownCertificate(user.uid, Astro.params.id ?? "");
 const course = cert ? (await getCourses()).find((c) => c.modules.some((m) => m.id === cert.moduleId)) : undefined;
 const mod = course?.modules.find((m) => m.id === cert?.moduleId);
-if (!cert || !course || !mod) return new Response(null, { status: 404 }); // Astro answers with the (prerendered) 404 page
+if (!cert || !course || !mod) return new Response(null, { status: 404 }); // src/middleware.ts fills in the 404 page
 
 const date = certificateDate(cert.issuedAt);
 const verifyUrl = cert.public ? new URL(`/verify/${cert.id}`, Astro.site) : null;
