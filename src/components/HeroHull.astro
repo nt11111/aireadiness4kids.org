@@ -1,27 +1,35 @@
 ---
-// The home page's picture: the Hull logo drawn large, sailing on straight-line water. Code-drawn, no
-// image file. The bars slide in once on load, the flag moves a little, and the water drifts slowly;
-// all of it stops for people who ask for reduced motion (theme.css turns animations off).
+// The home page's picture: the Hull logo drawn large, floating on a line of water. Code-drawn, no image
+// file. The boat bobs and the water flows without stopping; the bars also slide in once on load. A white
+// band under the waterline hides the bottom of the hull, so it sits in the water as it rises and dips.
+// Reduced motion stops all of it (theme.css turns animations off).
 interface Props { class?: string }
 const { class: className } = Astro.props;
 ---
 
 <svg viewBox="0 0 480 440" class:list={["hero-hull block h-auto w-full", className]} aria-hidden="true" focusable="false">
-  <g class="hh-flag">
-    <path d="M247 34 L338 72 L247 110 Z" fill="var(--ink)" />
+  <g class="hh-boat">
+    <g class="hh-flag">
+      <path d="M247 54 L338 92 L247 130 Z" fill="var(--ink)" />
+    </g>
+    <rect x="233" y="44" width="14" height="190" fill="var(--ink)" />
+    <rect class="hh-bar" style="--d: 0ms" x="10" y="234" width="460" height="46" fill="var(--track-fluent)" />
+    <rect class="hh-bar" style="--d: 110ms" x="62" y="292" width="356" height="46" fill="var(--track-literate)" />
+    <rect class="hh-bar" style="--d: 220ms" x="114" y="350" width="252" height="46" fill="var(--track-aware)" />
   </g>
-  <rect x="233" y="24" width="14" height="190" fill="var(--ink)" />
-  <rect class="hh-bar" style="--d: 0ms" x="10" y="214" width="460" height="46" fill="var(--track-fluent)" />
-  <rect class="hh-bar" style="--d: 110ms" x="62" y="272" width="356" height="46" fill="var(--track-literate)" />
-  <rect class="hh-bar" style="--d: 220ms" x="114" y="330" width="252" height="46" fill="var(--track-aware)" />
-  <g class="hh-water" stroke="var(--ink)" stroke-width="3">
-    <path d="M0 398 H120 M152 398 H318 M350 398 H480" />
-    <path d="M36 416 H206 M238 416 H404" stroke="var(--line-strong)" />
-    <path d="M96 434 H178 M210 434 H300 M332 434 H380" stroke="var(--line)" />
-  </g>
+  <rect x="0" y="378" width="480" height="62" fill="var(--surface)" />
+  <path class="hh-wave" d="M-120 378 H600" stroke="var(--ink)" stroke-width="4" stroke-dasharray="92 28" />
+  <path class="hh-wave hh-wave-2" d="M-120 400 H600" stroke="var(--line-strong)" stroke-width="3" stroke-dasharray="56 40" />
+  <path class="hh-wave hh-wave-3" d="M-120 420 H600" stroke="var(--line)" stroke-width="3" stroke-dasharray="34 46" />
 </svg>
 
 <style>
+  /* Bobbing: up and down with a slight rock, pivoting where the hull meets the water. */
+  .hh-boat {
+    transform-box: view-box;
+    transform-origin: 240px 378px;
+    animation: hh-bob 3.6s ease-in-out infinite;
+  }
   /* Position only, never opacity: if the animation is paused or skipped, the bars still show. */
   .hh-bar {
     animation: hh-in 560ms var(--ease-out) var(--d) backwards;
@@ -29,10 +37,17 @@ const { class: className } = Astro.props;
   .hh-flag {
     transform-box: fill-box;
     transform-origin: left center;
-    animation: hh-flag 2.6s ease-in-out 600ms infinite alternate;
+    animation: hh-flag 1.8s ease-in-out infinite alternate;
   }
-  .hh-water {
-    animation: hh-drift 7s ease-in-out infinite alternate;
+  /* The water flows left forever: each line's dashes shift by exactly one dash-and-gap, so the loop has no seam. */
+  .hh-wave { animation: hh-flow-120 2.4s linear infinite; }
+  .hh-wave-2 { animation: hh-flow-96 3.4s linear infinite reverse; }
+  .hh-wave-3 { animation: hh-flow-80 4.6s linear infinite; }
+  @keyframes hh-bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-6px) rotate(-1.2deg); }
+    50% { transform: translateY(-10px) rotate(0deg); }
+    75% { transform: translateY(-5px) rotate(1.2deg); }
   }
   @keyframes hh-in {
     from { transform: translateX(56px); }
@@ -40,10 +55,9 @@ const { class: className } = Astro.props;
   }
   @keyframes hh-flag {
     from { transform: skewY(0deg) scaleX(1); }
-    to { transform: skewY(-5deg) scaleX(0.94); }
+    to { transform: skewY(-6deg) scaleX(0.92); }
   }
-  @keyframes hh-drift {
-    from { transform: translateX(-10px); }
-    to { transform: translateX(10px); }
-  }
+  @keyframes hh-flow-120 { to { stroke-dashoffset: 120; } }
+  @keyframes hh-flow-96 { to { stroke-dashoffset: 96; } }
+  @keyframes hh-flow-80 { to { stroke-dashoffset: 80; } }
 </style>
