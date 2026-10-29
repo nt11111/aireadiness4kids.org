@@ -56,7 +56,7 @@ const day = (iso: string) => (iso ? new Date(iso).toLocaleDateString("en-US", { 
 const who = parent ? learner?.nickname : null;
 ---
 
-<BaseLayout title="My learning | ARK · AI Readiness for Kids" noindex>
+<BaseLayout title="My learning | ARK · AI Readiness Kollective" noindex>
   <div class="px-4 pb-20 pt-28 sm:px-6 lg:pt-36" data-server-progress>
     <div class="mx-auto max-w-site">
       <h1 class="text-display-lg text-ink">{who ? `${who}'s learning` : `Hi, ${profile.displayName}`}</h1>
@@ -76,7 +76,7 @@ const who = parent ? learner?.nickname : null;
                 <ProgressRing done={r.done} total={r.total} label={`${r.title}: steps done`} track={r.track} />
                 <div class="min-w-0 flex-1">
                   <p class="text-small font-bold text-ink-soft">{r.trackTitle}</p>
-                  <h3 class="mt-0.5 font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
+                  <h3 class="mt-0.5 font-display text-title font-bold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
                   <p class="mt-1 text-small text-ink-soft">{r.done} of {r.total} steps done · Next: step {r.next!.n}, {r.next!.title}</p>
                 </div>
                 <a href={r.next!.href} class={cn(buttonVariants(), "self-start sm:self-center")}>Continue<span class="sr-only"> {r.title}</span> <ArrowRight aria-hidden="true" /></a>
@@ -99,7 +99,7 @@ const who = parent ? learner?.nickname : null;
               <li class="flex flex-wrap items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1">
                 <CircleCheck aria-hidden="true" className="size-8 shrink-0 text-success" />
                 <div class="min-w-0 flex-1">
-                  <h3 class="font-display text-title font-semibold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
+                  <h3 class="font-display text-title font-bold text-ink"><a href={r.href} class="rounded-sm underline decoration-line-strong decoration-1 underline-offset-4 hover:text-brand hover:decoration-brand">{r.title}</a></h3>
                   <p class="text-small text-ink-soft">{r.trackTitle}{r.at && ` · Finished ${day(r.at)}`}</p>
                 </div>
                 {certificates.has(r.id) ? (

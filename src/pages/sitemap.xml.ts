@@ -8,7 +8,7 @@ import { getCourses, getModuleSteps, moduleHref, moduleSlug, trackHref } from ".
 import { getCollection } from "astro:content";
 export const prerender = true;
 
-const PAGES = ["/", "/courses", "/educators", "/workshops", "/about", "/get-involved", "/donate", "/contact", "/privacy", "/terms", "/accessibility", "/signup", "/signin"];
+const PAGES = ["/", "/courses", "/parents", "/educators", "/workshops", "/about", "/get-involved", "/donate", "/contact", "/privacy", "/terms", "/accessibility", "/signup", "/signin"];
 
 export const GET: APIRoute = async ({ site }) => {
   const [courses, guides] = await Promise.all([getCourses(), getCollection("guides")]);

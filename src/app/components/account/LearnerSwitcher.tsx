@@ -29,7 +29,7 @@ export function LearnerSwitcher({ learners, activeId }: { learners: Learner[]; a
 
   return (
     <div role="group" aria-labelledby="switcher-h" className="rounded-xl border border-line bg-surface p-5 shadow-1 sm:w-fit sm:min-w-[20rem] sm:p-6">
-      <h2 id="switcher-h" className="font-sans text-small font-bold uppercase tracking-[0.12em] text-ink-soft">Who's learning?</h2>
+      <h2 id="switcher-h" className="font-display text-small font-bold text-ink-soft">Who's learning?</h2>
       <ul className="mt-3 flex flex-wrap gap-2">
         {learners.map((l) => {
           const active = l.id === activeId;

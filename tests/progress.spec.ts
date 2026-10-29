@@ -30,6 +30,7 @@ async function learnerAccount(src?: string): Promise<Account & { learnerId: stri
 
 const progressDoc = (uid: string, learnerId: string) => adminDb.doc(`users/${uid}/learners/${learnerId}/progress/${DOC}`);
 const bySrc = async (src: string) => (await adminDb.doc(`stats/bySrc_${src}`).get()).data() ?? {};
+const GATE = "Save your place to keep going.";
 const stepsIn = async (uid: string, learnerId: string) => Object.keys((await progressDoc(uid, learnerId).get()).get("steps") ?? {}).sort();
 
 test.describe("progress API", () => {
@@ -155,7 +156,7 @@ async function next(page: Page, title: string) {
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
 }
 
-test("a guest does step 1 and the pre-check, signs up, and both carry over (with the ?src= tag)", async ({ page }) => {
+test("a guest does the open steps and the pre-check, signs up, and both carry over (with the ?src= tag)", async ({ page }) => {
   const src = newSrc();
   await page.goto(`${BIAS_MODULE}?src=${src}`);
   // The tag is kept, then removed from the address bar.
@@ -172,11 +173,17 @@ test("a guest does step 1 and the pre-check, signs up, and both carry over (with
   await expect(page.getByRole("heading", { level: 1, name: "What is bias?" })).toBeVisible();
   await hydrated(page);
   await page.locator("[data-lesson-next]").click();
-  await expect(page.getByRole("dialog", { name: "Keep going for free" })).toBeVisible();
+  // Steps 1 to 3 are open, so Next goes on to step 2; the sign-up panel waits at the end of step 3.
+  await expect(page.getByRole("heading", { level: 1, name: "Where does bias come from?" })).toBeVisible();
+  await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[2]}`);
+  await hydrated(page);
+  await page.locator("[data-lesson-next]").click();
+  await expect(page.getByRole("dialog", { name: GATE })).toBeVisible();
   const guest = await page.evaluate(() => JSON.parse(localStorage.getItem("ark.guest.v1") ?? "null"));
-  expect(guest).toMatchObject({ v: 1, src, steps: { [MOD]: [BIAS_STEPS[0]] }, pre: { [MOD]: { score: 2, total: 3 } } });
+  expect(guest).toMatchObject({ v: 1, src, pre: { [MOD]: { score: 2, total: 3 } } });
+  expect([...guest.steps[MOD]].sort()).toEqual([BIAS_STEPS[0], BIAS_STEPS[2]].sort());
 
-  await page.getByRole("link", { name: "Sign up with email" }).click();
+  await page.getByRole("link", { name: "Make a free account" }).click();
   await chooseBirth(page, 16, 2);
   const email = `guest-${unique()}@example.test`;
   await page.getByLabel("What should we call you?").fill("Jules");
@@ -184,15 +191,15 @@ test("a guest does step 1 and the pre-check, signs up, and both carry over (with
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
-  const step2 = `${BIAS_MODULE}/${BIAS_STEPS[1]}`;
-  await confirmEmail(page, email, step2);
+  const step4 = `${BIAS_MODULE}/${BIAS_STEPS[3]}`;
+  await confirmEmail(page, email, step4);
   await signInWithForm(page, email);
-  await expect(page).toHaveURL(step2);
+  await expect(page).toHaveURL(step4);
 
-  // The step-2 page loads progress, merges the guest key into the new account, then clears it.
+  // The step-4 page loads progress, merges the guest key into the new account, then clears it.
   const uid = (await adminAuth.getUserByEmail(email)).uid;
   const learnerId = (await adminDb.collection(`users/${uid}/learners`).get()).docs[0].id;
-  await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0]]);
+  await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0], BIAS_STEPS[2]].sort());
   // The merge writes the steps, then the pre-check: wait for both.
   await expect.poll(async () => (await progressDoc(uid, learnerId).get()).get("pre")).toMatchObject({ score: 2, outOf: 3 });
   await expect.poll(() => page.evaluate(() => localStorage.getItem("ark.guest.v1"))).toBeNull();
@@ -201,7 +208,7 @@ test("a guest does step 1 and the pre-check, signs up, and both carry over (with
   expect((await adminDb.doc(`users/${uid}`).get()).get("firstSrc")).toBe(src);
   expect(await bySrc(src)).toMatchObject({ accounts_13to17: 1, learners: 1, moduleStarts: 1, preCount: 1 });
 
-  await expect(await stepsDone(page)).toHaveText("1 of 6 steps done.");
+  await expect(await stepsDone(page)).toHaveText("2 of 6 steps done.");
   await page.screenshot({ path: `screenshots/${PHASE}/progress/guest-merged-module.png`, fullPage: true });
 });
 
@@ -348,11 +355,11 @@ test("\"No thanks\" deletes this device's copy and adds nothing", async ({ page,
 });
 
 test("confirming the email on another device still brings this device's progress in, without asking", async ({ page, browser }) => {
-  // This device: step 1 as a guest, then sign up from the gate panel.
-  await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[0]}`);
+  // This device: step 3 as a guest, then sign up from the gate panel.
+  await page.goto(`${BIAS_MODULE}/${BIAS_STEPS[2]}`);
   await hydrated(page);
   await page.locator("[data-lesson-next]").click();
-  await page.getByRole("dialog", { name: "Keep going for free" }).getByRole("link", { name: "Sign up with email" }).click();
+  await page.getByRole("dialog", { name: GATE }).getByRole("link", { name: "Make a free account" }).click();
   await chooseBirth(page, 17, 4);
   const email = `x-${unique()}@example.test`;
   await page.getByLabel("What should we call you?").fill("Cam");
@@ -363,19 +370,19 @@ test("confirming the email on another device still brings this device's progress
 
   // Another device (say, a phone) opens the email link and signs in. It has no guest progress.
   const phone = await (await browser.newContext({ baseURL: BASE, reducedMotion: "reduce" })).newPage();
-  const step2 = `${BIAS_MODULE}/${BIAS_STEPS[1]}`;
-  await confirmEmail(phone, email, step2);
+  const step4 = `${BIAS_MODULE}/${BIAS_STEPS[3]}`;
+  await confirmEmail(phone, email, step4);
   await signInWithForm(phone, email);
-  await expect(phone).toHaveURL(step2);
+  await expect(phone).toHaveURL(step4);
   const uid = (await adminAuth.getUserByEmail(email)).uid;
   const learnerId = await selfLearner(uid);
   await phone.context().close();
 
-  // Back on this device: signing in adds step 1 straight away, because this account was made here.
+  // Back on this device: signing in adds step 3 straight away, because this account was made here.
   await page.goto(`/signin?next=${encodeURIComponent(BIAS_MODULE)}`);
   await signInWithForm(page, email);
   await expect(page).toHaveURL((u) => u.pathname === BIAS_MODULE);
-  await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[0]]);
+  await expect.poll(() => stepsIn(uid, learnerId)).toEqual([BIAS_STEPS[2]]);
   await expect.poll(() => guestKey(page)).toBeNull();
   await expect(page.getByRole("dialog", { name: OFFER })).toHaveCount(0);
 });

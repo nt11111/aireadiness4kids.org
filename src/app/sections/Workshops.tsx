@@ -42,7 +42,7 @@ export default function Workshops({ tracks }: { tracks: TrackSummary[] }) {
           {formats.map((f) => (
             <li key={f.t}>
               <Card className="h-full">
-                <p className="flex items-center gap-2 text-small font-bold uppercase tracking-[0.14em] text-brand"><Clock aria-hidden="true" className="size-4" />{f.time}</p>
+                <p className="flex items-center gap-2 font-display text-small font-bold text-brand"><Clock aria-hidden="true" className="size-4" />{f.time}</p>
                 <CardTitle className="mt-2 !text-display-sm">{f.t}</CardTitle>
                 <p className="mt-3 text-ui text-ink-soft">{f.d}</p>
               </Card>
@@ -71,7 +71,7 @@ export default function Workshops({ tracks }: { tracks: TrackSummary[] }) {
                     <span aria-hidden="true" className={cn("w-2 self-stretch", s.bar)} />
                     <span className="min-w-0 flex-1 py-5">
                       <span className={cn("block text-small font-bold", s.ink)}>Grades {t.grades} · {t.modules} modules</span>
-                      <span className="mt-0.5 block font-display text-display-sm font-semibold text-ink">{t.title}</span>
+                      <span className="mt-0.5 block font-display text-display-sm font-bold text-ink">{t.title}</span>
                     </span>
                     <ArrowRight aria-hidden="true" className="mr-5 size-5 shrink-0 text-ink-soft transition-transform duration-[var(--dur)] group-hover:translate-x-0.5" />
                   </a>
@@ -90,7 +90,7 @@ export default function Workshops({ tracks }: { tracks: TrackSummary[] }) {
             <li key={id} id={id}>
               <Card className="h-full">
                 <IconBox><Icon aria-hidden="true" /></IconBox>
-                <p className="text-small font-bold uppercase tracking-[0.14em] text-brand">{tag}</p>
+                <p className="font-display text-small font-bold text-brand">{tag}</p>
                 <CardTitle className="mt-1 !text-display-sm">{t}</CardTitle>
                 <p className="mt-3 text-ui text-ink-soft">{d}</p>
               </Card>

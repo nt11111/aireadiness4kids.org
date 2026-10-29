@@ -67,7 +67,7 @@ export function ContactPanel() {
         <Card>
           <Eyebrow className="flex items-center gap-2"><Mail aria-hidden="true" className="size-4" />Email</Eyebrow>
           {/* Let a long address wrap after the @, never mid-word. */}
-          <a href={`mailto:${ORG.email}`} className="mt-2 block break-words rounded-sm font-display text-title font-semibold text-ink underline decoration-brand/50 decoration-2 underline-offset-4 hover:text-brand hover:decoration-brand">{ORG.email.split("@")[0]}@<wbr />{ORG.email.split("@")[1]}</a>
+          <a href={`mailto:${ORG.email}`} className="mt-2 block break-words rounded-sm font-display text-title font-bold text-ink underline decoration-brand/50 decoration-2 underline-offset-4 hover:text-brand hover:decoration-brand">{ORG.email.split("@")[0]}@<wbr />{ORG.email.split("@")[1]}</a>
         </Card>
         <div id="newsletter" className="rounded-xl bg-brand-soft p-6 sm:p-8">
           <Eyebrow>Mailing list</Eyebrow>

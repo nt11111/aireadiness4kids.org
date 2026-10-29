@@ -111,7 +111,7 @@ test.describe("(a) user A can't read or write user B's data through any API rout
 });
 
 test.describe("(c) signed-out requests to gated routes get a redirect, not content", () => {
-  const gated = [...BIAS_STEPS.slice(1).map((s) => `${BIAS_MODULE}/${s}`), "/my-learning", "/account", "/admin", "/present/literate/bias-in-ai"];
+  const gated = [...BIAS_STEPS.slice(3).map((s) => `${BIAS_MODULE}/${s}`), "/my-learning", "/account", "/admin", "/present/literate/bias-in-ai"];
 
   for (const path of gated) {
     test(`GET ${path}`, async () => {
@@ -123,10 +123,11 @@ test.describe("(c) signed-out requests to gated routes get a redirect, not conte
     });
   }
 
-  test("step 1 stays open", async () => {
+  test("the first three steps stay open", async () => {
     const res = await call(`${BIAS_MODULE}/${BIAS_STEPS[0]}`, { method: "GET" });
     expect(res.status).toBe(200);
     expect(res.text).toContain("Bias, in plain words");
+    for (const slug of BIAS_STEPS.slice(1, 3)) expect((await call(`${BIAS_MODULE}/${slug}`, { method: "GET" })).status, slug).toBe(200);
   });
 
   test("gated APIs answer 401", async () => {
@@ -135,11 +136,11 @@ test.describe("(c) signed-out requests to gated routes get a redirect, not conte
   });
 
   test("path variations can't slip past the gate", async () => {
-    for (const path of ["/account/", "/%61ccount", `${BIAS_MODULE}/${BIAS_STEPS[1]}/`, "/my-learning?x=1"]) {
+    for (const path of ["/account/", "/%61ccount", `${BIAS_MODULE}/${BIAS_STEPS[3]}/`, "/my-learning?x=1"]) {
       const res = await call(path, { method: "GET" });
       expect([302, 404], path).toContain(res.status);
       expect(res.text, path).not.toContain("Your account");
-      expect(res.text, path).not.toContain("Where does bias come from?");
+      expect(res.text, path).not.toContain("Quick check");
     }
   });
 

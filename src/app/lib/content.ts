@@ -4,11 +4,11 @@
 
 export const ORG = {
   name: "ARK",
-  fullName: "AI Readiness for Kids",
+  fullName: "AI Readiness Kollective",
   tagline: "Think. Prompt. Responsibly.",
   email: "contact@aireadiness4kids.org",
   mission:
-    "ARK is a 501(c)(3) nonprofit dedicated to equipping K-12 students with the knowledge, skills, and ethical grounding to use artificial intelligence responsibly, safely, and thoughtfully, for themselves, their communities, and the world.",
+    "ARK is dedicated to equipping K-12 students with the knowledge, skills, and ethical grounding to use artificial intelligence responsibly, safely, and thoughtfully, for themselves, their communities, and the world.",
   vision:
     "A future where every child, no matter their background or zip code, understands the AI tools shaping their world and has the confidence to use them with intention and integrity.",
 };
@@ -22,7 +22,7 @@ export const VALUES = [
 ];
 
 export const ROADMAP = [
-  { phase: "Year 1", title: "Foundation", items: ["File 501(c)(3) and build the core team", "Launch the curriculum across all three tracks", "Deliver workshops in 3 to 5 regional districts", "Secure a founding grant"] },
+  { phase: "Year 1", title: "Foundation", items: ["Build the core team", "Launch the curriculum across all three tracks", "Deliver workshops in 3 to 5 regional districts", "Secure a founding grant"] },
   { phase: "Year 2", title: "Regional scale", items: ["Expand to 10+ districts", "Launch the ambassador program and teacher PD certification", "Host the first annual student summit", "Reach $250K revenue"] },
   { phase: "Year 3", title: "National", items: ["Partner with 3+ states", "National ambassador network", "Full Spanish-language curriculum", "Publish the first research report"] },
   { phase: "Year 5", title: "Model organization", items: ["Curriculum adopted nationwide", "100+ trained ambassadors", "50,000+ students reached annually", "A recognized voice on AI education policy"] },

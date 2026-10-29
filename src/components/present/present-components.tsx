@@ -39,7 +39,7 @@ function Choices({ scenario }: { scenario: ScenarioData }) {
       <p className="font-bold text-ink">{scenario.prompt}</p>
       <ul className="mt-4 grid gap-3">
         {scenario.options.map((o, k) => (
-          <li key={o.id} className="flex gap-3"><span className="font-display font-semibold text-brand">{letter(k)}</span><span>{o.text}</span></li>
+          <li key={o.id} className="flex gap-3"><span className="font-display font-bold text-brand">{letter(k)}</span><span>{o.text}</span></li>
         ))}
       </ul>
     </div>

@@ -75,11 +75,11 @@ const groups: { title: string; rows: Row[] }[] = [
 const need = (tok: string) => (tok.startsWith("line") || tok === "accent-strong" ? 3 : 4.5);
 
 const typeScale = [
-  ["text-display-xl", "Display XL", "56 / 1.05", "font-display font-semibold"],
-  ["text-display-lg", "Display L: page titles", "44 / 1.1", "font-display font-semibold"],
-  ["text-display-md", "Display M: section titles", "34 / 1.15", "font-display font-semibold"],
+  ["text-display-xl", "Display XL", "56 / 1.05", "font-display font-bold"],
+  ["text-display-lg", "Display L: page titles", "44 / 1.1", "font-display font-bold"],
+  ["text-display-md", "Display M: section titles", "34 / 1.15", "font-display font-bold"],
   ["text-display-sm", "Display S: card titles", "26 / 1.2", "font-display font-medium"],
-  ["text-title", "Title", "20 / 1.3", "font-display font-semibold"],
+  ["text-title", "Title", "20 / 1.3", "font-display font-bold"],
   ["text-lesson-aware", "Lesson body, AI Aware (K-5)", "20 / 1.6", "font-sans"],
   ["text-lesson", "Lesson body", "18 / 1.7", "font-sans"],
   ["text-ui", "UI text", "16 / 1.5", "font-sans"],
@@ -98,7 +98,7 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
 <BaseLayout title="Components | ARK design system" noindex>
   <div class="bg-surface-2 border-b border-line pt-32 pb-10 px-6">
     <div class="max-w-site mx-auto">
-      <p class="text-small font-bold uppercase tracking-[0.14em] text-brand">Hidden style guide</p>
+      <p class="font-display text-small font-bold text-brand">Hidden style guide</p>
       <h1 class="text-display-lg mt-2 text-ink">ARK design system</h1>
       <p class="text-lesson text-ink-soft mt-3 max-w-reading">Tokens from <code class="font-mono text-small">src/styles/theme.css</code> (brief section 3), checked for WCAG AA by <code class="font-mono text-small">npm run check:contrast</code>. Card, progress, and lesson content below is sample data for layout only, not lesson material.</p>
       <nav aria-label="Style guide sections" class="mt-6">
@@ -236,7 +236,7 @@ const sections = [["type", "Type"], ["color", "Color"], ["buttons", "Buttons"], 
           <div class="flex items-start gap-4">
             <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-track-literate font-display font-black text-track-literate-on" aria-hidden="true">2</span>
             <div class="min-w-0">
-              <h3 class="font-display text-title font-semibold text-ink">Bias in AI</h3>
+              <h3 class="font-display text-title font-bold text-ink">Bias in AI</h3>
               <p class="text-small text-ink-soft mt-1 flex items-center gap-1.5"><Clock className="size-4" aria-hidden="true" /> 60 min · 6 steps</p>
             </div>
           </div>

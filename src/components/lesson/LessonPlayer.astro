@@ -4,7 +4,7 @@
 import { fade } from "astro:transitions";
 import { X } from "lucide-react";
 import { ARKMark } from "../../app/components/site/Logo";
-import { ReviewBadge, type ReviewStatus } from "../../app/components/site/ReviewBadge";
+import type { ReviewStatus } from "../../app/components/site/ReviewBadge";
 import { LessonOutline } from "../../app/components/lesson/LessonOutline";
 import { LessonNav } from "../../app/components/lesson/LessonNav";
 import { trackStyle } from "../../app/lib/tracks";
@@ -12,7 +12,7 @@ import { cn } from "../../app/components/ui/utils";
 import ReadAloud from "./ReadAloud.astro";
 import Sources from "./Sources.astro";
 import Breadcrumbs from "../Breadcrumbs.astro";
-import { STEP_LABEL, type StepRef } from "../../lib/lesson-types";
+import { OPEN_STEPS, STEP_LABEL, type StepRef } from "../../lib/lesson-types";
 
 interface Props {
   track: { id: string; title: string; href: string };
@@ -21,7 +21,7 @@ interface Props {
   index: number;
   /** Where Next goes from the last step: the module's completion page, unless a preview says otherwise. */
   finishHref?: string;
-  /** Signed-out visitors can do step 1; pressing Next there opens the sign-up panel. */
+  /** Signed-out visitors can do the first OPEN_STEPS steps; pressing Next on the last of them opens the sign-up panel. */
   signedIn?: boolean;
   /** The step's "Sources" list (title and link), shown collapsed at the end of the step. */
   sources?: { title: string; url: string }[];
@@ -31,29 +31,27 @@ const { track, module, steps, index, finishHref = `${Astro.props.module.href}/co
 const step = steps[index];
 const aware = track.id === "aware";
 const s = trackStyle(track.id);
-const pct = Math.round(((index + 1) / steps.length) * 100);
 const prevHref = index === 0 ? module.href : steps[index - 1].href;
 const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href;
 ---
 
 <div data-lesson-root data-track={track.id} class={cn("lesson", aware && "lesson-aware")}>
-  <header class="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur" transition:name="lesson-top" transition:animate="none">
+  <header class="sticky top-0 z-40 border-b border-ink bg-surface" transition:name="lesson-top" transition:animate="none">
     <div class="flex h-14 items-center gap-3 px-3 sm:px-4">
-      <a href="/" class="grid size-11 shrink-0 place-items-center rounded-full" aria-label="ARK home">
-        <ARKMark size={30} decorative />
+      <a href="/" class="grid size-11 shrink-0 place-items-center" aria-label="ARK home">
+        <ARKMark size={32} small decorative />
       </a>
       <!-- One link to the module overview (two small stacked links would be too-small tap targets). -->
       <a href={module.href} class="group min-w-0 flex-1 rounded-md py-1 leading-tight">
         <span class="block truncate text-small text-ink-soft">{track.title}</span>
-        <span class="block truncate font-display text-ui font-semibold text-ink underline-offset-4 group-hover:underline sm:text-title">{module.title}</span>
+        <span class="block truncate font-display text-ui font-bold text-ink underline-offset-4 group-hover:underline sm:text-title">{module.title}</span>
       </a>
-      <ReviewBadge status={module.status} className="hidden md:inline-flex" />
-      <a href={module.href} class="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 text-ui font-bold text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink">
+            <a href={module.href} class="inline-flex min-h-11 shrink-0 items-center gap-1.5 px-3 font-display text-ui font-bold text-ink transition-colors hover:bg-surface-2">
         <X aria-hidden="true" className="size-5" /><span class="hidden sm:inline">Exit</span><span class="sr-only"> lesson</span>
       </a>
     </div>
     <div
-      class="h-1 bg-surface-2"
+      class="grid auto-cols-fr grid-flow-col gap-[3px] px-3 pb-2 sm:px-4"
       role="progressbar"
       aria-label="Progress through this module"
       aria-valuemin="0"
@@ -61,9 +59,14 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
       aria-valuenow={index + 1}
       aria-valuetext={`Step ${index + 1} of ${steps.length}`}
     >
-      <div class={cn("h-full rounded-r-full", s.bar)} style={`width:${pct}%`} transition:name="lesson-progress"></div>
+      {steps.map((_, n) => <span class={cn("block h-2.5", n < index ? s.bar : n === index ? cn(s.bar, "opacity-40") : "bg-line")}></span>)}
     </div>
   </header>
+  {module.status !== "reviewed" && (
+    <p class="border-b border-line bg-surface-2 px-4 py-2.5 text-small text-ink sm:px-6">
+      This lesson is being checked by experts. <a href="/about#reviewers" class="font-bold underline underline-offset-4">How we check lessons</a>
+    </p>
+  )}
 
   <div class="flex">
     <LessonOutline client:load transition:persist="lesson-outline" steps={steps} currentId={step.id} track={track.id} moduleTitle={module.title} moduleHref={module.href} />
@@ -75,11 +78,15 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         transition:animate={fade({ duration: "0.2s" })}
       >
         <Breadcrumbs items={[{ label: "Courses", href: "/courses" }, { label: track.title, href: track.href }, { label: module.title, href: module.href }]} class="mb-3 text-ink-soft" />
-        <p class="flex flex-wrap items-center gap-x-2 text-small font-bold text-ink-soft">
-          <span>Step {index + 1} of {steps.length}</span><span aria-hidden="true">·</span><span>{STEP_LABEL[step.type]}</span><span aria-hidden="true">·</span><span>{step.minutes} min</span>
-          {module.status !== "reviewed" && <ReviewBadge status={module.status} className="ml-1 md:hidden" />}
-        </p>
-        <h1 data-focus-on-nav tabindex="-1" class={cn("mt-2 text-ink focus:outline-none", aware ? "text-display-lg" : "text-display-md sm:text-display-lg")}>{step.title}</h1>
+        <div class="mt-2 flex items-end gap-4 border-b border-line pb-6 sm:gap-6">
+          <span aria-hidden="true" class={cn("shrink-0 font-display text-[3.5rem] font-bold leading-[0.85] tracking-[-0.03em] sm:text-[5.5rem]", aware ? "text-ink shadow-[inset_0_-0.18em_0_var(--track-aware)]" : s.ink)}>{String(index + 1).padStart(2, "0")}</span>
+          <div class="min-w-0">
+            <p class="flex flex-wrap items-center gap-x-2 font-display text-small font-bold text-ink-soft">
+              <span>Step {index + 1} of {steps.length}</span><span aria-hidden="true">·</span><span>{STEP_LABEL[step.type]}</span><span aria-hidden="true">·</span><span>{step.minutes} min</span>
+            </p>
+            <h1 data-focus-on-nav tabindex="-1" class={cn("mt-1.5 text-ink focus:outline-none", aware ? "text-[clamp(1.875rem,4.2vw,2.75rem)] leading-[1.15]" : "text-[clamp(1.75rem,4.2vw,2.75rem)] leading-[1.15]")}>{step.title}</h1>
+          </div>
+        </div>
         {aware && <ReadAloud class="mt-5" />}
         <div class="lesson-prose mt-6">
           <slot />
@@ -87,7 +94,7 @@ const nextHref = index === steps.length - 1 ? finishHref : steps[index + 1].href
         <Sources sources={sources} />
         <div data-lesson-end aria-hidden="true" class="h-px"></div>
       </article>
-      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === 0 && steps.length > 1} />
+      <LessonNav client:load steps={steps} index={index} track={track.id} moduleTitle={module.title} prevHref={prevHref} nextHref={nextHref} gated={!signedIn && index === OPEN_STEPS - 1 && steps.length > OPEN_STEPS} />
     </main>
   </div>
 </div>

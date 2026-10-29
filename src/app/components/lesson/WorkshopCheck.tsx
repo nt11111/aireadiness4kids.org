@@ -68,7 +68,7 @@ export function WorkshopCheck({ moduleId, moduleTitle, moduleHref, phase, questi
   if (done) {
     return (
       <div ref={thanks} tabIndex={-1} className="grid gap-5 rounded-xl border border-line bg-surface p-6 shadow-1 focus:outline-none sm:p-8">
-        <p className="flex items-center gap-2 font-display text-title font-semibold text-ink">
+        <p className="flex items-center gap-2 font-display text-title font-bold text-ink">
           <CircleCheck aria-hidden="true" className="size-6 shrink-0 text-success" />
           {done.duplicate ? "You've already sent answers for this check. Thanks!" : "Thanks! Your answers are in."}
         </p>

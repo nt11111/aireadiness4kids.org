@@ -14,7 +14,7 @@ test("a server-rendered page's HTML already has the signed-in header", async () 
   expect(header).toContain("Account menu for");
   expect(header).toContain("Robin");
   expect(header).not.toContain(">Sign in<");
-  expect(header).not.toContain("Create free account");
+  expect(header).toContain("Become an ambassador");
 });
 
 test("a signed-out server-rendered page's HTML has the sign-in links", async () => {
@@ -33,11 +33,10 @@ test("a static page hides the sign-in links until /api/me answers, then shows th
   await page.route("**/api/me", async (route) => { await held; await route.continue(); });
   await page.goto("/courses/");
   const header = page.locator("header");
-  await expect(header.getByRole("link", { name: "Create free account" })).toBeHidden();
   await expect(header.getByRole("link", { name: "Sign in", exact: true })).toBeHidden();
   release();
   await expect(header.getByRole("button", { name: /Account menu for Sam/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Create free account" })).toHaveCount(0);
+  await expect(header.getByRole("link", { name: "Sign in", exact: true })).toHaveCount(0);
 });
 
 test("a stale hint with no session shows the sign-in links once /api/me says signed out", async ({ page }) => {
@@ -46,7 +45,7 @@ test("a stale hint with no session shows the sign-in links once /api/me says sig
   await page.goto("/courses/");
   const header = page.locator("header");
   await expect(header.getByRole("link", { name: "Sign in", exact: true })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Create free account" })).toBeVisible();
+  await expect(header.getByRole("link", { name: "Become an ambassador" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.classList.contains("si"))).toBe(false);
   expect(await page.evaluate(() => /ark_si=1/.test(document.cookie))).toBe(false);
 });

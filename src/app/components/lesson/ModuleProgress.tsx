@@ -71,7 +71,7 @@ export function PreCheck({ questions, moduleId, startHref }: { questions: Questi
     <div className="rounded-xl border border-line bg-surface p-5 shadow-1 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="font-display text-title font-semibold text-ink">See what you already know</h2>
+          <h2 className="font-display text-title font-bold text-ink">See what you already know</h2>
           <p className="mt-1 text-ui text-ink-soft">
             {result ? `Your starting score: ${result.score} of ${result.total}.` : `${questions.length} quick questions before you start. Optional.`}
           </p>

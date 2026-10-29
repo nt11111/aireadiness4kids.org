@@ -26,9 +26,9 @@ export function Celebrate() {
   return <span hidden />;
 }
 
-/** "You improved from 1/3 to 3/3." (brief section 7), said kindly whichever way it went. */
+/** "You beat your starting score: 1/3 at the start, 3/3 now." (brief section 7), said kindly whichever way it went. */
 export function compareLine(pre: Score, after: Score) {
-  if (after.score > pre.score) return `You improved from ${pre.score}/${pre.outOf} to ${after.score}/${after.outOf}.`;
+  if (after.score > pre.score) return `You beat your starting score: ${pre.score}/${pre.outOf} at the start, ${after.score}/${after.outOf} now.`;
   if (after.score === pre.score) return `You got ${after.score}/${after.outOf} before and after.`;
   return `You got ${pre.score}/${pre.outOf} before and ${after.score}/${after.outOf} after. The recap is a good place for a second look.`;
 }
@@ -58,8 +58,8 @@ export function PostCheck({ moduleId, learnerId, questions, pre, after: initial 
   const summary = after && pre ? compareLine(pre, after) : after ? `After the module: ${after.score}/${after.outOf}.` : null;
 
   return (
-    <div className="rounded-xl border border-line bg-surface p-5 shadow-1 sm:p-6">
-      <h2 className="font-display text-title font-semibold text-ink">See what you learned</h2>
+    <div className="border-2 border-ink bg-surface p-5 sm:p-6">
+      <h2 className="font-display text-title font-bold text-ink">See what you learned</h2>
       {summary ? (
         <>
           <p ref={result} tabIndex={-1} className="mt-2 text-lesson font-bold text-ink focus:outline-none" data-compare>{summary}</p>
@@ -117,10 +117,10 @@ export function CertificatePanel({ learnerId, moduleId, certificate: initial, ch
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-accent/60 bg-surface p-5 shadow-1 sm:flex-row sm:items-start sm:p-6">
+    <div className="flex flex-col gap-5 border-2 border-ink border-l-[10px] border-l-accent bg-surface p-5 sm:flex-row sm:items-start sm:p-6">
       <Award aria-hidden="true" className="size-10 shrink-0 text-accent-strong" />
       <div className="min-w-0 flex-1">
-        <h2 className="font-display text-title font-semibold text-ink">Your certificate</h2>
+        <h2 className="font-display text-title font-bold text-ink">Your certificate</h2>
         <p className="mt-1 text-ui text-ink-soft">
           {child
             ? `A certificate with the name ${nickname}, ready to print. It stays private: it has no public page.`

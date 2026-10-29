@@ -1,6 +1,9 @@
 // Plain types shared by the lesson pages (server) and the lesson islands (browser).
 // No imports here, so islands can use them without pulling in astro:content.
 
+/** Signed-out visitors can do this many steps of every module; the server gates the rest. */
+export const OPEN_STEPS = 3;
+
 export type StepType = "explainer" | "video" | "scenario" | "check" | "reflect" | "recap" | "activity";
 
 export type Option = { id: string; text: string };

@@ -40,7 +40,7 @@ export function GetInvolvedTop() {
             <li key={t}>
               <a href={to} className="group flex h-full items-center gap-4 rounded-xl border border-line bg-surface p-5 shadow-1 transition-[border-color,box-shadow] duration-[var(--dur)] hover:border-brand hover:shadow-2">
                 <IconBox className="mb-0 shrink-0"><Icon aria-hidden="true" /></IconBox>
-                <span className="min-w-0 flex-1"><span className="block font-display text-title font-semibold text-ink group-hover:text-brand">{t}</span><span className="block text-small text-ink-soft">{d}</span></span>
+                <span className="min-w-0 flex-1"><span className="block font-display text-title font-bold text-ink group-hover:text-brand">{t}</span><span className="block text-small text-ink-soft">{d}</span></span>
                 <ArrowRight aria-hidden="true" className="size-5 shrink-0 text-brand transition-transform duration-[var(--dur)] group-hover:translate-x-0.5" />
               </a>
             </li>
@@ -67,7 +67,7 @@ export function GetInvolvedTop() {
             <p className="mt-3 text-ui text-ink-soft">Ambassadors create an organic reach multiplier. One trained teen can run workshops for hundreds of classmates without a staff facilitator present. This mirrors the model used successfully by Cyber For Youth.</p>
             <dl className="mt-6 grid grid-cols-2 gap-4">
               {[["9-12", "Grades eligible"], ["1 day", "Certification training"]].map(([n, l]) => (
-                <div key={l} className="rounded-lg bg-surface p-5"><dt className="text-small text-ink-soft">{l}</dt><dd className="mt-1 font-display text-display-sm font-semibold text-ink">{n}</dd></div>
+                <div key={l} className="rounded-lg bg-surface p-5"><dt className="text-small text-ink-soft">{l}</dt><dd className="mt-1 font-display text-display-sm font-bold text-ink">{n}</dd></div>
               ))}
             </dl>
           </Card>
@@ -97,9 +97,9 @@ export function GetInvolvedTop() {
         <ul className="mt-6 grid gap-5 md:grid-cols-3">
           {TIERS.map((t, i) => (
             <li key={t.name} className={cn("rounded-xl border bg-surface p-6 shadow-1 sm:p-8", t.featured ? "border-brand border-2" : "border-line")}>
-              <p className="text-small font-bold uppercase tracking-[0.14em] text-brand">Tier {3 - i}</p>
-              <h4 className="mt-1 font-display text-title font-semibold text-ink">{t.name}</h4>
-              <p className="mt-2 mb-5 font-display text-display-sm font-semibold text-ink">{t.amount}</p>
+              <p className="font-display text-small font-bold text-brand">Tier {3 - i}</p>
+              <h4 className="mt-1 font-display text-title font-bold text-ink">{t.name}</h4>
+              <p className="mt-2 mb-5 font-display text-display-sm font-bold text-ink">{t.amount}</p>
               <Ticks icon={<Check />} items={t.perks} />
             </li>
           ))}
@@ -123,7 +123,7 @@ export function Faq() {
             <div key={f.q}>
               <h3>
                 <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} aria-controls={`faq-${i}`} className="flex w-full items-center justify-between gap-6 rounded-md py-5 text-left">
-                  <span className="font-display text-title font-semibold text-ink">{f.q}</span>
+                  <span className="font-display text-title font-bold text-ink">{f.q}</span>
                   <Plus aria-hidden="true" className={cn("size-5 shrink-0 text-brand transition-transform duration-[var(--dur)]", isOpen && "rotate-45")} />
                 </button>
               </h3>

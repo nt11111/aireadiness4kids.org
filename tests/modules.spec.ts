@@ -13,12 +13,12 @@ const decode = (s: string) =>
 const tag = (html: string, re: RegExp) => decode(re.exec(html)?.[1] ?? "");
 const count = (html: string, re: RegExp) => (html.match(re) ?? []).length;
 
-test("signed out, step 1 of every module is open and every later step redirects to sign-in", async () => {
+test("signed out, the first three steps of every module are open and every later step redirects to sign-in", async () => {
   for (const m of MODULES) {
     const steps = stepSlugs(m);
     expect(steps.length, m).toBeGreaterThanOrEqual(5);
-    expect((await call(`/courses/${m}/${steps[0]}`, { method: "GET" })).status, `${m} step 1`).toBe(200);
-    for (const slug of steps.slice(1)) {
+    for (const [i, slug] of steps.slice(0, 3).entries()) expect((await call(`/courses/${m}/${slug}`, { method: "GET" })).status, `${m} step ${i + 1}`).toBe(200);
+    for (const slug of steps.slice(3)) {
       const path = `/courses/${m}/${slug}`;
       const res = await call(path, { method: "GET" });
       expect(res.status, path).toBe(302);

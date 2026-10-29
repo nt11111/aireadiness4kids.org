@@ -1,4 +1,4 @@
-# ARK · AI Readiness for Kids: course platform
+# ARK · AI Readiness Kollective: course platform
 
 Free AI literacy courses for K-12 students, live at **https://aireadiness4kids.org**.
 

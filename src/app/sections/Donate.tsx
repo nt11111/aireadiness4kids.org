@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Heart, ShieldCheck } from "lucide-react";
+import { Heart, Info } from "lucide-react";
 import { ORG } from "../lib/content";
 import { Card, CardTitle, Btn } from "../components/site/Primitives";
 import { buttonVariants } from "../components/ui/button";
@@ -25,7 +25,7 @@ export function DonatePanel() {
             const selected = amt === a && !custom;
             return (
               <button key={a} type="button" aria-pressed={selected} onClick={() => { setAmt(a); setCustom(""); }}
-                className={cn("min-h-12 rounded-lg border-[1.5px] py-3 font-display text-title font-semibold transition-colors duration-[var(--dur)]", selected ? "border-brand bg-brand text-brand-ink" : "border-input bg-surface text-ink hover:border-brand hover:bg-brand-soft")}>
+                className={cn("min-h-12 rounded-lg border-[1.5px] py-3 font-display text-title font-bold transition-colors duration-[var(--dur)]", selected ? "border-brand bg-brand text-brand-ink" : "border-input bg-surface text-ink hover:border-brand hover:bg-brand-soft")}>
                 ${a}
               </button>
             );
@@ -42,7 +42,7 @@ export function DonatePanel() {
           Donate {value ? `$${value}` : ""}
         </a>
         <p className="mt-3 text-center text-small text-ink-soft">This opens an email to our team. We will reply with how to give.</p>
-        <p className="mt-4 flex items-start justify-center gap-2 text-small text-ink-soft"><ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand" /> 501(c)(3) nonprofit. Gifts are tax-deductible to the extent allowed by law.</p>
+        <p className="mt-4 flex items-start justify-center gap-2 text-small text-ink-soft"><Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" /> ARK is not a registered nonprofit, so gifts are not tax-deductible.</p>
       </Card>
 
       <div className="grid gap-5">
@@ -50,7 +50,7 @@ export function DonatePanel() {
           <CardTitle>Where the money goes</CardTitle>
           <dl className="mt-4 grid gap-3">
             {[["50%", "Programs: curriculum, workshops, facilitator training"], ["25%", "Operations: staffing, technology, compliance"], ["15%", "Marketing: content, social, event outreach"], ["10%", "Reserve: emergency and growth fund"]].map(([p, d]) => (
-              <div key={p} className="flex items-baseline gap-4"><dt className="w-12 shrink-0 font-display text-title font-semibold text-brand">{p}</dt><dd className="text-ui text-ink-soft">{d}</dd></div>
+              <div key={p} className="flex items-baseline gap-4"><dt className="w-12 shrink-0 font-display text-title font-bold text-brand">{p}</dt><dd className="text-ui text-ink-soft">{d}</dd></div>
             ))}
           </dl>
         </Card>

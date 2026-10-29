@@ -17,8 +17,8 @@ type ReviewerEntry = Reviewer & { modules: { title: string; href: string }[] };
 export default function About({ reviewers }: { reviewers: ReviewerEntry[] }) {
   return (
     <>
-      <PageHero crumb="About" eyebrow="Who we are" title="A nonprofit built with parents, teachers, and students, not just for them."
-        lead="ARK (AI Readiness for Kids) is a 501(c)(3) nonprofit. We believe every child deserves to understand the AI tools shaping their world, and the confidence to use them with intention and integrity." />
+      <PageHero crumb="About" eyebrow="Who we are" title="Built with parents, teachers, and students, not just for them."
+        lead="ARK (AI Readiness Kollective) makes free AI lessons for grades K-12. We believe every child deserves to understand the AI tools shaping their world, and the confidence to use them with intention and integrity." />
 
       <Section className="!pb-0" labelledBy="mission-h">
         <h2 id="mission-h" className="sr-only">Mission and vision</h2>
@@ -35,7 +35,7 @@ export default function About({ reviewers }: { reviewers: ReviewerEntry[] }) {
           <ol className="divide-y divide-line border-y border-line">
             {VALUES.map((v, i) => (
               <li key={v.word} className="flex gap-5 py-6">
-                <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-soft font-display font-semibold text-brand">{i + 1}</span>
+                <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-soft font-display font-bold text-brand">{i + 1}</span>
                 <div><CardTitle>{v.word}</CardTitle><p className="mt-1 text-ui text-ink-soft">{v.desc}</p></div>
               </li>
             ))}
@@ -96,7 +96,7 @@ export default function About({ reviewers }: { reviewers: ReviewerEntry[] }) {
         <ol className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {ROADMAP.map((r) => (
             <li key={r.phase} className="rounded-xl border border-line bg-surface p-6 shadow-1">
-              <p className="text-small font-bold uppercase tracking-[0.14em] text-brand">{r.phase}</p>
+              <p className="font-display text-small font-bold text-brand">{r.phase}</p>
               <CardTitle className="mt-1">{r.title}</CardTitle>
               <Ticks className="mt-4 [&_li]:text-small" icon={<Check />} items={r.items} />
             </li>

@@ -1,6 +1,6 @@
 /* Self-hosted via @fontsource: no Google Fonts request (friendlier to school networks). */
-/* Fraunces: display headings only. Variable wght + optical size. */
-@import "@fontsource-variable/fraunces/opsz.css";
+/* Archivo: headings, labels, and buttons. Variable weight; straight-sided and plain. */
+@import "@fontsource-variable/archivo/wght.css";
 /* Atkinson Hyperlegible: body and UI. Built for legibility for young and struggling readers. */
 @import "@fontsource/atkinson-hyperlegible/400.css";
 @import "@fontsource/atkinson-hyperlegible/400-italic.css";

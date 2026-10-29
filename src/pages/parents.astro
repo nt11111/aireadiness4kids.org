@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHead from "../components/SectionHead.astro";
+import { PageHero } from "../app/components/site/PageHero";
+import { buttonVariants } from "../app/components/ui/button";
+import { trackStyle } from "../app/lib/tracks";
+import { cn } from "../app/components/ui/utils";
+import { getCourses, trackHref } from "../lib/courses";
+import { OPEN_STEPS } from "../lib/lesson-types";
+export const prerender = true;
+
+const courses = await getCourses();
+
+const steps = [
+  ["Pick your child's grade", `Open a course and start the first module. The first ${OPEN_STEPS} steps of every module need no account.`],
+  ["Do it together", "Sit with younger kids. In AI Aware, press “Read aloud” to hear any step. Most steps take 3 to 10 minutes."],
+  ["Make a family account to keep going", "You sign up, then add a profile for each child with just a nickname. Progress is saved to that profile."],
+];
+
+const promises = [
+  ["No email from kids under 13", "Children learn inside your account, with just a nickname and a grade band. We never ask them for an email, photo, full name, or birthday."],
+  ["Reflections stay on your device", "When a lesson asks your child to write about their own life, the answer stays in this browser. ARK never sees it."],
+  ["Free, with no ads", "Every course is free, and our analytics use no cookies."],
+  ["Checked by experts", "Experts and AI professionals review each module. Lessons still being checked say so at the top."],
+];
+---
+
+<BaseLayout title="Parents | ARK · AI Readiness Kollective" description="How ARK's free AI lessons work for families: do the first steps without an account, learn together at home, and keep kids' data private.">
+  <PageHero
+    crumb="Parents"
+    eyebrow="For parents and guardians"
+    title="Learn about AI together, at home."
+    lead="Short lessons you can do side by side with your child, in grades K to 12. Free, private, and no account needed to try them."
+  />
+
+  <section aria-labelledby="how-h" class="px-4 py-14 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-site">
+      <SectionHead id="how-h" label="How it works" title="Three steps, at your own pace." />
+      <ol class="grid border-t-2 border-ink lg:grid-cols-3">
+        {steps.map(([title, body], i) => (
+          <li class="grid grid-cols-[48px_1fr] border-b border-line py-5 lg:block lg:border-b-0 lg:border-r lg:px-5 lg:first:pl-0 lg:last:border-r-0">
+            <span class="font-display text-[1.75rem] font-bold leading-none text-ink" aria-hidden="true">{i + 1}</span>
+            <div class="lg:mt-4">
+              <h3 class="font-display text-title text-ink"><span class="sr-only">Step {i + 1}: </span>{title}</h3>
+              <p class="mt-1.5 text-ui text-ink-soft">{body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="pick-h" class="border-t border-line bg-surface-2 px-4 py-14 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-site">
+      <SectionHead id="pick-h" label="Courses" title="Pick your child's grade." />
+      <ul class="border-t-2 border-ink">
+        {courses.map(({ track }) => (
+          <li>
+            <a href={trackHref(track)} class="group grid min-h-[72px] grid-cols-[6px_56px_1fr] items-center gap-x-3.5 border-b border-line py-3.5 transition-colors hover:bg-surface sm:grid-cols-[8px_88px_1fr_auto] sm:gap-x-5">
+              <span class={cn("self-stretch", trackStyle(track.id).bar)} aria-hidden="true"></span>
+              <span class="font-display text-lg font-bold text-ink-soft sm:text-[1.375rem]"><span class="sr-only">Grades </span>{track.data.grades.replace("-", "–")}</span>
+              <span>
+                <span class="block font-display text-lg font-bold text-ink sm:text-xl">{track.data.title}</span>
+                <span class="block text-ui text-ink-soft">{track.data.hook ?? track.data.tagline}</span>
+              </span>
+              <span class="hidden pr-1.5 font-display font-bold text-ink sm:block" aria-hidden="true">Start →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="privacy-h" class="px-4 py-14 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-site">
+      <SectionHead id="privacy-h" label="Your child's privacy" title="We collect as little as we can." />
+      <ul class="grid gap-x-6 sm:grid-cols-2">
+        {promises.map(([title, body]) => (
+          <li class="border-t-2 border-ink pb-6 pt-4">
+            <h3 class="font-display text-title text-ink">{title}</h3>
+            <p class="mt-1.5 text-ui text-ink-soft">{body}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+        <a href="/signup" class={cn(buttonVariants({ size: "lg" }), "justify-between gap-6")}>Make a family account <span aria-hidden="true">→</span></a>
+        <a href="/privacy" class={buttonVariants({ variant: "outline", size: "lg" })}>Read the privacy policy</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

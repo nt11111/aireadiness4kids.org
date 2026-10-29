@@ -93,7 +93,7 @@ export function PracticeChat({ initialPrompt = "" }: { initialPrompt?: string })
             data-practice-message={m.role}
             className={cn("rounded-xl border p-4", m.role === "user" ? "ml-6 border-line bg-surface-2 sm:ml-16" : "mr-6 border-brand/30 bg-surface shadow-1 sm:mr-16")}
           >
-            <p className="text-small font-bold uppercase tracking-[0.1em] text-ink-soft">{m.role === "user" ? "You" : "Practice tool (AI)"}</p>
+            <p className="font-display text-small font-bold text-ink-soft">{m.role === "user" ? "You" : "Practice tool (AI)"}</p>
             <p className="mt-1.5 whitespace-pre-wrap break-words text-lesson text-ink">{m.content}</p>
           </div>
         ))}

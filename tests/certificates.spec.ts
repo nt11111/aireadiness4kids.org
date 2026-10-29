@@ -149,7 +149,7 @@ test.describe("completion page", () => {
     await page.getByRole("radio", { name: "Favor applicants who resemble the people hired before" }).click();
     await page.getByRole("radio", { name: "Test how well it works for many different groups of people" }).click();
     await page.getByRole("button", { name: "See my score" }).click();
-    await expect(page.locator("[data-compare]")).toHaveText("You improved from 1/3 to 3/3.");
+    await expect(page.locator("[data-compare]")).toHaveText("You beat your starting score: 1/3 at the start, 3/3 now.");
     expect((await adminDb.doc(`users/${a.uid}/learners/${a.learnerId}/progress/${DOC}`).get()).get("post")).toMatchObject({ score: 3, outOf: 3 });
 
     await page.getByRole("button", { name: "Get my certificate" }).click();
@@ -164,7 +164,7 @@ test.describe("completion page", () => {
     // Back on the completion page, the certificate is already there; My learning offers a reprint.
     await page.goto(`${BIAS_MODULE}/complete`);
     await expect(page.getByRole("link", { name: "View and print" })).toBeVisible();
-    await expect(page.getByText("You improved from 1/3 to 3/3.")).toBeVisible();
+    await expect(page.getByText("You beat your starting score: 1/3 at the start, 3/3 now.")).toBeVisible();
     await page.goto("/my-learning");
     await expect(page.getByRole("link", { name: "Reprint certificate for Bias in AI" })).toHaveAttribute("href", /^\/certificates\//);
 

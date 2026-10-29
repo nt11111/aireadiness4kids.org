@@ -3,6 +3,7 @@ title: "AI Aware"
 grades: "K-5"
 color: track-aware
 tagline: "Discovery & Awareness"
+hook: "What is AI, and can it be wrong? Do it with a grown-up."
 summary: "The AI Aware course introduces young learners to the idea that AI exists in the world around them, how it helps and sometimes confuses us, and what it means to be a thoughtful user of technology."
 order: 1
 outcomes:

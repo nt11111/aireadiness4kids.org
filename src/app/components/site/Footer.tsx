@@ -1,40 +1,36 @@
-import { Mail, ShieldCheck } from "lucide-react";
 import { Logo } from "./Logo";
+import { AMBASSADOR_HREF } from "./Nav";
 import { ORG } from "../../lib/content";
 
 const cols = [
-  { heading: "Learn", links: [["All courses", "/courses"], ["AI Aware (K-5)", "/courses/aware"], ["AI Literate (6-8)", "/courses/literate"], ["AI Fluent (9-12)", "/courses/fluent"]] },
-  { heading: "Our Work", links: [["Workshops & programs", "/workshops"], ["For educators", "/educators"], ["Student Ambassadors", "/get-involved#ambassadors"], ["Research & Reports", "/workshops#research"], ["How we review modules", "/about#reviewers"]] },
-  { heading: "Join Us", links: [["Become an Ambassador", "/get-involved#ambassadors"], ["Volunteer", "/get-involved#volunteer"], ["Partner With Us", "/get-involved#partners"], ["Mailing List", "/contact#newsletter"]] },
-  { heading: "Organization", links: [["About", "/about"], ["Leadership", "/about#team"], ["Donate", "/donate"], ["Contact", "/contact"]] },
+  { heading: "Learn", links: [["AI Aware (K-5)", "/courses/aware"], ["AI Literate (6-8)", "/courses/literate"], ["AI Fluent (9-12)", "/courses/fluent"], ["All courses", "/courses"]] },
+  { heading: "Get involved", links: [["Become an ambassador", AMBASSADOR_HREF], ["Parents", "/parents"], ["Teachers", "/educators"], ["Workshops", "/workshops"], ["Donate", "/donate"]] },
+  { heading: "About", links: [["About ARK", "/about"], ["How we check lessons", "/about#reviewers"], ["Contact", "/contact"]] },
 ];
 
 const legal = [["Privacy", "/privacy"], ["Terms", "/terms"], ["Accessibility", "/accessibility"]];
 
 export function Footer() {
   return (
-    <footer className="on-dark relative overflow-hidden bg-ink text-white print:hidden">
-      <div className="relative mx-auto max-w-[calc(var(--container)+3rem)] px-4 pb-10 pt-16 sm:px-6">
-        <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
+    <footer className="border-t-2 border-ink bg-surface print:hidden">
+      <div className="mx-auto max-w-[calc(var(--container)+3rem)] px-4 pb-10 pt-12 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <a href="/" aria-label="ARK AIReadiness4Kids, home" className="inline-block rounded-md">
-              <Logo tone="light" />
+            <a href="/" aria-label="ARK, AI Readiness Kollective, home" className="inline-flex min-h-11 items-center">
+              <Logo />
             </a>
-            <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/80">
-              A 501(c)(3) nonprofit helping K-12 students, teachers, and parents understand AI and use it responsibly. Every course is free.
+            <p className="mt-4 max-w-sm text-ui text-ink-soft">
+              Helping K-12 students, teachers, and parents understand AI and use it well. Every course is free.
             </p>
-            <a href={`mailto:${ORG.email}`} className="mt-6 inline-flex items-center gap-2.5 text-[15px] text-white/85 underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">
-              <Mail aria-hidden="true" className="size-[18px]" /> {ORG.email}
-            </a>
+            <a href={`mailto:${ORG.email}`} className="mt-3 inline-block py-2 text-ui font-bold text-brand underline underline-offset-4">{ORG.email}</a>
           </div>
-
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-3">
             {cols.map((c) => (
               <nav key={c.heading} aria-label={c.heading}>
-                <h2 className="mb-4 font-sans text-eyebrow font-bold uppercase tracking-[0.14em] text-white/75">{c.heading}</h2>
-                <ul>
+                <h2 className="border-t-2 border-ink pt-3 font-display text-small font-bold text-ink">{c.heading}</h2>
+                <ul className="mt-2">
                   {c.links.map(([label, href]) => (
-                    <li key={label}><a href={href} className="block py-1.5 text-sm text-white/85 transition-colors hover:text-glow">{label}</a></li>
+                    <li key={label}><a href={href} className="block py-2.5 text-ui text-ink-soft hover:text-ink hover:underline hover:underline-offset-4">{label}</a></li>
                   ))}
                 </ul>
               </nav>
@@ -42,21 +38,19 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-8 flex max-w-3xl gap-3 text-sm leading-relaxed text-white/85">
-          <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-glow" />
-          <span><strong className="text-white">Our privacy promise:</strong> we collect as little as we can. Kids under 13 never give us an email, reflections stay on your own device, and our analytics use no cookies. <a href="/privacy" className="text-white underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">Read the privacy policy</a>.</span>
+        <p className="mt-10 max-w-3xl border-l-[6px] border-brand bg-surface-2 px-4 py-3 text-ui text-ink">
+          <strong>Our privacy promise:</strong> we collect as little as we can. Kids under 13 never give us an email, reflections stay on your own device, and our analytics use no cookies. <a href="/privacy" className="font-bold text-brand underline underline-offset-4">Read the privacy policy</a>.
         </p>
 
-        <div className="mt-8 flex flex-col gap-4 border-t border-white/15 pt-7 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-white/75">© {new Date().getFullYear()} ARK · AIReadiness4Kids · 501(c)(3) nonprofit</p>
+        <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+          <p className="text-small text-ink-soft">© {new Date().getFullYear()} ARK · AI Readiness Kollective</p>
           <nav aria-label="Legal">
-            <ul className="flex flex-wrap gap-x-5 gap-y-1">
+            <ul className="flex flex-wrap gap-x-5">
               {legal.map(([label, href]) => (
-                <li key={href}><a href={href} className="inline-block py-1.5 text-sm text-white/85 underline decoration-white/40 underline-offset-4 hover:text-glow hover:decoration-glow">{label}</a></li>
+                <li key={href}><a href={href} className="inline-block py-2.5 text-small text-ink-soft underline underline-offset-4 hover:text-ink">{label}</a></li>
               ))}
             </ul>
           </nav>
-          <p className="text-xs font-bold tracking-wider text-glow">Think. Prompt. Responsibly.</p>
         </div>
       </div>
     </footer>

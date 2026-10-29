@@ -31,21 +31,21 @@ const verifyText = verifyUrl ? `${verifyUrl.host}${verifyUrl.pathname}` : null;
     <div class="relative flex h-full flex-col items-center justify-between px-[9cqw] py-[7cqw] text-center">
       <div class="text-[1.9cqw]"><Logo fluid /></div>
       <div class="flex flex-col items-center">
-        <p class="text-[1.5cqw] font-bold uppercase tracking-[0.3em] text-brand">Certificate of completion</p>
+        <p class="text-[1.5cqw] font-bold font-display text-brand">Certificate of completion</p>
         <p class="mt-[2.4cqw] text-[1.9cqw] text-ink-soft">This certifies that</p>
-        <p class="mt-[0.8cqw] max-w-full break-words font-display text-[5.6cqw] font-semibold leading-tight text-ink" data-cert-name>{name}</p>
+        <p class="mt-[0.8cqw] max-w-full break-words font-display text-[5.6cqw] font-bold leading-tight text-ink" data-cert-name>{name}</p>
         <div class="mt-[1.4cqw] h-[0.2cqw] w-[30cqw] bg-accent"></div>
         <p class="mt-[1.8cqw] text-[1.9cqw] text-ink-soft">completed the module</p>
-        <p class="mt-[0.6cqw] font-display text-[3.4cqw] font-semibold leading-tight text-ink" data-cert-module>{moduleTitle}</p>
+        <p class="mt-[0.6cqw] font-display text-[3.4cqw] font-bold leading-tight text-ink" data-cert-module>{moduleTitle}</p>
         <p class="mt-[1cqw] text-[1.6cqw] text-ink-soft">{trackTitle} · Grades {grades}</p>
       </div>
       <div class="flex w-full items-end justify-between gap-[3cqw] text-left text-[1.4cqw] text-ink-soft">
-        <p><span class="block font-bold uppercase tracking-[0.14em] text-ink">Date</span>{date}</p>
-        <p class="max-w-[42cqw] text-center">ARK · AI Readiness for Kids<span class="block">Free AI literacy lessons for K-12</span></p>
+        <p><span class="block font-bold font-display text-ink">Date</span>{date}</p>
+        <p class="max-w-[42cqw] text-center">ARK · AI Readiness Kollective<span class="block">Free AI literacy lessons for K-12</span></p>
         {verifyText ? (
-          <p class="text-right"><span class="block font-bold uppercase tracking-[0.14em] text-ink">Verify at</span><span class="break-all" data-cert-verify>{verifyText}</span></p>
+          <p class="text-right"><span class="block font-bold font-display text-ink">Verify at</span><span class="break-all" data-cert-verify>{verifyText}</span></p>
         ) : (
-          <p class="text-right"><span class="block font-bold uppercase tracking-[0.14em] text-ink">Issued by</span>ARK</p>
+          <p class="text-right"><span class="block font-bold font-display text-ink">Issued by</span>ARK</p>
         )}
       </div>
     </div>

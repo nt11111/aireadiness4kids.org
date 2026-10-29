@@ -16,7 +16,7 @@ type Props = {
   moduleTitle: string;
   prevHref: string;
   nextHref: string;
-  /** Signed out on step 1: Next opens the sign-up panel instead of going to step 2. */
+  /** Signed out on the last open step: Next opens the sign-up panel instead of going on. */
   gated?: boolean;
 };
 
@@ -49,6 +49,27 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
     return () => io.disconnect();
   }, [step.id]);
 
+  // Keep whatever gets focus clear of the sticky top bar and this bar (WCAG 2.4.11). Browsers only scroll
+  // a focused element that's fully out of view, so a tall field half under a bar would otherwise stay there.
+  useEffect(() => {
+    const GAP = 16;
+    const onFocus = (e: FocusEvent) => {
+      const el = e.target;
+      if (!(el instanceof HTMLElement) || el.closest("[data-sticky], [data-lesson-root] > header")) return;
+      const r = el.getBoundingClientRect();
+      const topEdge = document.querySelector("[data-lesson-root] > header")?.getBoundingClientRect().bottom ?? 0;
+      const bottomEdge = document.querySelector("[data-sticky]")?.getBoundingClientRect().top ?? innerHeight;
+      if (r.bottom > bottomEdge - GAP && r.top < bottomEdge) {
+        // Scroll it up, but never so far that its top goes under the top bar.
+        window.scrollBy({ top: Math.max(0, Math.min(r.bottom - bottomEdge + GAP, r.top - topEdge - GAP)) });
+      } else if (r.top < topEdge + GAP && r.bottom > topEdge) {
+        window.scrollBy({ top: r.top - topEdge - GAP });
+      }
+    };
+    document.addEventListener("focusin", onFocus);
+    return () => document.removeEventListener("focusin", onFocus);
+  }, []);
+
   const markComplete = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!completed.has(step.id)) trackEvent({ name: "step_complete", props: { type: step.type } });
     progress.complete(step.id);
@@ -73,7 +94,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
   const counter = `Step ${step.n} of ${steps.length}`;
 
   return (
-    <div data-sticky className="sticky bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur">
+    <div data-sticky className="sticky bottom-0 z-30 border-t-2 border-ink bg-surface">
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <nav aria-label="Lesson" className="mx-auto flex max-w-[calc(var(--reading)+3rem)] items-center justify-between gap-2 px-4 py-3 sm:px-6">
           <a href={prevHref} data-lesson-prev className={cn(buttonVariants({ variant: "ghost" }), tap, "px-3 sm:px-4")} aria-label={isFirst ? "Back to module overview" : undefined}>
@@ -87,7 +108,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
             <span><span className="sr-only sm:not-sr-only">Step </span>{step.n} of {steps.length}</span>
             <span className="sr-only">: open the list of steps</span>
           </SheetTrigger>
-          <p className="hidden text-small font-bold text-ink-soft lg:block" aria-hidden="true">{counter}</p>
+          <p className="hidden font-display text-small font-bold text-ink-soft lg:block" aria-hidden="true">{counter}</p>
 
           <a href={nextHref} data-lesson-next onClick={markComplete} aria-busy={leaving || undefined} className={cn(buttonVariants(), tap, "px-4 sm:px-6")}>
             {isLast ? (
@@ -104,7 +125,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </a>
         </nav>
 
-        <SheetContent side="bottom" className="max-h-[85dvh] rounded-t-xl pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
+        <SheetContent side="bottom" className="max-h-[85dvh] border-t-2 border-ink pb-[max(1rem,env(safe-area-inset-bottom))] lg:hidden">
           <SheetHeader className="px-5 pb-0 pr-16 pt-5">
             <SheetTitle className="font-display text-title">{moduleTitle}</SheetTitle>
             <SheetDescription className="text-small text-ink-soft">
@@ -116,7 +137,7 @@ export function LessonNav({ steps, index, track, moduleTitle, prevHref, nextHref
           </nav>
         </SheetContent>
       </Sheet>
-      {gated && <GatePanel open={gateOpen} onOpenChange={setGateOpen} next={nextHref} />}
+      {gated && <GatePanel open={gateOpen} onOpenChange={setGateOpen} next={nextHref} done={index + 1} total={steps.length} />}
     </div>
   );
 }

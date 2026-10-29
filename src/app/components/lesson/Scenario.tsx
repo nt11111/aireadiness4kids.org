@@ -28,7 +28,7 @@ export function Scenario({ prompt, options, stepId }: Props) {
 
   return (
     <div role="group" aria-labelledby={`${uid}-prompt`} className="rounded-xl border border-line bg-surface p-5 shadow-1 sm:p-6">
-      <p className="inline-flex items-center gap-2 text-small font-bold uppercase tracking-[0.12em] text-brand">
+      <p className="inline-flex items-center gap-2 font-display text-small font-bold text-brand">
         <Split aria-hidden="true" className="size-4" /> What would you do?
       </p>
       <p id={`${uid}-prompt`} className="mt-2 text-lesson font-bold text-ink">{prompt}</p>

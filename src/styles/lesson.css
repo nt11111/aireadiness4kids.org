@@ -4,8 +4,8 @@
 :root {
   /* Minimum tap target. AI Aware (K-5) lessons use 48px. */
   --tap: 2.75rem;
-  /* Lesson top bar: 56px bar + 4px progress + 1px border. */
-  --lesson-top: 61px;
+  /* Lesson top bar: 56px bar + 10px progress segments + 8px below them + 1px border. */
+  --lesson-top: 75px;
 }
 .lesson-aware {
   --tap: 3rem;
@@ -25,14 +25,14 @@ html:has([data-lesson-root]) {
   font-family: var(--font-display);
   font-size: var(--text-display-sm);
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 700;
 }
 .lesson-prose > h3 {
   margin-top: 1.6em;
   font-family: var(--font-display);
   font-size: var(--text-title);
   line-height: 1.3;
-  font-weight: 600;
+  font-weight: 700;
 }
 .lesson-prose > h2 + *,
 .lesson-prose > h3 + * { margin-top: 0.5em; }
@@ -50,7 +50,7 @@ html:has([data-lesson-root]) {
 .lesson-prose a:not([class]):hover { text-decoration-thickness: 2px; }
 .lesson-prose strong { font-weight: 700; }
 .lesson-prose > blockquote {
-  border-left: 4px solid var(--line-strong);
+  border-left: 6px solid var(--ink);
   padding-left: 1em;
   color: var(--ink-soft);
 }
@@ -92,11 +92,9 @@ html:has([data-lesson-root]) {
   clip: auto;
   clip-path: none;
   white-space: normal;
-  font-family: var(--font-sans);
-  font-size: var(--text-eyebrow);
+  font-family: var(--font-display);
+  font-size: var(--text-small);
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--ink-soft);
 }
 .lesson-prose .footnotes ol { list-style: decimal; margin-top: 0.75em; padding-left: 1.4em; }
@@ -110,7 +108,6 @@ html:has([data-lesson-root]) {
 .doc-prose > table { font-size: var(--text-small); }
 .doc-prose td:first-child { font-weight: 700; }
 .review-note {
-  border-radius: 4px;
   background: var(--warning-soft);
   box-shadow: inset 0 -2px 0 var(--warning);
   padding: 0 0.25em;

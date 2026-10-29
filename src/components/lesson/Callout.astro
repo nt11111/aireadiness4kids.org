@@ -19,7 +19,7 @@ const k = KINDS[kind];
 <div role="note" aria-label={optional ? `${title ?? k.label} (optional)` : title ?? k.label} data-optional={optional ? "" : undefined} class={cn("lesson-block flex gap-3 rounded-xl border p-4 sm:gap-4 sm:p-5", k.box, optional && "border-2 border-dashed")}>
   <k.Icon aria-hidden="true" className={cn("mt-1 size-5 shrink-0", k.icon)} />
   <div class="min-w-0 [&>*+*]:mt-2">
-    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-small font-bold uppercase tracking-[0.1em] text-ink">
+    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-small font-bold text-ink">
       <span>{title ?? k.label}</span>
       {optional && <span class="rounded-full border border-line-strong bg-surface px-2 py-0.5 text-[0.75rem] normal-case tracking-normal text-ink-soft">Optional</span>}
     </p>
